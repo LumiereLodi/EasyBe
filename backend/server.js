@@ -12,10 +12,10 @@ app.use(express())
 //   console.log("hello there")
 // })
 
-app.get("/IT", async (req, res) => {
+app.get("/IT/:id", async (req, res) => {
   try {
 
-    const retrieve = await pool.query("SELECT * FROM customer")
+    const retrieve = await pool.query("SELECT employeeGivenName, jobTitle from employee where departmentid = $1 ", [req.params.id])
 
     res.json(retrieve.rows)
   } catch (err) {
