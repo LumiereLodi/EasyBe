@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {Drawer} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import Divider from "@material-ui/core/Divider";
@@ -17,15 +17,23 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import {BrowserRouter,Link} from "react-router-dom"
+import {BrowserRouter, Route, Switch} from "react-router-dom"
 import MenuIcon from "@material-ui/icons/Menu"
 import IconButton from "@material-ui/core/IconButton";
+import Grid from "@material-ui/core/Grid";
+import {Link} from "@material-ui/core";
+import Avatar from '@material-ui/core/Avatar';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+
+
+
 
 import easybeLogo from "../../assets/EasyBe.png";
-import {Dashboard} from "@material-ui/icons";
+// import {Dashboard} from "@material-ui/icons";
 import TitleBar from "../AppBar";
 import Typography from "@material-ui/core/Typography";
-
+import MainLayout from "../Layout";
+import Dashboard from "../Dashboard";
 
 
 function ElevationScroll(props) {
@@ -46,6 +54,7 @@ const useStyles = makeStyles(theme =>({
 
     },
     toolbar: theme.mixins.toolbar,
+
     userId: {
         marginTop: "1rem",
         height: "4rem",
@@ -107,7 +116,14 @@ const useStyles = makeStyles(theme =>({
         flexGrow: 1,
         paddingTop: theme.spacing(10),
         paddingRight: theme.spacing(0.5),
-        paddingLeft: theme.spacing(25),
+        paddingLeft: "210px",
+        [theme.breakpoints.down("md")]:{
+            paddingLeft: "10px",
+            paddingRight: "10px"
+        }
+    },
+    drawerItemSelected:{
+        opacity: 1
     }
 
 }))
@@ -120,15 +136,30 @@ function AppDrawer(props) {
 
 
     const [openMobileDrawer, setOpenMobileDrawer] = useState();
+    const [selectedMenuItem, setSelectedMenuItem] = useState(0);
+
 
     const routes = [
-        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>},
-        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>},
-        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>},
+        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/dashboard", activeIndex: 0},
+        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/", activeIndex: 1},
+        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/project", activeIndex: 2},
+        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, activeIndex: 3},
     ]
 
+    useEffect(()=> {
+
+        [...routes].forEach(route => {
+            switch(window.location.pathname){
+                case `${route.link}`:
+                    if(route.activeIndex !== selectedMenuItem){
+                        setSelectedMenuItem(route.activeIndex);
+                    }
+            }
+        })
+
+    },[selectedMenuItem]);
     const permanentDrawer = (
+        <BrowserRouter>
         <Drawer
             variant="permanent"
             anchor="left"
@@ -136,21 +167,63 @@ function AppDrawer(props) {
             className={classes.drawerPadding}
 
         >
+            {/*// the picture size when you change to button to be fixed later*/}
+            {/*<Button component={Link} to="/" className={classes.logoContainer} disableRipple >*/}
+
+            {/*    <img className={classes.easybeLogo} src={easybeLogo} alt="easybe logo"/>*/}
+            {/*</Button>*/}
             <img className={classes.easybeLogo} src={easybeLogo} alt="easybe logo"/>
 
-            <div className={classes.userId} ></div>
+            <div className={classes.userId} >
+                <Grid container style={{height: "100%"}}>
+                        <Grid item >
+                            <Grid container alignItems={"center"} style={{height: "100%"}}>
+                                <Grid item>
+                                    <Avatar style={{height: "1.5em", width: "1.5em", marginLeft: "0.2em", marginRight: "0.5em"}}>LL</Avatar>
+                                </Grid>
+                                <Grid item>
+                                    <Typography>
+                                        Lumiere Lodi
+                                    </Typography>
+                                    <Typography style={{fontSize: "0.7em",color: "#878787"}}>
+                                       SM Manager
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+
+                        </Grid>
+                        <Grid item md={3}>
+                            <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
+                                <IconButton aria-label="display more actions" edge="end" color="inherit">
+                                    <MoreHorizIcon />
+                                </IconButton>
+
+                            </Grid>
+
+                        </Grid>
+                </Grid>
+            </div>
             <div className={classes.menuTitle}>Menu</div>
             <List disablePadding>
                 {routes.map((route, index) => (
-                    <ListItem button className={classes.drawerItem} key={index}>
-                        {route.icon}
-                        <ListItemText >{route.name}</ListItemText>
-                    </ListItem>
+                    <Link href={route.link}>
+                        <ListItem button
+                                  className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
+                                  key={index}
+                                  onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
+                                  selected={route.activeIndex===selectedMenuItem}>
+                            {route.icon}
+                            <ListItemText >{route.name}</ListItemText>
+                        </ListItem>
+                    </Link>
+
                 ))}
 
             </List>
 
         </Drawer>
+        </BrowserRouter>
     )
     const mobileDrawer=(
         <Fragment>
@@ -175,10 +248,12 @@ function AppDrawer(props) {
                 <div className={classes.menuTitle}>Menu</div>
                 <List disablePadding>
                     {routes.map((route, index) => (
-                        <ListItem button className={classes.drawerItem} key={index}>
+                        <Link href={route.link}>
+                        <ListItem button className={classes.drawerItem} key={index} onClick={() => setSelectedMenuItem(route.activeIndex)} selected={selectedMenuItem === route.activeIndex}>
                             {route.icon}
                             <ListItemText >{route.name}</ListItemText>
                         </ListItem>
+                        </Link>
                     ))}
 
 
@@ -198,47 +273,33 @@ function AppDrawer(props) {
     )
     return (
         <div>
-            <TitleBar/>
-            {matches ? <ElevationScroll>
-                <AppBar position="fixed" className={classes.appBar} >
-                    <Toolbar disableGutters>
-                        <BrowserRouter>
-                            <Button component={Link} to="/" className={classes.logoContainer} disableRipple >
+            <Grid container>
+                <TitleBar/>
+                {matches ? <ElevationScroll>
+                    <AppBar position="static" className={classes.appBar} >
+                        <Toolbar disableGutters>
+                            <BrowserRouter>
+                                <Button component={Link} to="/" className={classes.logoContainer} disableRipple >
 
-                                <img className={classes.LogoImage} src={easybeLogo} alt="easybe logo"/>
-                            </Button>
+                                    <img className={classes.LogoImage} src={easybeLogo} alt="easybe logo"/>
+                                </Button>
 
-                        </BrowserRouter>
-                        {mobileDrawer}
-                    </Toolbar>
-                </AppBar>
-            </ElevationScroll> : permanentDrawer}
-            <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                    ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-                    facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-                    gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-                    donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                    adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-                    Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-                    imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-                    arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-                    donec massa sapien faucibus et molestie ac.
-                </Typography>
-                <Typography paragraph>
-                    Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-                    facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-                    tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-                    consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-                    vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-                    hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-                    tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-                    nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-                    accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-                </Typography>
-            </main>
+                            </BrowserRouter>
+                            {mobileDrawer}
+                        </Toolbar>
+                    </AppBar>
+                </ElevationScroll> : permanentDrawer}
+                <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    {/*<MainLayout/>*/}
+                    <Switch>
+                        <Route exact path={"/"} component={()=> <div>Homes</div>}/>
+                        <Route path={"/dashboard"} component={Dashboard}/>
+                        <Route path={"/project"} component={MainLayout}/>
+                    </Switch>
+                </main>
+            </Grid>
+
 
         </div>
     );

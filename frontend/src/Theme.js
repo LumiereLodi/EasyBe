@@ -16,5 +16,16 @@ export default createTheme({
             yellow: easyYellow
         }
 
+    },
+    typography:{
+        login:{
+            fontFamily: "Roboto",
+            fontWeight: "bold"
+        },
+        dashboard:{
+            fontFamily: "Roboto",
+            fontWeight: "bold"
+        },
+
     }
 })
