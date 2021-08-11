@@ -27,5 +27,34 @@ export default createTheme({
             fontWeight: "bold"
         },
 
+    },
+    overrides: {
+        MuiInputLabel: {
+            root: {
+                color: easyBeige,
+                fontSize: "1rem",
+
+            }
+        },
+        MuiInput: {
+            root: {
+                color:"white",
+                fontWeight: 300,
+
+
+            },
+            underline: {
+                //if you use after it will apply when clicked
+                "&:before": {
+                    borderBottom: `2px solid ${easyBeige}`
+                },
+                "&:after": {
+                    borderBottom: `2px solid ${easyBeige}`
+                },
+                "&:hover:not($disabled):not($focused):not($error):before": {
+                    borderBottom: `2px solid ${easyBeige}`
+                }
+            }
+        }
     }
 })

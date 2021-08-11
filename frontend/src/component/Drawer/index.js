@@ -35,6 +35,11 @@ import Typography from "@material-ui/core/Typography";
 import MainLayout from "../Layout";
 import Dashboard from "../Dashboard";
 
+/**MENU**/
+import ResearchMenu from "../Views/Managers/research/Menu"
+import SalesMenu from "../Views/Managers/sales/Menu"
+import HRMenu from "../Views/Managers/humanResource/Menu"
+
 
 function ElevationScroll(props) {
     const { children } = props;
@@ -205,22 +210,7 @@ function AppDrawer(props) {
                 </Grid>
             </div>
             <div className={classes.menuTitle}>Menu</div>
-            <List disablePadding>
-                {routes.map((route, index) => (
-                    <Link href={route.link}>
-                        <ListItem button
-                                  className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
-                                  key={index}
-                                  onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
-                                  selected={route.activeIndex===selectedMenuItem}>
-                            {route.icon}
-                            <ListItemText >{route.name}</ListItemText>
-                        </ListItem>
-                    </Link>
-
-                ))}
-
-            </List>
+            <HRMenu/>
 
         </Drawer>
         </BrowserRouter>
@@ -246,18 +236,7 @@ function AppDrawer(props) {
 
                 <div className={classes.userId} ></div>
                 <div className={classes.menuTitle}>Menu</div>
-                <List disablePadding>
-                    {routes.map((route, index) => (
-                        <Link href={route.link}>
-                        <ListItem button className={classes.drawerItem} key={index} onClick={() => setSelectedMenuItem(route.activeIndex)} selected={selectedMenuItem === route.activeIndex}>
-                            {route.icon}
-                            <ListItemText >{route.name}</ListItemText>
-                        </ListItem>
-                        </Link>
-                    ))}
-
-
-                </List>
+                <HRMenu/>
 
             </SwipeableDrawer>
 

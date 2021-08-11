@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     layout1:{
         height: "38.5em",
         backgroundColor: theme.palette.secondary.main,
-
+        overflow: "auto"
 
 
     },
@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down("sm")]: {
             marginTop: "2em",
             marginLeft:0
-        }
+        },
+        overflow: "auto"
     }
 
 }))
@@ -39,7 +40,22 @@ function Index(props) {
                        xs={12}
 
                 >
-
+                    <h1>Column 1</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>scroll down again</h1>
+                    <h1>app bar is gone</h1>
                 </Grid>
 
                 <Grid  item
@@ -48,6 +64,22 @@ function Index(props) {
                        xs={12}
 
                 >
+                    <h1>Column 1</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>new line</h1>
+                    <h1>scroll down again</h1>
+                    <h1>app bar is gone</h1>
                     <Grid container className="grid-container">
 
 

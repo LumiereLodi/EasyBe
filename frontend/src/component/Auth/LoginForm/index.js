@@ -7,14 +7,22 @@ import {
     InputLabel,
     Button,
     InputBase,
+    TextField,
     useMediaQuery
 } from "@material-ui/core";
 
 
 import {makeStyles} from "@material-ui/styles";
 
-import easybeLogo from "../../assets/EasyBe.png";
+import easybeLogo from "../../../assets/EasyBe.png";
 
+import * as yup from 'yup';
+import { useFormik } from 'formik';
+
+const loginForm = yup.object({
+    email: yup.string('Enter email').required('Email is required').email('Enter a valid Email'),
+    password: yup.string('Enter Password').required('Password is required')
+})
 const useStyles = makeStyles(theme => ({
     mainContainer: {
         marginTop: "5em",
@@ -57,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     },
     dividerContainer: {
         marginTop: "1.5em",
-        marginBottom: "5em",
+        marginBottom: "1em",
 
 
     },
@@ -65,7 +73,8 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.secondary.main,
         height: 29,
         width: 325,
-        borderRadius: "10px"
+        borderRadius: "10px",
+        marginBottom: "2em"
 
     },
     form: {
@@ -79,29 +88,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: "2em"
 
     },
-    input: {
-        "& .MuiInputBase-input": {
-            background: "white",
-            height: 25,
-            width: 325,
-            borderRadius: "2.5px",
-            paddingLeft: "7px"
-        },
-        "& .MuiInputBase-root": {
-            background: "white",
-            height: 45,
-            width: 325,
-            borderRadius: "2.5px"
-        },
 
-        marginBottom: "2em"
-
-    },
-    formLabel: {
-        ...theme.typography.login,
-        color: "white",
-        marginBottom: "0.5em"
-    },
     loginButton: {
         ...theme.typography.login,
         backgroundColor: theme.palette.secondary.main,
@@ -112,6 +99,10 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             backgroundColor: theme.palette.secondary.light
         }
+    },
+    textfield: {
+        marginBottom: "2em",
+        width: 350
     }
 }))
 
@@ -119,6 +110,16 @@ const useStyles = makeStyles(theme => ({
 function Index(props) {
     const classes = useStyles();
 
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: loginForm,
+        onSubmit: values =>  {
+            alert(JSON.stringify(values,null,2))
+        }
+    });
     return (
         <div>
             <Grid container direction={"row"} justify={"center"} className={classes.mainContainer}
@@ -145,32 +146,42 @@ function Index(props) {
                                         contact admin.</Typography>
 
                                 </Grid>
-                                <Grid item className={classes.dividerContainer}>
-                                    <Divider style={{backgroundColor: "white", height: 1, width: 350}}/>
-                                </Grid>
                             </Grid>
                         </Grid>
 
                         <Grid item>
                             <Grid container justify={"center"}>
-                                <form>
+                                <form onSubmit={formik.handleSubmit}>
                                     <Grid container direction={"column"}>
-                                        <Grid item>
-                                            <InputLabel className={classes.formLabel}>Email</InputLabel>
-                                            <InputBase id="outlined-basic" className={classes.input} disableUnderline/>
+                                        <Grid item className={classes.textfield}>
+                                            <TextField fullWidth
+                                                       color={"secondary"}
+                                                       id="email"
+                                                       label="Email"
+                                                       value={formik.values.email}
+                                                       onChange={formik.handleChange}
+                                                       error={ Boolean(formik.errors.email)}
+                                                       helperText={formik.errors.email}
+                                            />
                                         </Grid>
 
-                                        <Grid item>
-                                            <Grid item>
-                                                <InputLabel className={classes.formLabel}>Password</InputLabel>
-                                                <InputBase id="outlined-basic" className={classes.input}
-                                                           disableUnderline type={"password"}/>
-                                            </Grid>
+                                        <Grid item className={classes.textfield}>
+                                            <TextField fullWidth
+                                                       color={"secondary"}
+                                                       id="password"
+                                                       label="Password"
+                                                       type={"password"}
+                                                       value={formik.values.password}
+                                                       onChange={formik.handleChange}
+                                                       error={ Boolean(formik.errors.password)}
+                                                       helperText={formik.errors.password}
+                                            />
+
                                         </Grid>
                                         <Grid item>
                                             <Grid container justify={"center"}>
                                                 <Grid item>
-                                                    <Button className={classes.loginButton}>
+                                                    <Button className={classes.loginButton} type={"submit"}>
                                                         Login
                                                     </Button>
                                                 </Grid>

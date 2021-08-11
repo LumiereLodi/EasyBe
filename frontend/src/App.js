@@ -4,7 +4,7 @@ import {ThemeProvider} from "@material-ui/styles";
 import AppDrawer from "./component/Drawer";
 import {BrowserRouter as Router} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import LoginForm from "./component/LoginForm"
+import LoginForm from "./component/Auth/LoginForm"
 
 function App() {
     return (
