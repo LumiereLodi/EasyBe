@@ -41,18 +41,21 @@ function Admin(props) {
     ]
     const addButton=(
         <div style={{marginLeft: "auto"}}>
-            <IconButton component={Link} to="/admin/add">
+            <IconButton component={Link} to={ window.location.pathname ==="/admin/departmentList" ? "/admin/addDepartment" : "/admin/addEmployee" }>
                 <AddIcon className={classes.tab} />
             </IconButton>
         </div>
     )
 
     useEffect(() => {
+        if(window.location.pathname  === "/admin/addEmployee"){
+            setValue(1)
+        }
         if(window.location.pathname === '/admin'){
             window.location.pathname = "/admin/departmentList";
             props.setSelectedMenuItem(4);
         }
-    })
+    },[window.location.pathname])
     return (
         <div>
 
@@ -69,6 +72,8 @@ function Admin(props) {
                         </div>
 
                     }/>
+                    <Route path={"/admin/addDepartment"} component={AddDepartment}/>
+                    <Route path={"/admin/addEmployee"} component={RegisterEmployee}/>
                 </Switch>
 
 

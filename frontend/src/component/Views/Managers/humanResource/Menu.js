@@ -52,7 +52,8 @@ function Menu(props) {
                     }
             }
         })
-        if (window.location.pathname === "/admin/departmentList" || window.location.pathname === "/admin/employeeList"){
+        if (window.location.pathname === "/admin/departmentList" || window.location.pathname === "/admin/employeeList"
+            || window.location.pathname === "/admin/addDepartment" ||  window.location.pathname=== "/admin/addEmployee"){
             props.setSelectedMenuItem(4);
         }
 

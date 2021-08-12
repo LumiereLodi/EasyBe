@@ -3,18 +3,21 @@ import {Grid} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
-
-    layout2:{
+    layout:{
         height: "38.5em",
         marginLeft: "1em",
         marginRight: "0.3em",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: "white",
+        border: "2px solid",
+        borderColor: "rgba(35,37,38,0.25)",
         [theme.breakpoints.down("sm")]: {
             marginTop: "2em",
             marginLeft:0
         },
-        overflow: "auto"
-    }
+        overflow: "auto",
+        paddingLeft: "1em"
+    },
+
 
 }))
 
@@ -23,27 +26,12 @@ function Details(props) {
     return (
 
             <Grid item
-                  className={classes.layout2}
+                  className={classes.layout}
                   md
                   xs={12}
 
             >
-                <h1>{props.text}</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>new line</h1>
-                <h1>scroll down again</h1>
-                <h1>app bar is gone</h1>
+                {props.details}
                 <Grid container className="grid-container">
 
 

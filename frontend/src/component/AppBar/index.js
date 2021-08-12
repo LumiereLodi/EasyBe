@@ -28,7 +28,10 @@ const useStyles = makeStyles(theme => ({
         fontWeight: "bold"
     },
     backgroundStyle: {
-        boxShadow: "none"
+        boxShadow: "none",
+        backgroundColor: "transparent",
+        border: "2px solid",
+        borderColor: "rgba(35,37,38,0.25)",
     },
     tab:{
         ...theme.typography.tab,
@@ -60,14 +63,14 @@ function Try(props) {
     return (
         <Fragment>
             <Hidden mdDown>
-                <AppBar position="fixed" className={classes.appBar} color="secondary" classes={{root: classes.backgroundStyle}}>
+                <AppBar position="fixed" className={classes.appBar}  classes={{root: classes.backgroundStyle}}>
                     <Grid container style={{height: "100%"}} alignItems={"center"}>
                         <Grid item style={{width: "100%"}}>
                             <Toolbar>
                                 <Tabs
                                     value={props.value}
                                     onChange={handleChange}
-                                    indicatorColor="secondary"
+                                    indicatorColor="none"
 
                                 >
                                     {props.tab.map((tab, index) => (
