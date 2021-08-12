@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {Drawer} from "@material-ui/core";
+import {Drawer, Hidden} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import Divider from "@material-ui/core/Divider";
 import List from '@material-ui/core/List';
@@ -30,7 +30,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import easybeLogo from "../../assets/EasyBe.png";
 // import {Dashboard} from "@material-ui/icons";
-import TitleBar from "../AppBar";
+import TopBar from "../AppBar";
 import Typography from "@material-ui/core/Typography";
 import MainLayout from "../Layout";
 import Dashboard from "../Dashboard";
@@ -39,7 +39,13 @@ import Dashboard from "../Dashboard";
 import ResearchMenu from "../Views/Managers/research/Menu"
 import SalesMenu from "../Views/Managers/sales/Menu"
 import HRMenu from "../Views/Managers/humanResource/Menu"
+import RegisterEmployee from "../Views/Managers/humanResource/RegisterEmployee";
+import Admin from "../Views/Managers/humanResource/Admin";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
+const marginLeft = 100;
+const drawerWidth = 13.5;
 
 function ElevationScroll(props) {
     const { children } = props;
@@ -84,7 +90,7 @@ const useStyles = makeStyles(theme =>({
         marginRight: "auto"
 
     },
-    appBar:{
+    appBarTab:{
         zIndex: theme.zIndex.modal + 1
     },
     logoContainer:{
@@ -129,11 +135,34 @@ const useStyles = makeStyles(theme =>({
     },
     drawerItemSelected:{
         opacity: 1
+    },
+    appBar: {
+        width: `calc(100% - ${drawerWidth}em)`,
+        marginLeft: marginLeft,
+        marginRight: "0.5em",
+        marginTop: "0.9em",
+        marginBottom: "1em",
+        height: "7em"
+    },
+    title:{
+        fontWeight: "bold"
+    },
+    backgroundStyle: {
+        boxShadow: "none"
+    },
+    tab:{
+        ...theme.typography.tab,
+        "&:hover":{
+            opacity: 1,
+        },
+
+
     }
 
 }))
 
 function AppDrawer(props) {
+
     const classes = useStyles();
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down("md"));
@@ -141,9 +170,13 @@ function AppDrawer(props) {
 
 
     const [openMobileDrawer, setOpenMobileDrawer] = useState();
+    // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
+    const [value, setValue] = useState()
 
-
+    const handleChange=(e, newValue)=>{
+        setValue(newValue)
+    }
     const routes = [
         {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/dashboard", activeIndex: 0},
         {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/", activeIndex: 1},
@@ -210,7 +243,8 @@ function AppDrawer(props) {
                 </Grid>
             </div>
             <div className={classes.menuTitle}>Menu</div>
-            <HRMenu/>
+            <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>
+
 
         </Drawer>
         </BrowserRouter>
@@ -236,7 +270,7 @@ function AppDrawer(props) {
 
                 <div className={classes.userId} ></div>
                 <div className={classes.menuTitle}>Menu</div>
-                <HRMenu/>
+                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>
 
             </SwipeableDrawer>
 
@@ -250,12 +284,14 @@ function AppDrawer(props) {
             </IconButton>
         </Fragment>
     )
+
     return (
         <div>
             <Grid container>
-                <TitleBar/>
+                {/*<TopBar tabTitleMain={tab} />*/}
+
                 {matches ? <ElevationScroll>
-                    <AppBar position="static" className={classes.appBar} >
+                    <AppBar position="static" className={classes.appBarTab} >
                         <Toolbar disableGutters>
                             <BrowserRouter>
                                 <Button component={Link} to="/" className={classes.logoContainer} disableRipple >
@@ -274,7 +310,11 @@ function AppDrawer(props) {
                     <Switch>
                         <Route exact path={"/"} component={()=> <div>Homes</div>}/>
                         <Route path={"/dashboard"} component={Dashboard}/>
-                        <Route path={"/project"} component={MainLayout}/>
+                        {/*<Route path={"/project"} component={MainLayout}/>*/}
+                        {/*<Route path={"/client"} component={RegisterEmployee}/>*/}
+                        <Route path={"/admin"} component={()=> <div><Admin setSelectedMenuItem={setSelectedMenuItem}/></div>}/>
+
+
                     </Switch>
                 </main>
             </Grid>

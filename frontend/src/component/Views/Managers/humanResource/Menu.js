@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme =>({
 function Menu(props) {
     const classes = useStyles()
 
-    const [selectedMenuItem, setSelectedMenuItem] = useState(0);
+    // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
 
     const routes = [
-        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/dashboard", activeIndex: 0},
+        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/home", activeIndex: 0},
         {name: "Department", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, link: "/", activeIndex: 1},
-        {name: "Employee", icon:<ListItemIcon><PeopleAltIcon/></ListItemIcon>, link: "/project", activeIndex: 2},
-        {name: "Projects", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/client", activeIndex: 2},
-        {name: "Admin", icon: <ListItemIcon><SettingsIcon/></ListItemIcon>, activeIndex: 3},
+        {name: "Employee", icon:<ListItemIcon><PeopleAltIcon/></ListItemIcon>, link: "/employee", activeIndex: 2},
+        {name: "Projects", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/yesy", activeIndex: 3},
+        {name: "Admin", icon: <ListItemIcon><SettingsIcon/></ListItemIcon>,link: "/admin", activeIndex: 4},
 
     ]
     useEffect(()=> {
@@ -47,23 +47,26 @@ function Menu(props) {
         [...routes].forEach(route => {
             switch(window.location.pathname){
                 case `${route.link}`:
-                    if(route.activeIndex !== selectedMenuItem){
-                        setSelectedMenuItem(route.activeIndex);
+                    if(route.activeIndex !== props.selectedMenuItem){
+                        props.setSelectedMenuItem(route.activeIndex);
                     }
             }
         })
+        if (window.location.pathname === "/admin/departmentList" || window.location.pathname === "/admin/employeeList"){
+            props.setSelectedMenuItem(4);
+        }
 
-    },[selectedMenuItem]);
+    },[props.selectedMenuItem]);
     return (
         <div>
             <List disablePadding>
                 {routes.map((route, index) => (
                     <Link href={route.link}>
                         <ListItem button
-                                  className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
+                                  className={props.selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
                                   key={index}
-                                  onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
-                                  selected={route.activeIndex===selectedMenuItem}>
+                                  onClick={(e) => { props.setSelectedMenuItem(route.activeIndex)}}
+                                  selected={route.activeIndex===props.selectedMenuItem}>
                             {route.icon}
                             <ListItemText >{route.name}</ListItemText>
                         </ListItem>

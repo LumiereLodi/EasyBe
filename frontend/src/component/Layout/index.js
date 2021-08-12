@@ -40,7 +40,7 @@ function Index(props) {
                        xs={12}
 
                 >
-                    <h1>Column 1</h1>
+                    <h1>{props.text}</h1>
                     <h1>new line</h1>
                     <h1>new line</h1>
                     <h1>new line</h1>

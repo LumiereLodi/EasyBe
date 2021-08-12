@@ -26,6 +26,13 @@ export default createTheme({
             fontFamily: "Roboto",
             fontWeight: "bold"
         },
+        tab:{
+            color: "black",
+            fontSize: "1.3em",
+            fontWeight: "bold",
+            textTransform: "none"
+        }
+
 
     },
     overrides: {
