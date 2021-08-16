@@ -2,17 +2,30 @@ import React from "react";
 import theme from "./Theme"
 import {ThemeProvider} from "@material-ui/styles";
 import AppDrawer from "./component/Drawer";
-import {BrowserRouter as Router} from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+// import Grid from "@material-ui/core/Grid";
 import LoginForm from "./component/Auth/LoginForm"
+import appDrawer from "./component/Drawer";
+import admin from "./component/Views/Managers/humanResource/Admin"
+import departmentlist from  "./component/Views/Managers/humanResource/DepartmentList"
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
+            {/*<Router>*/}
+            {/*    <AppDrawer/>*/}
+            {/*</Router>*/}
+
             <Router>
-                <AppDrawer/>
+                {/*<LoginForm/>*/}
+                <switch>
+                    <Route exact path={"/"} component={LoginForm}/>
+                    <Route path={"/drawer"} component={appDrawer}/>
+                </switch>
+
             </Router>
-            {/*<LoginForm/>*/}
+
+
 
         </ThemeProvider>
 

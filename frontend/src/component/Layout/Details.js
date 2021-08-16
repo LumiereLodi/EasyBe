@@ -4,7 +4,7 @@ import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
     layout:{
-        height: "38.5em",
+        height: "38.3em",
         marginLeft: "1em",
         marginRight: "0.3em",
         backgroundColor: "white",
@@ -15,7 +15,8 @@ const useStyles = makeStyles(theme => ({
             marginLeft:0
         },
         overflow: "auto",
-        paddingLeft: "1em"
+        paddingLeft: "1em",
+        paddingRight: "1em"
     },
 
 
@@ -26,9 +27,11 @@ function Details(props) {
     return (
 
             <Grid item
+
                   className={classes.layout}
                   md
                   xs={12}
+                  direction={"column"}
 
             >
                 {props.details}

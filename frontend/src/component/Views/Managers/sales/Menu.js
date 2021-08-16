@@ -7,7 +7,7 @@ import TimelineIcon from "@material-ui/icons/Timeline";
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 
 import Drawer from "../../../Drawer";
-import {Link} from "@material-ui/core";
+import {Link} from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
@@ -35,10 +35,10 @@ function Menu(props) {
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
 
     const routes = [
-        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/dashboard", activeIndex: 0},
+        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
         {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/", activeIndex: 1},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/project", activeIndex: 2},
-        {name: "Client", icon:<ListItemIcon><BusinessCenterIcon/></ListItemIcon>, link: "/client", activeIndex: 2},
+        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/project", activeIndex: 2},
+        {name: "Client", icon:<ListItemIcon><BusinessCenterIcon/></ListItemIcon>, link: "/drawer/client", activeIndex: 2},
         {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, activeIndex: 3},
 
     ]
@@ -58,16 +58,19 @@ function Menu(props) {
         <div>
             <List disablePadding>
                 {routes.map((route, index) => (
-                    <Link href={route.link}>
+
                         <ListItem button
                                   className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
                                   key={index}
                                   onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
-                                  selected={route.activeIndex===selectedMenuItem}>
+                                  selected={route.activeIndex===selectedMenuItem}
+                                  component={Link}
+                                  to={route.link}
+                        >
                             {route.icon}
                             <ListItemText >{route.name}</ListItemText>
+
                         </ListItem>
-                    </Link>
 
                 ))}
 

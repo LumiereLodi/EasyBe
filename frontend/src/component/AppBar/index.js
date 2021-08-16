@@ -1,9 +1,7 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import Button from "@material-ui/core/Button";
+import React, {Fragment, useEffect} from 'react';
 import {makeStyles} from "@material-ui/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography";
 import {Hidden} from "@material-ui/core";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -57,6 +55,9 @@ function Try(props) {
                    if (props.value !== route.activeIndexes) {
                        props.setValue(route.activeIndexes)
                    }
+                   break;
+               default:
+                   break;
            }
        })
     })
@@ -85,9 +86,7 @@ function Try(props) {
 
 
                                     ))}
-                                    {/*<Tab label="zero"/>*/}
-                                    {/*<Tab label="one"/>*/}
-                                    {/*<Tab label="two"/>*/}
+
 
                                 </Tabs>
                                 {props.addButton}

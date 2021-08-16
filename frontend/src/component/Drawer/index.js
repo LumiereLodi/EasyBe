@@ -1,10 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
-import {Drawer, Hidden} from "@material-ui/core";
+import {Drawer} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import Divider from "@material-ui/core/Divider";
-import List from '@material-ui/core/List';
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import GroupIcon from '@material-ui/icons/Group';
@@ -17,7 +13,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import {BrowserRouter, Route, Switch} from "react-router-dom"
+import {BrowserRouter as Router, Redirect, Route, Switch, useHistory} from "react-router-dom"
 import MenuIcon from "@material-ui/icons/Menu"
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
@@ -27,22 +23,26 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 
 
-
 import easybeLogo from "../../assets/EasyBe.png";
-// import {Dashboard} from "@material-ui/icons";
-import TopBar from "../AppBar";
 import Typography from "@material-ui/core/Typography";
-import MainLayout from "../Layout";
 import Dashboard from "../Dashboard";
 
 /**MENU**/
 import ResearchMenu from "../Views/Managers/research/Menu"
-import SalesMenu from "../Views/Managers/sales/Menu"
+ import SalesMenu from "../Views/Managers/sales/Menu"
 import HRMenu from "../Views/Managers/humanResource/Menu"
-import RegisterEmployee from "../Views/Managers/humanResource/RegisterEmployee";
+// import RegisterEmployee from "../Views/Managers/humanResource/RegisterEmployee";
 import Admin from "../Views/Managers/humanResource/Admin";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import DepartmentList from "../Views/Managers/humanResource/DepartmentList";
+// import Tabs from "@material-ui/core/Tabs";
+// import Tab from "@material-ui/core/Tab";
+
+/**APP STATE**/
+import {useObserver} from "mobx-react"
+import {useAppState} from "../WithStore"
+//import Cookies from 'js-cookie';
+import axios from "axios";
+
 
 const marginLeft = 100;
 const drawerWidth = 13.5;
@@ -167,37 +167,50 @@ function AppDrawer(props) {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down("md"));
     const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const appState = useAppState()
+    let history = useHistory()
 
 
-    const [openMobileDrawer, setOpenMobileDrawer] = useState();
+    const [openMobileDrawer, setOpenMobileDrawer] = useState(false);
     // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [value, setValue] = useState()
+    const [department, setDepartment] = useState('')
+    const [position, setPosition] = useState('')
 
     const handleChange=(e, newValue)=>{
         setValue(newValue)
     }
-    const routes = [
-        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/dashboard", activeIndex: 0},
-        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/", activeIndex: 1},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/project", activeIndex: 2},
-        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, activeIndex: 3},
-    ]
 
-    useEffect(()=> {
 
-        [...routes].forEach(route => {
-            switch(window.location.pathname){
-                case `${route.link}`:
-                    if(route.activeIndex !== selectedMenuItem){
-                        setSelectedMenuItem(route.activeIndex);
-                    }
-            }
-        })
+    useEffect(()=>{
+        async function authenticate(){
 
-    },[selectedMenuItem]);
+                const result = await axios.get("http://localhost:3001/authenticate", {
+                    withCredentials: true
+                })
+
+                if(!result.data.authenticated){
+                    history.replace('/')
+                }else{
+                    const response = await axios.get(`http://localhost:3001/userinformation/${result.data.employeeid}`)
+                    appState.setUserInfo(response.data.user)
+                    setDepartment(response.data.user.departmentid)
+                    setPosition(response.data.user.position)
+
+                }
+
+
+
+        }
+
+        authenticate()
+
+
+
+    })
     const permanentDrawer = (
-        <BrowserRouter>
+
         <Drawer
             variant="permanent"
             anchor="left"
@@ -212,43 +225,52 @@ function AppDrawer(props) {
             {/*</Button>*/}
             <img className={classes.easybeLogo} src={easybeLogo} alt="easybe logo"/>
 
-            <div className={classes.userId} >
-                <Grid container style={{height: "100%"}}>
-                        <Grid item >
+
+                <Grid container  className={classes.userId}>
+                        <Grid item sm={8}>
                             <Grid container alignItems={"center"} style={{height: "100%"}}>
                                 <Grid item>
                                     <Avatar style={{height: "1.5em", width: "1.5em", marginLeft: "0.2em", marginRight: "0.5em"}}>LL</Avatar>
                                 </Grid>
                                 <Grid item>
                                     <Typography>
-                                        Lumiere Lodi
+                                        {appState.userInfo.lastname}
                                     </Typography>
                                     <Typography style={{fontSize: "0.7em",color: "#878787"}}>
-                                       SM Manager
+                                        {appState.userInfo.departmentname} {appState.userInfo.position}
                                     </Typography>
                                 </Grid>
 
                             </Grid>
 
                         </Grid>
-                        <Grid item md={3}>
+
+                        <Grid item sm={4}>
                             <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
-                                <IconButton aria-label="display more actions" edge="end" color="inherit">
+                                <IconButton aria-label="display more actions" edge="center" color="inherit">
                                     <MoreHorizIcon />
                                 </IconButton>
 
                             </Grid>
 
                         </Grid>
-                </Grid>
-            </div>
-            <div className={classes.menuTitle}>Menu</div>
-            <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>
 
+
+                </Grid>
+
+            <div className={classes.menuTitle}>Menu</div>
+            {/*{(position === "Manager" && department === "2000" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
+            {(position === "Manager" && department === "2001" ) ?  <ResearchMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+            {(position === "Manager" && department === "2002" ) ?  <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+            {/*{(position === "Manager" && department === "2003" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
+            {(position === "Manager" && department === "2004" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+
+            {/*<HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>*/}
+            {/*{test === 1 ? <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
 
 
         </Drawer>
-        </BrowserRouter>
+
     )
     const mobileDrawer=(
         <Fragment>
@@ -286,7 +308,8 @@ function AppDrawer(props) {
         </Fragment>
     )
 
-    return (
+    return useObserver (()=>(
+
         <div>
             <Grid container>
                 {/*<TopBar tabTitleMain={tab} />*/}
@@ -294,13 +317,12 @@ function AppDrawer(props) {
                 {matches ? <ElevationScroll>
                     <AppBar position="static" className={classes.appBarTab} >
                         <Toolbar disableGutters>
-                            <BrowserRouter>
+
                                 <Button component={Link} to="/" className={classes.logoContainer} disableRipple >
 
                                     <img className={classes.LogoImage} src={easybeLogo} alt="easybe logo"/>
                                 </Button>
 
-                            </BrowserRouter>
                             {mobileDrawer}
                         </Toolbar>
                     </AppBar>
@@ -308,21 +330,29 @@ function AppDrawer(props) {
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     {/*<MainLayout/>*/}
-                    <Switch>
-                        <Route exact path={"/"} component={()=> <div>Homes</div>}/>
-                        <Route path={"/dashboard"} component={Dashboard}/>
-                        {/*<Route path={"/project"} component={MainLayout}/>*/}
-                        {/*<Route path={"/client"} component={RegisterEmployee}/>*/}
-                        <Route path={"/admin"} component={()=> <div><Admin setSelectedMenuItem={setSelectedMenuItem}/></div>}/>
+
+                        <Switch>
+                            <Redirect exact from={"/drawer"} to={"/drawer/dashboard"}/>
+                        </Switch>
 
 
-                    </Switch>
+                        <Switch>
+                            <Route path={"/drawer/yes"} component={()=><div>YES YES</div>}/>
+                            <Route path={"/drawer/dashboard"} component={Dashboard}/>
+                            {/*<Route path={"/project"} component={MainLayout}/>*/}
+                            {/*<Route path={"/client"} component={RegisterEmployee}/>*/}
+                            <Route path={"/drawer/admin"} render={()=> <Admin setSelectedMenuItem={setSelectedMenuItem} />}/>
+                            {/*<Route path={"/admin/departmentList"} component={DepartmentList}/>*/}
+
+                        </Switch>
+
+
                 </main>
             </Grid>
 
 
         </div>
-    );
+    ));
 }
 
 export default AppDrawer;

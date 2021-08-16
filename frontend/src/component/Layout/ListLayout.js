@@ -5,7 +5,7 @@ import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
     layout1:{
-        height: "38.5em",
+        height: "38.3em",
         backgroundColor: "white",
         overflow: "auto",
         border: "2px solid",

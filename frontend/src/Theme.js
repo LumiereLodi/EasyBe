@@ -31,6 +31,12 @@ export default createTheme({
             fontSize: "1.3em",
             fontWeight: "bold",
             textTransform: "none"
+        },
+        h1:{
+            color: "black",
+            fontSize: "1.3em",
+            fontWeight: "bold",
+            textTransform: "none"
         }
 
 
@@ -41,12 +47,15 @@ export default createTheme({
                 color: easyBeige,
                 fontSize: "1rem",
 
+
+
             }
         },
         MuiInput: {
             root: {
                 color:"white",
                 fontWeight: 300,
+
 
 
             },

@@ -1,14 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Grid,
-    Paper,
     Typography,
-    Divider,
-    InputLabel,
-    Button,
-    InputBase,
-    useMediaQuery
+
 } from "@material-ui/core";
+import {useObserver} from "mobx-react"
+import {useAppState} from "../WithStore"
+import axios from "axios";
 
 
 import {makeStyles} from "@material-ui/styles";
@@ -60,6 +58,32 @@ const useStyles = makeStyles(theme =>({
 }))
 function Index(props) {
     const classes = useStyles();
+    const [completedProject, setCompletedProject] = useState(0)
+    const [activeProject, setActiveProject] = useState(0)
+    const [backlogProject, setBacklogProject] = useState(0)
+
+    useEffect(()=>{
+        async function fetchData(){
+            
+            try{
+                const status = "completed";
+                const completedProject = await axios.get("http://localhost:3001/dashboard/project/completed");
+                setCompletedProject(completedProject.data.count)
+
+                const activeProject = await axios.get("http://localhost:3001/dashboard/project/active")
+                setActiveProject(activeProject.data.count)
+
+                const backlogPorject = await axios.get("http://localhost:3001/dashboard/project/status/backlog")
+                setBacklogProject(backlogPorject.data.count)
+            }catch (e) {
+                console.log(e)
+            }
+                
+
+        }
+
+        fetchData()
+    })
     return (
         <div>
             <Grid container direction={"column"}>
@@ -72,7 +96,7 @@ function Index(props) {
                                 Active Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "green"}}>
-                                32
+                                {activeProject}
                             </Typography>
 
                         </Grid>
@@ -81,7 +105,7 @@ function Index(props) {
                                 Completed Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "blue"}}>
-                                25
+                                {completedProject}
                             </Typography>
                         </Grid>
                         <Grid item md className={classes.projectStatusContainer}  style={{textAlign: "center"}}>
@@ -89,7 +113,7 @@ function Index(props) {
                                 Backlog Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "red"}}>
-                                3
+                                {backlogProject}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -97,7 +121,7 @@ function Index(props) {
                 <Grid item className={classes.overviewContainer}>
                     <Grid container direction={"column"} >
                         <Grid item style={{marginBottom: "1em",marginTop: "0.5em", fontSize: "1em", fontWeight: "bold", fontFamily: "sans-serif"}}>
-                            Project Overview
+                            Projects Overview
                         </Grid>
                         <Grid item style={{marginBottom: "1em"}} >
                             <Grid container justify={"center"} className={classes.overviewTitleContainer} alignItems={"center"}>
