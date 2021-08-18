@@ -73,11 +73,11 @@ function Admin(props) {
         //     props.setSelectedMenuItem(4);
         //
         // }
-    },[appState, props])
+    },[appState])
     return (
         <div>
 
-            <AppBar tab={tab} addButton={addButton} value={value} setValue={setValue}/>
+            <AppBar tab={tab} addButton={addButton} value={value} setValue={setValue} location={"admin"}/>
             <Switch>
                <Redirect exact from={"/drawer/admin"} to={"/drawer/admin/departmentList"}/>
             </Switch>

@@ -27,9 +27,9 @@ const useStyles = makeStyles(theme => ({
     },
     backgroundStyle: {
         boxShadow: "none",
-        backgroundColor: "transparent",
-        border: "2px solid",
-        borderColor: "rgba(35,37,38,0.25)",
+        backgroundColor: theme.palette.primary.main,
+        //border: "2px solid",
+       // borderColor: "rgba(35,37,38,0.25)",
     },
     tab:{
         ...theme.typography.tab,
@@ -68,13 +68,15 @@ function Try(props) {
                     <Grid container style={{height: "100%"}} alignItems={"center"}>
                         <Grid item style={{width: "100%"}}>
                             <Toolbar>
-                                <Tabs
-                                    value={props.value}
-                                    onChange={handleChange}
-                                    indicatorColor="none"
 
-                                >
-                                    {props.tab.map((tab, index) => (
+                                {props.location === "admin" ?
+                                    <Tabs
+                                        value={props.value}
+                                        onChange={handleChange}
+                                        indicatorColor="none"
+
+                                    >
+                                        {props.tab.map((tab, index) => (
 
                                             <Tab
                                                 key={index}
@@ -85,11 +87,31 @@ function Try(props) {
                                             />
 
 
-                                    ))}
+                                        ))}
 
 
-                                </Tabs>
-                                {props.addButton}
+                                    </Tabs>
+                                     :
+                                    <Tabs
+                                        indicatorColor="none"
+                                        value={0}
+
+                                    >
+                                        <Tab
+                                            className={classes.tab}
+                                            style={{opacity: 1}}
+                                            label={props.title}
+                                            disableRipple
+                                            component={Link}
+                                            to={props.link}
+
+
+                                        />
+                                    </Tabs>
+
+                                        }
+                                {props.addButton }
+
                             </Toolbar>
                         </Grid>
                     </Grid>

@@ -8,7 +8,7 @@ import LoginForm from "./component/Auth/LoginForm"
 import appDrawer from "./component/Drawer";
 import admin from "./component/Views/Managers/humanResource/Admin"
 import departmentlist from  "./component/Views/Managers/humanResource/DepartmentList"
-
+import {useObserver} from "mobx-react"
 function App() {
     return (
         <ThemeProvider theme={theme}>

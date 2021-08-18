@@ -20,6 +20,8 @@ import Grid from "@material-ui/core/Grid";
 import {Link} from "@material-ui/core";
 import Avatar from '@material-ui/core/Avatar';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 
 
@@ -33,6 +35,8 @@ import ResearchMenu from "../Views/Managers/research/Menu"
 import HRMenu from "../Views/Managers/humanResource/Menu"
 // import RegisterEmployee from "../Views/Managers/humanResource/RegisterEmployee";
 import Admin from "../Views/Managers/humanResource/Admin";
+import Client from "../Views/Managers/sales/client"
+import Project from "../Views/Managers/sales/Project";
 import DepartmentList from "../Views/Managers/humanResource/DepartmentList";
 // import Tabs from "@material-ui/core/Tabs";
 // import Tab from "@material-ui/core/Tab";
@@ -157,6 +161,9 @@ const useStyles = makeStyles(theme =>({
         },
 
 
+    },
+    menu:{
+        borderRadius: 0
     }
 
 }))
@@ -172,37 +179,74 @@ function AppDrawer(props) {
 
 
     const [openMobileDrawer, setOpenMobileDrawer] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [openMenu, setOpenMenu] = useState(false);
+
     // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [value, setValue] = useState()
     const [department, setDepartment] = useState('')
     const [position, setPosition] = useState('')
+    const [reload, setReload] = useState(false);
+    const [initial, setInitial] = useState('')
 
     const handleChange=(e, newValue)=>{
         setValue(newValue)
+    }
+    const handleClick = (e) => {
+
+        setAnchorEl(e.currentTarget);
+        setOpenMenu(true);
+
+    };
+    const handleClose = (e) => {
+        setAnchorEl(null);
+        setOpenMenu(false);
+    };
+
+    const logout = async () =>{
+        
+        try{
+            const result = await axios.get("http://localhost:3001/logout", {
+                withCredentials: true
+            })
+        }catch (err) {
+            alert(err)
+        }
+       
+
+        //window.location.reload(true)
+        setReload(!reload)
+
     }
 
 
     useEffect(()=>{
         async function authenticate(){
 
-                const result = await axios.get("http://localhost:3001/authenticate", {
-                    withCredentials: true
-                })
+            const result = await axios.get("http://localhost:3001/authenticate", {
+                withCredentials: true
+            })
 
-                if(!result.data.authenticated){
-                    history.replace('/')
-                }else{
-                    const response = await axios.get(`http://localhost:3001/userinformation/${result.data.employeeid}`)
-                    appState.setUserInfo(response.data.user)
-                    setDepartment(response.data.user.departmentid)
-                    setPosition(response.data.user.position)
+            if(!result.data.authenticated){
+                history.replace('/')
+            }else{
 
-                }
+                const response = await axios.get(`http://localhost:3001/userinformation/${result.data.employeeid}`)
+                 appState.setUserInfo(response.data.user)
+                 setDepartment(result.data.departmentid)
+                 setPosition(result.data.position)
+                 setInitial(result.data.givennames)
+
+
+
+
+            }
 
 
 
         }
+
 
         authenticate()
 
@@ -230,11 +274,13 @@ function AppDrawer(props) {
                         <Grid item sm={8}>
                             <Grid container alignItems={"center"} style={{height: "100%"}}>
                                 <Grid item>
-                                    <Avatar style={{height: "1.5em", width: "1.5em", marginLeft: "0.2em", marginRight: "0.5em"}}>LL</Avatar>
+                                    <Avatar  style={{height: "1.5em", width: "1.5em", marginLeft: "0.2em", marginRight: "0.5em"}}>{initial.charAt(0)}</Avatar>
                                 </Grid>
-                                <Grid item>
-                                    <Typography>
-                                        {appState.userInfo.lastname}
+                                <Grid item >
+                                    <Typography style={{fontFamily: 'Open Sans Condensed, sans-serif'}}>
+                                        {initial.split(" ", 1)[0].length < 11 ? initial.split(" ", 1)[0].charAt(0).toUpperCase()
+                                            + initial.split(" ", 1)[0].slice(1)  :
+                                            <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span> }
                                     </Typography>
                                     <Typography style={{fontSize: "0.7em",color: "#878787"}}>
                                         {appState.userInfo.departmentname} {appState.userInfo.position}
@@ -247,13 +293,37 @@ function AppDrawer(props) {
 
                         <Grid item sm={4}>
                             <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
-                                <IconButton aria-label="display more actions" edge="center" color="inherit">
+                                <IconButton aria-label="display more actions"
+                                            edge="center"
+                                            color="inherit"
+                                            onClick={(e) => handleClick(e)}
+                                            aria-owns={anchorEl ? "logout" : undefined}
+                                            aria-haspopup={anchorEl ? true : undefined}
+
+                                >
                                     <MoreHorizIcon />
                                 </IconButton>
+                                <Menu
+                                    id={"logout"}
+                                    open={openMenu}
+                                    onClose={handleClose}
+                                    MenuListProps={{onMouseLeave: handleClose}}
+                                    anchorEl={anchorEl}
+                                    classes={{paper: classes.menu}}
+                                >
+                                    <MenuItem
+                                    onClick={()=> {handleClose(); logout()}}
+                                    style={{fontWeight: "bold"}}
+                                    >
+                                        Log out
+                                    </MenuItem>
+                                </Menu>
 
                             </Grid>
 
                         </Grid>
+
+
 
 
                 </Grid>
@@ -341,8 +411,14 @@ function AppDrawer(props) {
                             <Route path={"/drawer/dashboard"} component={Dashboard}/>
                             {/*<Route path={"/project"} component={MainLayout}/>*/}
                             {/*<Route path={"/client"} component={RegisterEmployee}/>*/}
+
+                            {/**we dont need to pass the prop to the Admin component. this is for learning purpose***/}
                             <Route path={"/drawer/admin"} render={()=> <Admin setSelectedMenuItem={setSelectedMenuItem} />}/>
                             {/*<Route path={"/admin/departmentList"} component={DepartmentList}/>*/}
+                            <Route path={"/drawer/team"} component={()=><div>Team</div>}/>
+                            <Route path={"/drawer/project"} component={Project}/>
+                            <Route path={"/drawer/client"} component={Client}/>
+                            <Route path={"/drawer/analytics"} component={()=><div>Analytics</div>}/>
 
                         </Switch>
 

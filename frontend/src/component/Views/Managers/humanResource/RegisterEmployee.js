@@ -54,7 +54,8 @@ const useStyles = makeStyles(theme => ({
             color: theme.palette.primary.main,
         },
         "& .MuiInputBase-root": {
-            borderRadius: "0.3em"
+            borderRadius: "0.3em",
+           // backgroundColor: "white"
         },
         "& .MuiAutocomplete-root": {
             backgroundColor: "red"
@@ -68,7 +69,8 @@ const useStyles = makeStyles(theme => ({
         borderRadius: "10px",
         color: "white",
         "&:hover": {
-            backgroundColor: theme.palette.primary.light
+            backgroundColor: theme.palette.secondary.light,
+            color: "black"
         }
     }
 }))
@@ -104,26 +106,28 @@ function RegisterEmployee(props) {
             password: ''
         },
         validationSchema: formValidation,
-        onSubmit: async (values) => {
+        onSubmit: async (values,{resetForm}) => {
             const formatedDate = values.dateOfBirth.getFullYear() + "/" + parseInt(values.dateOfBirth.getMonth() + 1) + "/" + values.dateOfBirth.getDate();
             const updatedValues = {...values, dateOfBirth: formatedDate}
             try {
                 const result = await axios.get("http://localhost:3001/email/" + formik.values.email);
                 if (result.data.exist) {
-                    setEmailExist("Email already exist")
+                    setEmailExist("Email already exists")
                 } else {
-                    console.log("email does not exist")
+                    console.log("email does not exists")
                     setEmailExist('')
 
                     const data = JSON.stringify(updatedValues)
                     console.log(data);
                     const response = await axios.post("http://localhost:3001/register", data, {
                         headers: {
-                            'Content-Type': "application/x-www-form-urlencoded"
+                            'Content-Type': "application/json"
                         }
                     });
                     // use a snackbar to show the admin that the empoyee has been added.
                     alert("The employee " + response.data.data[0].givennames + " " + response.data.data[0].lastname + " has been added")
+                    resetForm()
+
                 }
 
 

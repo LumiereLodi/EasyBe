@@ -37,7 +37,7 @@ function Menu(props) {
     const appState = useAppState()
 
 
-    // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
+    const [selectedMenuItem, setSelectedMenuItem] = useState(0);
 
     const routes = [
         {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
@@ -60,29 +60,9 @@ function Menu(props) {
 
         if (window.location.pathname === "/drawer/admin/departmentList" || window.location.pathname === "/drawer/admin/employeeList"
             || window.location.pathname === "/drawer/admin/addDepartment" ||  window.location.pathname=== "/drawer/admin/addEmployee"){
-            props.setSelectedMenuItem(4);
+            setSelectedMenuItem(4);
 
         }
-        // if(window.location.pathname === "/drawer/dashboard" ){
-        //     window.location.pathname = "/drawer/dashboard";
-        //     props.setSelectedMenuItem(0);
-        // }
-        //  if(window.location.pathname === "/drawer/yes"){
-        //     window.location.pathname = "/drawer/yes";
-        //     props.setSelectedMenuItem(1);
-        // }
-        // else if(window.location.pathname === "/drawer/employee"){
-        //     window.location.pathname = "/drawer/employee"
-        //     props.setSelectedMenuItem(2);
-        // }
-        // else if(window.location.pathname === "/drawer/yesy"){
-        //     window.location.pathname = "/drawer/yesy";
-        //     props.setSelectedMenuItem(3);
-        // }
-        // else if(window.location.pathname === "/drawer/admin"){
-        //     window.location.pathname = "/drawer/admin";
-        //     props.setSelectedMenuItem(4);
-        // }
 
 
 
@@ -99,8 +79,8 @@ function Menu(props) {
                                   key={index}
                                   component={Link}
                                   to={route.link}
-                                  onClick={(e) => { props.setSelectedMenuItem(route.activeIndex)}}
-                                  selected={route.activeIndex===props.selectedMenuItem}>
+                                  onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
+                                  selected={route.activeIndex===selectedMenuItem}>
                             {route.icon}
                             <ListItemText >{route.name}</ListItemText>
                         </ListItem>

@@ -27,7 +27,7 @@ export default createTheme({
             fontWeight: "bold"
         },
         tab:{
-            color: "black",
+            color: "white",
             fontSize: "1.3em",
             fontWeight: "bold",
             textTransform: "none"

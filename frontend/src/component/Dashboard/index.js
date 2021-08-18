@@ -5,11 +5,13 @@ import {
 
 } from "@material-ui/core";
 import {useObserver} from "mobx-react"
+import {Observer} from "mobx-react"
 import {useAppState} from "../WithStore"
 import axios from "axios";
 
 
 import {makeStyles} from "@material-ui/styles";
+import AppBar from "../AppBar";
 
 const useStyles = makeStyles(theme =>({
     projectContainer:{
@@ -18,7 +20,8 @@ const useStyles = makeStyles(theme =>({
     },
     projectStatusContainer:{
         backgroundColor: theme.palette.secondary.main,
-        height: "10em"
+        height: "10em",
+        borderRadius: "0.5em"
     },
     projectStatusContainerMargin:{
         marginRight: "1em",
@@ -40,14 +43,15 @@ const useStyles = makeStyles(theme =>({
         height: "2.2em"
     },
     overviewDataContainer:{
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.main,
         borderRadius: "0.5em",
         marginBottom: "1.1em",
-        height: "20.4em"
+        height: "20.4em",
+        overflow: "auto"
 
     },
     overviewData:{
-        marginTop: "0.3em"
+        marginTop: "0.5em"
     },
     activityStatus:{
         fontWeight: "bold",
@@ -58,34 +62,49 @@ const useStyles = makeStyles(theme =>({
 }))
 function Index(props) {
     const classes = useStyles();
+    const appState = useAppState()
+
     const [completedProject, setCompletedProject] = useState(0)
     const [activeProject, setActiveProject] = useState(0)
     const [backlogProject, setBacklogProject] = useState(0)
+    const [projectOverview, setProjectOverview] = useState()
+
 
     useEffect(()=>{
+
         async function fetchData(){
-            
+
             try{
                 const status = "completed";
                 const completedProject = await axios.get("http://localhost:3001/dashboard/project/completed");
-                setCompletedProject(completedProject.data.count)
+                setCompletedProject(completedProject.data.count);
+                appState.setCompletedProject(completedProject.data.count);
 
-                const activeProject = await axios.get("http://localhost:3001/dashboard/project/active")
-                setActiveProject(activeProject.data.count)
+                const activeProject = await axios.get("http://localhost:3001/dashboard/project/active");
+                setActiveProject(activeProject.data.count);
+                appState.setActiveProject(activeProject.data.count);
+                const backlogProject = await axios.get("http://localhost:3001/dashboard/project/status/backlog");
+                setBacklogProject(backlogProject.data.count);
+                appState.setBacklogProject(backlogProject.data.count);
 
-                const backlogPorject = await axios.get("http://localhost:3001/dashboard/project/status/backlog")
-                setBacklogProject(backlogPorject.data.count)
+                console.log("loading...")
+                const overview = await axios.get(`http://localhost:3001/dashboard/overview/${appState.userInfo.departmentid}`)
+                //setProjectOverview(overview.data.data)
+                appState.setPorjectOverview(overview.data.data)
+                console.log(overview)
+                console.log("loaded to the state")
             }catch (e) {
                 console.log(e)
             }
-                
+
 
         }
 
         fetchData()
-    })
-    return (
+    },[completedProject, activeProject,backlogProject, projectOverview ])
+    return useObserver( ()=> (
         <div>
+            <AppBar title="Dashboard" location="dashboard" tab={[]} addButton link/>
             <Grid container direction={"column"}>
 
                 {/**ACTIVE COMPLETED AND BACKLOG**/}
@@ -96,7 +115,7 @@ function Index(props) {
                                 Active Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "green"}}>
-                                {activeProject}
+                                {appState.activeProject.length === 0 ? 0 : appState.activeProject}
                             </Typography>
 
                         </Grid>
@@ -105,7 +124,7 @@ function Index(props) {
                                 Completed Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "blue"}}>
-                                {completedProject}
+                                {appState.completedProject.length === 0 ? 0 : appState.completedProject }
                             </Typography>
                         </Grid>
                         <Grid item md className={classes.projectStatusContainer}  style={{textAlign: "center"}}>
@@ -113,7 +132,7 @@ function Index(props) {
                                 Backlog Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "red"}}>
-                                {backlogProject}
+                                {appState.backlogProject.length === 0 ? 0 : appState.backlogProject}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -140,20 +159,25 @@ function Index(props) {
                             </Grid>
                         </Grid>
                         <Grid item className={classes.overviewDataContainer}>
-                            <Grid container justify={"center"} className={classes.overviewData}>
-                                <Grid item sm style={{textAlign: "center", color: "white"}}>
-                                    Dev front end user managment
+                            {appState.projectOverview.map((project, index)=>(
+                                <Grid key={index} container justify={"center"} className={classes.overviewData}>
+
+                                    <Grid item sm style={{textAlign: "center", color: "black",fontFamily: "Roboto"}}>
+                                        {project.name}
+                                    </Grid>
+                                    <Grid item sm style={{textAlign: "center", color: "black",fontFamily: "Roboto"}}>
+                                        {project.task}
+                                    </Grid>
+                                    <Grid item sm style={{textAlign: "center",color: "black",fontFamily: "Roboto"}}>
+                                        {project.status}
+                                    </Grid>
+                                    <Grid item sm style={{textAlign: "center",color: "black",fontFamily: "Roboto"}}>
+                                        {project.progress}
+                                    </Grid>
                                 </Grid>
-                                <Grid item sm style={{textAlign: "center", color: "white"}}>
-                                    50
-                                </Grid>
-                                <Grid item sm style={{textAlign: "center",color: "white"}}>
-                                    On Track
-                                </Grid>
-                                <Grid item sm style={{textAlign: "center",color: "white"}}>
-                                    85%
-                                </Grid>
-                            </Grid>
+                            ))}
+
+
                         </Grid>
                     </Grid>
                 </Grid>
@@ -161,7 +185,7 @@ function Index(props) {
             </Grid>
 
         </div>
-    );
+    ));
 }
 
 export default Index;

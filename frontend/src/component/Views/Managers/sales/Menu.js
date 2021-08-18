@@ -36,10 +36,10 @@ function Menu(props) {
 
     const routes = [
         {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
-        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/", activeIndex: 1},
+        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/drawer/team", activeIndex: 1},
         {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/project", activeIndex: 2},
-        {name: "Client", icon:<ListItemIcon><BusinessCenterIcon/></ListItemIcon>, link: "/drawer/client", activeIndex: 2},
-        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, activeIndex: 3},
+        {name: "Client", icon:<ListItemIcon><BusinessCenterIcon/></ListItemIcon>, link: "/drawer/client", activeIndex: 3},
+        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>,link:"/drawer/analytics", activeIndex: 4},
 
     ]
     useEffect(()=> {
@@ -52,7 +52,14 @@ function Menu(props) {
                     }
             }
         })
+        if (window.location.pathname === "/drawer/client/clientlist" || window.location.pathname === "/drawer/client/addclient"){
+            setSelectedMenuItem(3);
 
+        }
+        if (window.location.pathname === "/drawer/project/projectlist" || window.location.pathname === "/drawer/project/addproject"){
+            setSelectedMenuItem(2);
+
+        }
     },[selectedMenuItem]);
     return (
         <div>
