@@ -6,7 +6,7 @@ const cors = require("cors")
 const bcrypt = require('bcrypt')
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
-const {createTokens, validateToken} = require('./jwt')
+const {createTokens, validateToken,salesmanagerValidation} = require('./jwt')
 
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -22,6 +22,20 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.get("/email/:email", async (req, res) => {
     const result = await db.query("SELECT email from members where email = $1 ", [req.params.email]);
+    if (result.rowCount === 0) {
+        res.status(200).json({exist: false})
+    } else {
+        res.status(200).json({
+            results: result.rows.length,
+            exist: true,
+            data: result.rows
+        })
+    }
+
+
+})
+app.get("/customer/email/:email", async (req, res) => {
+    const result = await db.query("SELECT email from customer where email = $1 ", [req.params.email]);
     if (result.rowCount === 0) {
         res.status(200).json({exist: false})
     } else {
@@ -134,7 +148,8 @@ app.get("/authenticate", validateToken, (req, res) => {
                 authenticated: req.authenticated,
                 position: req.position,
                 employeeid: req.employeeid,
-                departmentid: req.departmentid
+                departmentid: req.departmentid,
+                givennames: req.givennames
             }
             )
     }catch (error) {
@@ -184,14 +199,72 @@ app.get("/dashboard/project/:status", async (req, res) => {
 app.get("/dashboard/project/status/backlog", async (req, res) => {
     try {
 
-        const retrieve = await db.query("SELECT count(*) from project where projectenddate > Now()")
+        const retrieve = await db.query("SELECT count(*) from project where enddate > Now()")
 
-        res.json(retrieve.rows[0])
+        res.status(200).json(retrieve.rows[0])
     } catch (err) {
         res.status(400).json(err.message)
     }
 })
 
+app.get("/dashboard/overview/:departmentid", async(req, res)=> {
+    try{
+        const result = await db.query("select projects.projectid as projectid, projects.name,totalTasks.totalNumberTasks as Task, (Case when projects.enddate > Now() then 'Delayed' else 'on Track' end) as Status,\n" +
+            "         completedTasks.TaskProgress * 100 / totalTasks.totalNumberTasks || '%' as progress from project as projects\n" +
+            "         inner join(\n" +
+            "           select project.projectid, count(task.taskid) as TaskProgress from task, team, project\n" +
+            "         where project.projectid = team.projectid\n" +
+            "         and team.teamid = task.teamid\n" +
+            "\t\tand project.location = $1\n" +
+            "         and task.taskStatus = 'completed'  group by task.teamid, project.projectid\n" +
+            "\n" +
+            "         ) as completedTasks\n" +
+            "         on projects.projectid = completedTasks.projectid\n" +
+            "\n" +
+            "         inner join(\n" +
+            "           select project.projectid, count(task.taskid) as totalNumberTasks from task, team, project\n" +
+            "         where project.projectid = team.projectid\n" +
+            "\t\t\t and project.location = $1\n" +
+            "         and team.teamid = task.teamid group by task.teamid,project.projectid\n" +
+            "         ) as totalTasks\n" +
+            "         on projects.projectid = totalTasks.projectid \n" +
+            "\t\t \n" +
+            "\t\t ", [req.params.departmentid])
+
+        res.status(200).json({data: result.rows})
+
+    }catch (err) {
+        res.status(400).json(err.message)
+    }
+})
+
+app.get("/customerlist",salesmanagerValidation, async (req, res)=>{
+
+    try{
+        const result = await db.query("SELECT customerid, customername FROM customer ORDER BY createdat ASC")
+        res.status(200).json(result.rows)
+    }catch (e) {
+        res.status(400).json(err.message)
+    }
+})
+
+app.get("/employeelist/:departmentid", async(req, res)=>{
+
+    //departmentid might variable
+    try{
+        const result = await db.query("SELECT employeeid, givennames, lastname FROM members WHERE departmentid = $1 AND position='Staff' ORDER BY createdat ASC", [req.params.departmentid])
+        res.status(200).json(result.rows)
+    }catch (e) {
+        res.status(400).json(err.message)
+    }
+})
+app.get("/logout", (req, res)=>{
+
+        // clear cookie
+        res.clearCookie('access-token');
+        res.end()
+
+})
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`server listening on port ${port}...`)
