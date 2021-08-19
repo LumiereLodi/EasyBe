@@ -94,15 +94,17 @@ function AddClient(props) {
                     setEmailExist('')
 
                     const data = JSON.stringify(values)
-                   alert(data);
+
+                    const response = await axios.post("http://localhost:3001/addcustomers/" + appState.userInfo.employeeid, data, {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': "application/json"
+                        }
+                    });
+                    //use a snackbar to show the admin that the empoyee has been added.
+                    alert("Customer " + response.data.name +  " has been added")
+                    console.log(response)
                     resetForm({})
-                    // const response = await axios.post("http://localhost:3001/register", data, {
-                    //     headers: {
-                    //         'Content-Type': "application/json"
-                    //     }
-                    // });
-                    // use a snackbar to show the admin that the empoyee has been added.
-                    //alert("Customer " + response.data.data[0].name +  " has been added")
 
                 }
 

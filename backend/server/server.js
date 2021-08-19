@@ -1,12 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-const db = require("./db")
+const db = require("../models/db")
 const app = express();
 const cors = require("cors")
 const bcrypt = require('bcrypt')
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
-const {createTokens, validateToken,salesmanagerValidation} = require('./jwt')
+const {createTokens, validateToken,salesmanagerValidation} = require('../jwt')
 
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -241,9 +241,9 @@ app.get("/dashboard/overview/:departmentid", async(req, res)=> {
 app.get("/customerlist",salesmanagerValidation, async (req, res)=>{
 
     try{
-        const result = await db.query("SELECT customerid, customername FROM customer ORDER BY createdat ASC")
+        const result = await db.query("SELECT customerid, name FROM customer ORDER BY createdat ASC")
         res.status(200).json(result.rows)
-    }catch (e) {
+    }catch (err) {
         res.status(400).json(err.message)
     }
 })
@@ -252,7 +252,7 @@ app.get("/employeelist/:departmentid", async(req, res)=>{
 
     //departmentid might variable
     try{
-        const result = await db.query("SELECT employeeid, givennames, lastname FROM members WHERE departmentid = $1 AND position='Staff' ORDER BY createdat ASC", [req.params.departmentid])
+        const result = await db.query("SELECT employeeid, givennames, lastname FROM members WHERE departmentid = $1 AND position='Staff' ORDER BY createdat DESC", [req.params.departmentid])
         res.status(200).json(result.rows)
     }catch (e) {
         res.status(400).json(err.message)
@@ -265,6 +265,56 @@ app.get("/logout", (req, res)=>{
         res.end()
 
 })
+
+
+app.post("/addcustomers/:managerid",salesmanagerValidation, async(req, res) => {
+
+    try{
+        const client = await db.query ("INSERT INTO \n" +
+            "customer(customerid,name,\n" +
+            "\t\t email, phone,contactpersonname,\n" +
+            "\t\t postalcode, address, createdby)\n" +
+            "VALUES (nextval('customer_sequence'),$1,$2,$3,$4,$5,$6,$7) RETURNING * ", [
+            req.body.name,
+            req.body.email,
+            req.body.phone,
+            req.body.contactPerson,
+            req.body.postalCode,
+            req.body.address,
+            req.params.managerid
+        ]);
+
+
+        res.status(200).json(client.rows[0]);
+
+    }catch(error){
+        res.status(400).json(error)
+    }
+});
+
+app.post("/addprojects/:managerid",salesmanagerValidation, async (req, res) => {
+
+    try {
+        const outcome = await db.query("INSERT INTO \n" +
+            "project(projectid, name, customerid,\n" +
+            "\t\t description,startdate,\n" +
+            "\t\t enddate, staff,createdby)\n" +
+            "VALUES(nextval('project_sequence'),$1,$2,$3,$4,$5,$6,$7) RETURNING *", [
+            req.body.name,
+            req.body.customer,
+            req.body.description,
+            req.body.startDate,
+            req.body.endDate,
+            req.body.staff,
+            req.params.managerid
+        ]);
+
+        res.json(outcome.rows[0]);
+
+    } catch (e) {
+        console.log(e)
+    }
+});
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`server listening on port ${port}...`)

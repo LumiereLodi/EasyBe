@@ -207,7 +207,7 @@ function AppDrawer(props) {
     const logout = async () =>{
         
         try{
-            const result = await axios.get("http://localhost:3001/logout", {
+            await axios.get("http://localhost:3001/logout", {
                 withCredentials: true
             })
         }catch (err) {
