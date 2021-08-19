@@ -1,4 +1,7 @@
 const db = require("../models/db");
+const bcrypt = require("bcrypt");
+const {createTokens, validateToken,salesmanagerValidation} = require('../jwt');
+
 
 module.exports = {
     userInfo: async (req, res)=>{
@@ -83,7 +86,7 @@ module.exports = {
     logout: async(req, res)=> {
         // clear cookie
         res.clearCookie('access-token');
-        res.end()
+        res.end();
     }
 
 }

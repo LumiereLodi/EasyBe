@@ -136,7 +136,7 @@ function Index(props) {
         validationSchema: loginForm,
         onSubmit: async (values) =>  {
         try{
-            const response = await axios.post("http://localhost:3001/login",
+            const response = await axios.post("http://localhost:3001/user/login",
                 JSON.stringify(values,null,2), {
                     headers: {
                         'Content-Type': "application/json"
@@ -162,15 +162,6 @@ function Index(props) {
         }catch (error) {
             console.log(error)
         }
-            
-            // try{
-            //     const test = await axios.get("http://localhost:3001/profile", {
-            //         withCredentials: true
-            //     });
-            //     console.log(test.data)
-            // }catch (e) {
-            //     console.log(e)
-            // }
 
         }
     });

@@ -52,8 +52,8 @@ function Menu(props) {
         [...routes].forEach(route => {
             switch(window.location.pathname){
                 case `${route.link}`:
-                    if(route.activeIndex !== props.selectedMenuItem){
-                        props.setSelectedMenuItem(route.activeIndex);
+                    if(route.activeIndex !== selectedMenuItem){
+                        setSelectedMenuItem(route.activeIndex);
                     }
             }
         })
@@ -75,7 +75,7 @@ function Menu(props) {
                 {routes.map((route, index) => (
 
                         <ListItem button
-                                  className={props.selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
+                                  className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
                                   key={index}
                                   component={Link}
                                   to={route.link}

@@ -207,7 +207,7 @@ function AppDrawer(props) {
     const logout = async () =>{
         
         try{
-            await axios.get("http://localhost:3001/logout", {
+            await axios.get("http://localhost:3001/user/logout", {
                 withCredentials: true
             })
         }catch (err) {
@@ -232,7 +232,7 @@ function AppDrawer(props) {
                 history.replace('/')
             }else{
 
-                const response = await axios.get(`http://localhost:3001/userinformation/${result.data.employeeid}`)
+                const response = await axios.get(`http://localhost:3001/user/userinformation/${result.data.employeeid}`)
                  appState.setUserInfo(response.data.user)
                  setDepartment(result.data.departmentid)
                  setPosition(result.data.position)

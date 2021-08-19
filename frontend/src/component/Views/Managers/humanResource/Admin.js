@@ -53,7 +53,7 @@ function Admin(props) {
 
     useEffect( async() => {
             try{
-                const response = await axios.get("http://localhost:3001/admin/department/departmentlist");
+                const response = await axios.get("http://localhost:3001/hr/admin/department/departmentlist");
 
 
                 appState.addDepartmentName(response.data.departmentList);

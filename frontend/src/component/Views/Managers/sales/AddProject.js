@@ -107,7 +107,7 @@ function AddProject(props) {
                 console.log("inside submit")
                 const data = JSON.stringify(updatedValue)
 
-                const response = await axios.post("http://localhost:3001/addprojects/" + appState.userInfo.employeeid, data, {
+                const response = await axios.post("http://localhost:3001/sales/addprojects/" + appState.userInfo.employeeid, data, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': "application/json"

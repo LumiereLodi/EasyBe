@@ -1,4 +1,4 @@
-const {createTokens, validateToken,salesmanagerValidation} = require('../jwt')
+const {createTokens, validateToken,salesmanagerValidation} = require('../jwt');
 const db = require("../models/db");
 
 module.exports = {
