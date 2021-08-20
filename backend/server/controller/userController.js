@@ -99,7 +99,7 @@ module.exports = {
     logout: async(req, res)=> {
         // clear cookie
         res.clearCookie('access-token');
-        res.end();
+        res.json("downloaded");
     }
 
 }
