@@ -46,7 +46,7 @@ function Client(props) {
     return (
         <div>
 
-            <AppBar tab={[]} title={"Clients"} addButton={addButton} link={"/drawer/client/clientlist"}/>
+            <AppBar tab={[]} title={"Customers"} addButton={addButton} link={"/drawer/client/clientlist"}/>
             <Switch>
                 <Redirect exact from={"/drawer/client"} to={"/drawer/client/clientlist"}/>
             </Switch>

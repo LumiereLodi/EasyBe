@@ -3,16 +3,16 @@ import {Grid} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
-    layout:{
+    layout: {
         height: "38.3em",
         marginLeft: "1em",
         marginRight: "0.3em",
         backgroundColor: theme.palette.secondary.main,
-       // border: "2px solid",
-       // borderColor: "rgba(35,37,38,0.25)",
+        // border: "2px solid",
+        // borderColor: "rgba(35,37,38,0.25)",
         [theme.breakpoints.down("sm")]: {
             marginTop: "2em",
-            marginLeft:0
+            marginLeft: 0
         },
         overflow: "auto",
         paddingLeft: "1em",
@@ -27,20 +27,20 @@ function Details(props) {
     const classes = useStyles();
     return (
 
-            <Grid item
+        <Grid item
 
-                  className={classes.layout}
-                  md
-                  xs={12}
-                  direction={"column"}
+              className={classes.layout}
+              md
+              xs={12}
+              direction={"column"}
 
-            >
-                {props.details}
-                <Grid container className="grid-container">
+        >
+            {props.details}
+            <Grid container className="grid-container">
 
 
-                </Grid>
             </Grid>
+        </Grid>
     );
 }
 

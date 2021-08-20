@@ -4,9 +4,6 @@ import Details from "../../../Layout/Details";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
@@ -95,14 +92,14 @@ function AddClient(props) {
 
                     const data = JSON.stringify(values)
 
-                    const response = await axios.post("http://localhost:3001/sales/addcustomers/" + appState.userInfo.employeeid, data, {
+                    const response = await axios.post("http://localhost:3001/sales/addcustomer/" + appState.userInfo.employeeid, data, {
                         withCredentials: true,
                         headers: {
                             'Content-Type': "application/json"
                         }
                     });
                     //use a snackbar to show the admin that the empoyee has been added.
-                    alert("Customer " + response.data.name +  " has been added")
+                    alert("Customer " + response.data.name + " has been added")
                     console.log(response)
                     resetForm({})
 
@@ -191,7 +188,7 @@ function AddClient(props) {
                                    }}
                         />
                     </Grid>
-                    <Grid item sm className={classes.textFieldContainer} >
+                    <Grid item sm className={classes.textFieldContainer}>
                         <TextField fullWidth
                                    id={"postalCode"}
                                    variant={"filled"}

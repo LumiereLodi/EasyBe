@@ -7,15 +7,14 @@ import {
     TextField,
 } from "@material-ui/core";
 import {useAppState} from "../../WithStore"
-import appDrawer from "../../Drawer"
-import {Link,Redirect, Route, Switch, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 import {makeStyles} from "@material-ui/styles";
 
 import easybeLogo from "../../../assets/EasyBe.png";
 
 import * as yup from 'yup';
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 import axios from "axios";
 
 
@@ -114,54 +113,53 @@ function Index(props) {
     const appState = useAppState()
     const history = useHistory();
 
-    useEffect(()=>{
-        async function authenticate(){
+    useEffect(() => {
+        async function authenticate() {
             const result = await axios.get("http://localhost:3001/authenticate", {
                 withCredentials: true
             })
 
-            if(result.data.authenticated){
+            if (result.data.authenticated) {
                 history.replace('/drawer')
             }
         }
 
         authenticate()
 
-    })
+    }, [])
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
         },
         validationSchema: loginForm,
-        onSubmit: async (values) =>  {
-        try{
-            const response = await axios.post("http://localhost:3001/user/login",
-                JSON.stringify(values,null,2), {
-                    headers: {
-                        'Content-Type': "application/json"
-                    },
-                    withCredentials: true,
-                    //credentials: 'include'
-                });
-            console.log(response.data.status)
-            if(!response.data.status){
-                setEmailMessage("Incorrect Information. Try again.");
-                setPasswordMessage("Incorrect Information. Try again.");
+        onSubmit: async (values) => {
+            try {
+                const response = await axios.post("http://localhost:3001/user/login",
+                    JSON.stringify(values, null, 2), {
+                        headers: {
+                            'Content-Type': "application/json"
+                        },
+                        withCredentials: true,
+                        //credentials: 'include'
+                    });
+                console.log(response.data.status)
+                if (!response.data.status) {
+                    setEmailMessage("Incorrect Information. Try again.");
+                    setPasswordMessage("Incorrect Information. Try again.");
 
+                } else {
+                    setEmailMessage('');
+                    setPasswordMessage('');
+
+                    appState.setAuth(true);
+                    history.replace('/drawer')
+
+                }
+
+            } catch (error) {
+                console.log(error)
             }
-            else{
-                setEmailMessage('');
-                setPasswordMessage('');
-
-                appState.setAuth(true);
-                history.replace('/drawer')
-
-            }
-
-        }catch (error) {
-            console.log(error)
-        }
 
         }
     });
@@ -205,7 +203,11 @@ function Index(props) {
                                                        id="email"
                                                        label="Email"
                                                        value={formik.values.email}
-                                                       onChange={(e)=> {formik.handleChange(e); setEmailMessage('');setPasswordMessage('')}}
+                                                       onChange={(e) => {
+                                                           formik.handleChange(e);
+                                                           setEmailMessage('');
+                                                           setPasswordMessage('')
+                                                       }}
                                                        error={emailMessage.length === 0 ? Boolean(formik.errors.email) : true}
                                                        helperText={emailMessage.length === 0 ? formik.errors.email : emailMessage}
                                             />
@@ -218,9 +220,13 @@ function Index(props) {
                                                        label="Password"
                                                        type={"password"}
                                                        value={formik.values.password}
-                                                       onChange={(e)=> {formik.handleChange(e); setPasswordMessage('');setEmailMessage('')}}
+                                                       onChange={(e) => {
+                                                           formik.handleChange(e);
+                                                           setPasswordMessage('');
+                                                           setEmailMessage('')
+                                                       }}
                                                        error={passwordMessage.length === 0 ? Boolean(formik.errors.password) : true}
-                                                       helperText={ passwordMessage.length === 0 ? formik.errors.password : passwordMessage}
+                                                       helperText={passwordMessage.length === 0 ? formik.errors.password : passwordMessage}
                                             />
 
                                         </Grid>

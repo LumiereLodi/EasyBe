@@ -1,11 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Grid,
-    Typography,
-
-} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {useObserver} from "mobx-react"
-import {Observer} from "mobx-react"
 import {useAppState} from "../WithStore"
 import axios from "axios";
 
@@ -13,28 +8,28 @@ import axios from "axios";
 import {makeStyles} from "@material-ui/styles";
 import AppBar from "../AppBar";
 
-const useStyles = makeStyles(theme =>({
-    projectContainer:{
+const useStyles = makeStyles(theme => ({
+    projectContainer: {
         marginRight: "0.3em",
         marginBottom: "1em"
     },
-    projectStatusContainer:{
+    projectStatusContainer: {
         backgroundColor: theme.palette.secondary.main,
         height: "10em",
         borderRadius: "0.5em"
     },
-    projectStatusContainerMargin:{
+    projectStatusContainerMargin: {
         marginRight: "1em",
         marginLeft: "1em"
     },
-    overviewContainer:{
+    overviewContainer: {
         //backgroundColor: theme.palette.secondary.main,
         marginRight: "0.3em",
         paddingRight: "1.5em",
         paddingLeft: "1.5em"
 
     },
-    overviewText:{
+    overviewText: {
         ...theme.typography.dashboard
     },
     overviewTitleContainer: {
@@ -42,7 +37,7 @@ const useStyles = makeStyles(theme =>({
         borderRadius: "0.5em",
         height: "2.2em"
     },
-    overviewDataContainer:{
+    overviewDataContainer: {
         backgroundColor: theme.palette.secondary.main,
         borderRadius: "0.5em",
         marginBottom: "1.1em",
@@ -50,16 +45,17 @@ const useStyles = makeStyles(theme =>({
         overflow: "auto"
 
     },
-    overviewData:{
+    overviewData: {
         marginTop: "0.5em"
     },
-    activityStatus:{
+    activityStatus: {
         fontWeight: "bold",
         fontsize: "1em",
         marginBottom: "0.1em",
         marginTop: "1em"
     }
 }))
+
 function Index(props) {
     const classes = useStyles();
     const appState = useAppState()
@@ -70,12 +66,11 @@ function Index(props) {
     const [projectOverview, setProjectOverview] = useState()
 
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        async function fetchData(){
+        async function fetchData() {
 
-            try{
-                const status = "completed";
+            try {
                 const completedProject = await axios.get("http://localhost:3001/dashboard/project/completed");
                 setCompletedProject(completedProject.data.count);
                 appState.setCompletedProject(completedProject.data.count);
@@ -87,13 +82,11 @@ function Index(props) {
                 setBacklogProject(backlogProject.data.count);
                 appState.setBacklogProject(backlogProject.data.count);
 
-                console.log("loading...")
                 const overview = await axios.get(`http://localhost:3001/dashboard/overview/${appState.userInfo.departmentid}`)
-                //setProjectOverview(overview.data.data)
                 appState.setPorjectOverview(overview.data.data)
                 console.log(overview)
-                console.log("loaded to the state")
-            }catch (e) {
+
+            } catch (e) {
                 console.log(e)
             }
 
@@ -101,15 +94,15 @@ function Index(props) {
         }
 
         fetchData()
-    },[completedProject, activeProject,backlogProject, projectOverview ])
-    return useObserver( ()=> (
+    }, [appState.completedProject])
+    return useObserver(() => (
         <div>
             <AppBar title="Dashboard" location="dashboard" tab={[]} addButton link/>
             <Grid container direction={"column"}>
 
                 {/**ACTIVE COMPLETED AND BACKLOG**/}
                 <Grid item className={classes.projectContainer}>
-                    <Grid container jusitfy={"center"} >
+                    <Grid container jusitfy={"center"}>
                         <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}}>
                             <Typography className={classes.activityStatus}>
                                 Active Projects
@@ -119,15 +112,16 @@ function Index(props) {
                             </Typography>
 
                         </Grid>
-                        <Grid item md className={[classes.projectStatusContainer, classes.projectStatusContainerMargin]}  style={{textAlign: "center"}}>
+                        <Grid item md className={[classes.projectStatusContainer, classes.projectStatusContainerMargin]}
+                              style={{textAlign: "center"}}>
                             <Typography className={classes.activityStatus}>
                                 Completed Projects
                             </Typography>
                             <Typography style={{fontSize: "4em", color: "blue"}}>
-                                {appState.completedProject.length === 0 ? 0 : appState.completedProject }
+                                {appState.completedProject.length === 0 ? 0 : appState.completedProject}
                             </Typography>
                         </Grid>
-                        <Grid item md className={classes.projectStatusContainer}  style={{textAlign: "center"}}>
+                        <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}}>
                             <Typography className={classes.activityStatus}>
                                 Backlog Projects
                             </Typography>
@@ -138,12 +132,19 @@ function Index(props) {
                     </Grid>
                 </Grid>
                 <Grid item className={classes.overviewContainer}>
-                    <Grid container direction={"column"} >
-                        <Grid item style={{marginBottom: "1em",marginTop: "0.5em", fontSize: "1em", fontWeight: "bold", fontFamily: "sans-serif"}}>
+                    <Grid container direction={"column"}>
+                        <Grid item style={{
+                            marginBottom: "1em",
+                            marginTop: "0.5em",
+                            fontSize: "1em",
+                            fontWeight: "bold",
+                            fontFamily: "sans-serif"
+                        }}>
                             Projects Overview
                         </Grid>
-                        <Grid item style={{marginBottom: "1em"}} >
-                            <Grid container justify={"center"} className={classes.overviewTitleContainer} alignItems={"center"}>
+                        <Grid item style={{marginBottom: "1em"}}>
+                            <Grid container justify={"center"} className={classes.overviewTitleContainer}
+                                  alignItems={"center"}>
                                 <Grid item sm style={{textAlign: "center"}} className={classes.overviewText}>
                                     Project
                                 </Grid>
@@ -159,19 +160,19 @@ function Index(props) {
                             </Grid>
                         </Grid>
                         <Grid item className={classes.overviewDataContainer}>
-                            {appState.projectOverview.map((project, index)=>(
+                            {appState.projectOverview.map((project, index) => (
                                 <Grid key={index} container justify={"center"} className={classes.overviewData}>
 
-                                    <Grid item sm style={{textAlign: "center", color: "black",fontFamily: "Roboto"}}>
+                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.name}
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center", color: "black",fontFamily: "Roboto"}}>
+                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.task}
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center",color: "black",fontFamily: "Roboto"}}>
+                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.status}
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center",color: "black",fontFamily: "Roboto"}}>
+                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.progress}
                                     </Grid>
                                 </Grid>

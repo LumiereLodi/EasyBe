@@ -13,7 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
 import {makeStyles} from "@material-ui/styles";
 
-const useStyles = makeStyles(theme =>({
+const useStyles = makeStyles(theme => ({
 
     drawerItem: {
         color: "white",
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme =>({
         }
 
     },
-    drawerItemSelected:{
+    drawerItemSelected: {
         opacity: 1
     }
 
@@ -35,49 +35,71 @@ function Menu(props) {
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
 
     const routes = [
-        {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
+        {
+            name: "Dashboard",
+            icon: <ListItemIcon><DashboardIcon/></ListItemIcon>,
+            link: "/drawer/dashboard",
+            activeIndex: 0
+        },
         {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/drawer/team", activeIndex: 1},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/project", activeIndex: 2},
-        {name: "Client", icon:<ListItemIcon><BusinessCenterIcon/></ListItemIcon>, link: "/drawer/client", activeIndex: 3},
-        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>,link:"/drawer/analytics", activeIndex: 4},
+        {
+            name: "Project",
+            icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>,
+            link: "/drawer/project",
+            activeIndex: 2
+        },
+        {
+            name: "Customer",
+            icon: <ListItemIcon><BusinessCenterIcon/></ListItemIcon>,
+            link: "/drawer/client",
+            activeIndex: 3
+        },
+        {
+            name: "Analytics",
+            icon: <ListItemIcon><TimelineIcon/></ListItemIcon>,
+            link: "/drawer/analytics",
+            activeIndex: 4
+        },
 
     ]
-    useEffect(()=> {
+    useEffect(() => {
 
         [...routes].forEach(route => {
-            switch(window.location.pathname){
+            switch (window.location.pathname) {
                 case `${route.link}`:
-                    if(route.activeIndex !== selectedMenuItem){
+                    if (route.activeIndex !== selectedMenuItem) {
                         setSelectedMenuItem(route.activeIndex);
                     }
             }
         })
-        if (window.location.pathname === "/drawer/client/clientlist" || window.location.pathname === "/drawer/client/addclient"){
+        if (window.location.pathname === "/drawer/client/clientlist" || window.location.pathname === "/drawer/client/addclient") {
             setSelectedMenuItem(3);
 
         }
-        if (window.location.pathname === "/drawer/project/projectlist" || window.location.pathname === "/drawer/project/addproject"){
+        if (window.location.pathname === "/drawer/project/projectlist" || window.location.pathname === "/drawer/project/addproject") {
             setSelectedMenuItem(2);
 
         }
-    },[selectedMenuItem]);
+    }, [selectedMenuItem]);
     return (
         <div>
             <List disablePadding>
                 {routes.map((route, index) => (
 
-                        <ListItem button
-                                  className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
-                                  key={index}
-                                  onClick={(e) => { setSelectedMenuItem(route.activeIndex)}}
-                                  selected={route.activeIndex===selectedMenuItem}
-                                  component={Link}
-                                  to={route.link}
-                        >
-                            {route.icon}
-                            <ListItemText >{route.name}</ListItemText>
+                    <ListItem button
+                              className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
+                              key={index}
+                              onClick={(e) => {
+                                  setSelectedMenuItem(route.activeIndex)
+                              }}
+                              selected={route.activeIndex === selectedMenuItem}
+                              component={Link}
+                              to={route.link}
+                    >
+                        {route.icon}
+                        <ListItemText>{route.name}</ListItemText>
 
-                        </ListItem>
+                    </ListItem>
 
                 ))}
 

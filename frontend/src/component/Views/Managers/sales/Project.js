@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import AppBar from "../../../AppBar";
 import {Link, Redirect, Route, Switch} from "react-router-dom";
-import ClientList from "./ClientList";
-import AddClient from "./AddClient";
 import {useAppState} from "../../../WithStore";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,7 +9,7 @@ import ProjectList from "./ProjectList";
 import AddProject from "./AddProject";
 import axios from "axios";
 
-const useStyles = makeStyles(theme =>({
+const useStyles = makeStyles(theme => ({
 
     drawerIconContainer: {
         marginLeft: "auto",
@@ -19,22 +17,23 @@ const useStyles = makeStyles(theme =>({
             backgroundColor: "Transparent"
         }
     },
-    tab:{
+    tab: {
         ...theme.typography.tab,
         opacity: 1
     }
 
 }))
+
 function Project(props) {
     const classes = useStyles();
     const appState = useAppState()
 
-    useEffect(()=>{
-        async function fetchData(){
-            try{
-               const response = await axios.get("http://localhost:3001/sales/customerlist",{
-                   withCredentials: true
-               })
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await axios.get("http://localhost:3001/sales/customerlist", {
+                    withCredentials: true
+                })
                 console.log(response.data)
                 appState.setCustomerList(response.data)
 
@@ -42,19 +41,19 @@ function Project(props) {
                 console.log(staff.data)
                 appState.setStaffList(staff.data)
 
-            }catch (error) {
+            } catch (error) {
                 alert(error)
             }
         }
 
         fetchData()
-    })
+    }, [])
 
 
-    const addButton=(
+    const addButton = (
         <div style={{marginLeft: "auto"}}>
-            <IconButton component={Link} to={"/drawer/project/addproject" }>
-                <AddIcon className={classes.tab} />
+            <IconButton component={Link} to={"/drawer/project/addproject"}>
+                <AddIcon className={classes.tab}/>
             </IconButton>
         </div>
     )

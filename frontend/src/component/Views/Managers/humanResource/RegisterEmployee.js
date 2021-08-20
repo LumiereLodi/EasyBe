@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         },
         "& .MuiInputBase-root": {
             borderRadius: "0.3em",
-           // backgroundColor: "white"
+            // backgroundColor: "white"
         },
         "& .MuiAutocomplete-root": {
             backgroundColor: "red"
@@ -106,7 +106,7 @@ function RegisterEmployee(props) {
             password: ''
         },
         validationSchema: formValidation,
-        onSubmit: async (values,{resetForm}) => {
+        onSubmit: async (values, {resetForm}) => {
             const formatedDate = values.dateOfBirth.getFullYear() + "/" + parseInt(values.dateOfBirth.getMonth() + 1) + "/" + values.dateOfBirth.getDate();
             const updatedValues = {...values, dateOfBirth: formatedDate}
             try {
@@ -119,7 +119,7 @@ function RegisterEmployee(props) {
 
                     const data = JSON.stringify(updatedValues)
                     console.log(data);
-                    const response = await axios.post("http://localhost:3001/user/register", data, {
+                    const response = await axios.post("http://localhost:3001/user/register/" + appState.userInfo.employeeid, data, {
                         headers: {
                             'Content-Type': "application/json"
                         }

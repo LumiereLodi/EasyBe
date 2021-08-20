@@ -2,7 +2,6 @@ import React, {Fragment, useState} from 'react';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import {Button} from "@material-ui/core";
 import ListLayout from "../../../Layout/ListLayout";
 import Details from "../../../Layout/Details";
@@ -107,7 +106,7 @@ function AddProject(props) {
                 console.log("inside submit")
                 const data = JSON.stringify(updatedValue)
 
-                const response = await axios.post("http://localhost:3001/sales/addprojects/" + appState.userInfo.employeeid, data, {
+                const response = await axios.post("http://localhost:3001/sales/addproject/" + appState.userInfo.employeeid, data, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': "application/json"
@@ -117,7 +116,7 @@ function AddProject(props) {
                 alert("Project " +  response.data.name +  " has been added ")
                 //console.log(response)
               //alert(data)
-                //resetForm({})
+                resetForm({})
             }catch (error) {
                 console.log("there was an error")
                 alert(error)

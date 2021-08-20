@@ -6,7 +6,6 @@ import {Hidden} from "@material-ui/core";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Grid from "@material-ui/core/Grid";
-// import {Link} from "@material-ui/core";
 import {Link} from "react-router-dom"
 
 const marginLeft = 100;
@@ -22,49 +21,50 @@ const useStyles = makeStyles(theme => ({
         marginBottom: "1em",
         height: "7em"
     },
-    title:{
+    title: {
         fontWeight: "bold"
     },
     backgroundStyle: {
         boxShadow: "none",
         backgroundColor: theme.palette.primary.main,
         //border: "2px solid",
-       // borderColor: "rgba(35,37,38,0.25)",
+        // borderColor: "rgba(35,37,38,0.25)",
     },
-    tab:{
+    tab: {
         ...theme.typography.tab,
-        "&:hover":{
+        "&:hover": {
             opacity: 1,
         },
 
 
     }
 }))
+
 function Try(props) {
     const classes = useStyles()
-   // const [value, setValue] = useState(0)
+    // const [value, setValue] = useState(0)
 
-    const handleChange=(e, newValue)=>{
+    const handleChange = (e, newValue) => {
         props.setValue(newValue)
     }
 
-    useEffect(()=>{
-       [...props.tab].forEach(route =>{
-           switch (window.location.pathname) {
-               case `${route.link}` :
-                   if (props.value !== route.activeIndexes) {
-                       props.setValue(route.activeIndexes)
-                   }
-                   break;
-               default:
-                   break;
-           }
-       })
+    useEffect(() => {
+        [...props.tab].forEach(route => {
+            switch (window.location.pathname) {
+                case `${route.link}` :
+                    if (props.value !== route.activeIndexes) {
+                        props.setValue(route.activeIndexes)
+                    }
+                    break;
+                default:
+                    break;
+            }
+        })
     })
     return (
         <Fragment>
             <Hidden mdDown>
-                <AppBar position="fixed" className={classes.appBar}  classes={{root: classes.backgroundStyle}}>
+                <AppBar position="fixed" className={classes.appBar} classes={{root: classes.backgroundStyle}}>
                     <Grid container style={{height: "100%"}} alignItems={"center"}>
                         <Grid item style={{width: "100%"}}>
                             <Toolbar>
@@ -91,7 +91,7 @@ function Try(props) {
 
 
                                     </Tabs>
-                                     :
+                                    :
                                     <Tabs
                                         indicatorColor="none"
                                         value={0}
@@ -109,8 +109,8 @@ function Try(props) {
                                         />
                                     </Tabs>
 
-                                        }
-                                {props.addButton }
+                                }
+                                {props.addButton}
 
                             </Toolbar>
                         </Grid>
