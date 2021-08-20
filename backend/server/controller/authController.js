@@ -1,7 +1,8 @@
-const {createTokens, validateToken,salesmanagerValidation} = require('../jwt');
 const db = require("../models/db");
 
 module.exports = {
+
+    //RETURN VALUES BELOW TO THE TOKEN INSIDE THE COOKIE
     auth: async(req, res)=>{
         try{
             res.json(
@@ -18,8 +19,10 @@ module.exports = {
         }
 
         },
+
+    //QUERY TO CHECK IF THE EMAIL EXISTS IN THE DATABASE WHILE ADDING AN EMPLOYEE OR CUSTOMER
     email: async (req, res)=>{
-        const result = await db.query("SELECT email from members where email = $1 ", [req.params.email]);
+        const result = await db.query("SELECT email from employee where email = $1 ", [req.params.email]);
         if (result.rowCount === 0) {
             res.status(200).json({exist: false})
         } else {

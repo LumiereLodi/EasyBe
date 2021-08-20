@@ -13,6 +13,8 @@ module.exports = {
 
     },
 
+    //WHEN ADDING USER THE DEPARTMENT THEY ARE JOINING WILL BE LISTED FOR THE ADMIN
+
     departmentList: async (req, res)=> {
         try {
             const result = await db.query("select * from department");

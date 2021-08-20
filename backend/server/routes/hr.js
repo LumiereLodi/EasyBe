@@ -1,6 +1,9 @@
 const express = require('express');
 
-
+/******* HR MANAGER IS ALSO CONSIDERED THE ADMIN.
+ *RESPONSIBLE FOR ADDING USERS AND DEPARTMENT
+ * EDITING INFORMATION AND PROVIDING SYSTEM SUPPORT
+ * ***********/
 const router = express.Router();
 
 const hr = require('../controller/hrController');

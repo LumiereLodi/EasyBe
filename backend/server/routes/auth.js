@@ -1,5 +1,10 @@
+/******** AUTHENTICATION ROUTES  ***********/
+
+//>>>>>>>Checks for existing emails when you load user or customer
+//>>>>>>>Check for valid tokens in the cookie
+
 const express = require('express');
-const {createTokens, validateToken,salesmanagerValidation} = require('../jwt')
+const {validateToken} = require('../jwt')
 
 
 const router = express.Router();

@@ -1,6 +1,9 @@
 const db = require("../models/db");
 
 module.exports = {
+
+    //PROJECT THAT HAS BEEN COMPLETED AND ACTIVE PROJECTS
+
     status: async(req, res)=> {
         try {
 
@@ -11,6 +14,8 @@ module.exports = {
             res.status(400).json(err.message)
         }
     },
+
+    //PROJECT THAT HAS A DATE EARLIER THAN TODAY IS BACKLOG
     backlog: async (req, res)=> {
         try {
 
@@ -22,6 +27,7 @@ module.exports = {
         }
     },
 
+    //OVERVIEW OF PROJECTS AND TASKS WITHIN THE USER DEPARTMENT
     overview: async(req, res)=> {
         try{
             const result = await db.query("select projects.projectid as projectid, projects.name,totalTasks.totalNumberTasks as Task, (Case when projects.enddate > Now() then 'Delayed' else 'on Track' end) as Status,\n" +
