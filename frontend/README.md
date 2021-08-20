@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+CODE STRUCTURES: 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ASSETS : MULTIMEDIA, PHOTOS, LOGOS
 
-## Available Scripts
+COMPONENT: 
 
-In the project directory, you can run:
 
-### `yarn start`
+    -APPBAR : The main appbar of the bar is its own component here. Prop will be sent to the component as title 
+    
+    -AUTH : Here you find the login form and authentication when the user reload the page. 
+    
+    -DASHBOARD : The dashboard for all users is the same. The top part of the dash board is the same for everyone and the overview part depends on your department. 
+    
+    -DRAWER : A permanent drawer on the left of the screen. Here we have listed the tabs. The Tabs are different depending on user position and department. 
+    
+    -LAYOUT : We have two main layout that we have called list layout and details layout. the list layout is on the left and the roght layout is on the right. 
+    
+    -VIEWS : 
+        -MANAGER : The view of each manager depending on their department. 
+        -STAFF : view of each staff members depending on their department. 
+        
+        
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+IN MORE DETAILS:  
 
-### `yarn test`
+⚡ PERN Full-Stack PROJECT/TEAM AND ANALTICAL TOOL FOR EASYBE
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    PostgreSQL Express React Node (PERN) full-stack app, integrates React 
+	frontend with Node.js backend. 
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+📄 Table of Contents
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    Using this project 
+    =
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+📚 Using this project
+Backend
 
-### `yarn eject`
+1. PostgreSQL needs to be installed and running - I started it from my
+Windows 10 PostgreSQL 12 dropdown option 'SQL shell (psql)'
+2. Postman used to test the backend before frontend was available
+3. Postgresql shell commands: \l list all databases. \c database1 connect to
+database1. \dt inspect tables. \q to quit.
+📷 API's and Schema 
+Refer to zip folder.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Backend screenshot Frontend & backend screenshot Frontend screenshot
+📶 Technologies - Backend
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    PostgreSQL v13
+    PostgreSQL Installer for Windows
+    Express.js middleware v4
+    Node.js v14
+    Nodemon npm module so backend server will automatically restart after code changes
+    Postman API to simulate a frontend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+📶 Technologies - Frontend
+    React framework v17
+	Mobx
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+💾 Setup - Backend
 
-## Learn More
+    Change to /server directory
+    Install dependencies using npm i
+    Install nodemon globally if you don't already have it
+    Install PostgreSQL & run it (requires the password you created during installation)
+    Add database access credentials to db.js - recommend installing npm dotenv & using .env to hide credentials if commiting to Github
+    Postgresql shell commands: \l list all databases. \c database1 connect to database1. \dt inspect tables. \d+ inspect table & show relation information. \q to quit.
+    Run nodemon server for a dev server
+    *http://localhost:5000/ can be accessed for CRUD operations such as POST, GET, PUT, DELETE etc. using Postman
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+💾 Setup - Frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    Change to /client directory
+    Install dependencies using npm i.
+    Run npm start. Frontend will open at http://localhost:{port#}
