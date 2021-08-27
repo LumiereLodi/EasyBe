@@ -83,7 +83,7 @@ function AddClient(props) {
         onSubmit: async (values, {resetForm}) => {
 
             try {
-                const result = await axios.get("http://localhost:3001/sales/customer/email/" + formik.values.email);
+                const result = await axios.get("/sales/customer/email/" + formik.values.email);
                 if (result.data.exist) {
                     setEmailExist("Email already exists")
                 } else {
@@ -92,7 +92,7 @@ function AddClient(props) {
 
                     const data = JSON.stringify(values)
 
-                    const response = await axios.post("http://localhost:3001/sales/addcustomer/" + appState.userInfo.employeeid, data, {
+                    const response = await axios.post("/sales/addcustomer/" + appState.userInfo.employeeid, data, {
                         withCredentials: true,
                         headers: {
                             'Content-Type': "application/json"

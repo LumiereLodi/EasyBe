@@ -110,7 +110,7 @@ function RegisterEmployee(props) {
             const formatedDate = values.dateOfBirth.getFullYear() + "/" + parseInt(values.dateOfBirth.getMonth() + 1) + "/" + values.dateOfBirth.getDate();
             const updatedValues = {...values, dateOfBirth: formatedDate}
             try {
-                const result = await axios.get("http://localhost:3001/authenticate/email/" + formik.values.email);
+                const result = await axios.get("/authenticate/email/" + formik.values.email);
                 if (result.data.exist) {
                     setEmailExist("Email already exists")
                 } else {
@@ -119,7 +119,7 @@ function RegisterEmployee(props) {
 
                     const data = JSON.stringify(updatedValues)
                     console.log(data);
-                    const response = await axios.post("http://localhost:3001/user/register/" + appState.userInfo.employeeid, data, {
+                    const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
                         headers: {
                             'Content-Type': "application/json"
                         }

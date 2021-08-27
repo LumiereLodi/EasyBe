@@ -115,7 +115,7 @@ function Index(props) {
 
     useEffect(() => {
         async function authenticate() {
-            const result = await axios.get("http://localhost:3001/authenticate", {
+            const result = await axios.get("/authenticate", {
                 withCredentials: true
             })
 
@@ -135,7 +135,7 @@ function Index(props) {
         validationSchema: loginForm,
         onSubmit: async (values) => {
             try {
-                const response = await axios.post("http://localhost:3001/user/login",
+                const response = await axios.post("/user/login",
                     JSON.stringify(values, null, 2), {
                         headers: {
                             'Content-Type': "application/json"

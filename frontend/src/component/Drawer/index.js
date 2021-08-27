@@ -202,7 +202,7 @@ function AppDrawer(props) {
     const logout = async () => {
 
         try {
-            await axios.get("http://localhost:3001/user/logout", {
+            await axios.get("/user/logout", {
                 withCredentials: true
             }).then();
         } catch (err) {
@@ -216,7 +216,7 @@ function AppDrawer(props) {
     useEffect(() => {
         async function authenticate() {
 
-            const result = await axios.get("http://localhost:3001/authenticate", {
+            const result = await axios.get("/authenticate", {
                 withCredentials: true
             })
 
@@ -224,7 +224,7 @@ function AppDrawer(props) {
                 history.replace('/')
             } else {
 
-                const response = await axios.get(`http://localhost:3001/user/userinformation/${result.data.employeeid}`)
+                const response = await axios.get(`/user/userinformation/${result.data.employeeid}`)
                 appState.setUserInfo(response.data.user)
                 setDepartment(result.data.departmentid)
                 setPosition(result.data.position)

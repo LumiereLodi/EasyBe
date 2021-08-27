@@ -12,6 +12,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static("/frontend/build"))
+} 
 
 /************* CONNECTION TO THE ROUTES ******************/
 

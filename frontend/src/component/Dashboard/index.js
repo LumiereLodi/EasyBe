@@ -71,18 +71,18 @@ function Index(props) {
         async function fetchData() {
 
             try {
-                const completedProject = await axios.get("http://localhost:3001/dashboard/project/completed");
+                const completedProject = await axios.get("/dashboard/project/completed");
                 setCompletedProject(completedProject.data.count);
                 appState.setCompletedProject(completedProject.data.count);
 
-                const activeProject = await axios.get("http://localhost:3001/dashboard/project/active");
+                const activeProject = await axios.get("/dashboard/project/active");
                 setActiveProject(activeProject.data.count);
                 appState.setActiveProject(activeProject.data.count);
-                const backlogProject = await axios.get("http://localhost:3001/dashboard/project/status/backlog");
+                const backlogProject = await axios.get("/project/status/backlog");
                 setBacklogProject(backlogProject.data.count);
                 appState.setBacklogProject(backlogProject.data.count);
 
-                const overview = await axios.get(`http://localhost:3001/dashboard/overview/${appState.userInfo.departmentid}`)
+                const overview = await axios.get(`/dashboard/overview/${appState.userInfo.departmentid}`)
                 appState.setPorjectOverview(overview.data.data)
                 console.log(overview)
 

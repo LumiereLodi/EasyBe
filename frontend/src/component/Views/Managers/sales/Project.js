@@ -31,13 +31,13 @@ function Project(props) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get("http://localhost:3001/sales/customerlist", {
+                const response = await axios.get("/sales/customerlist", {
                     withCredentials: true
                 })
                 console.log(response.data)
                 appState.setCustomerList(response.data)
 
-                const staff = await axios.get(`http://localhost:3001/employee/employeelist/${appState.userInfo.departmentid}`)
+                const staff = await axios.get(`/employee/employeelist/${appState.userInfo.departmentid}`)
                 console.log(staff.data)
                 appState.setStaffList(staff.data)
 
