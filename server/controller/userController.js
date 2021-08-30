@@ -1,5 +1,5 @@
 const db = require("../models/db");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const {createTokens, validateToken,salesmanagerValidation} = require('../jwt');
 
 
