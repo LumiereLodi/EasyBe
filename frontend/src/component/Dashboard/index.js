@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import {Grid, Typography} from "@material-ui/core";
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
 import axios from "axios";
 
 
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles, useTheme} from "@material-ui/styles";
 import AppBar from "../AppBar";
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +22,15 @@ const useStyles = makeStyles(theme => ({
     },
     projectStatusContainerMargin: {
         marginRight: "1em",
-        marginLeft: "1em"
+        marginLeft: "1em",
+        [theme.breakpoints.down("xs")]: {
+
+            marginRight: 0,
+            marginLeft: 0,
+            marginTop: "1em", 
+            marginBottom: "1em"
+            
+        }
     },
     overviewContainer: {
         //backgroundColor: theme.palette.secondary.main,
@@ -59,6 +69,8 @@ const useStyles = makeStyles(theme => ({
 function Index(props) {
     const classes = useStyles();
     const appState = useAppState()
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down("xs"));
 
     const [completedProject, setCompletedProject] = useState(0)
     const [activeProject, setActiveProject] = useState(0)
@@ -98,12 +110,12 @@ function Index(props) {
     return useObserver(() => (
         <div>
             <AppBar title="Dashboard" location="dashboard" tab={[]} addButton link/>
-            <Grid container direction={"column"}>
+            <Grid container direction={"column"} style={{marginTop: "1em"}}>
 
                 {/**ACTIVE COMPLETED AND BACKLOG**/}
                 <Grid item className={classes.projectContainer}>
                     <Grid container jusitfy={"center"}>
-                        <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}}>
+                        <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}} xs={12}>
                             <Typography className={classes.activityStatus}>
                                 Active Projects
                             </Typography>
@@ -113,7 +125,7 @@ function Index(props) {
 
                         </Grid>
                         <Grid item md className={[classes.projectStatusContainer, classes.projectStatusContainerMargin]}
-                              style={{textAlign: "center"}}>
+                              style={{textAlign: "center"}} xs={12}>
                             <Typography className={classes.activityStatus}>
                                 Completed Projects
                             </Typography>
@@ -121,7 +133,7 @@ function Index(props) {
                                 {appState.completedProject.length === 0 ? 0 : appState.completedProject}
                             </Typography>
                         </Grid>
-                        <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}}>
+                        <Grid item md className={classes.projectStatusContainer} style={{textAlign: "center"}} xs={12} >
                             <Typography className={classes.activityStatus}>
                                 Backlog Projects
                             </Typography>

@@ -49,12 +49,12 @@ function ElevationScroll(props) {
     const {children} = props;
     const trigger = useScrollTrigger({
         disableHysteresis: true,
-        threshold: 0
+        threshold: 1000
     });
 
     return React.cloneElement(children, {
-        elevation: trigger ? 4 : 0,
-    });
+        elevation: trigger ? 1 : 0,
+    })
 }
 
 const useStyles = makeStyles(theme => ({
@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
         width: "12.5rem"
 
     },
-    toolbar: theme.mixins.toolbar,
+    //toolbar: theme.mixins.toolbar,
 
     userId: {
         marginTop: "1rem",
@@ -90,7 +90,8 @@ const useStyles = makeStyles(theme => ({
 
     },
     appBarTab: {
-        zIndex: theme.zIndex.modal + 1
+        zIndex: theme.zIndex.modal + 1,
+        position: "fixed"
     },
     logoContainer: {
         maxWidth: "1px",
