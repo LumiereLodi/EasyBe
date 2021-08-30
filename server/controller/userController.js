@@ -23,6 +23,7 @@ module.exports = {
     //BEFORE LOGIN WE CHECK WHETHER YOUR CREDENTIALS ARE CORRECT OR NOT.
     login: async (req, res)=>{
         const {email, password} = req.body;
+        console.log("inside login")
         try {
             const user = await db.query("SELECT employeeid, givennames, lastname, dateofbirth, email,address,contract, position, departmentid from employee where email = $1", [email]);
 
@@ -56,6 +57,7 @@ module.exports = {
             }
 
         } catch (error) {
+            console.log("inside login error")
                 res.status(400).json(error.message)
         }
 
