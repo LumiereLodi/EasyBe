@@ -11,9 +11,15 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const path = require("path")
+
+app.use(express.static(path[0] +  "frontend/build"))
 
 if(process.env.NODE_ENV === "production"){
-    app.use(express.static("/frontend/build"))
+    const path = __dirname.split("\server")
+    app.use(express.static(path[0] +  "frontend/build"))
+    //D:\lumie\Coding\IE Project\EasyBe\frontend\build
+    //frontend\build
 } 
 
 /************* CONNECTION TO THE ROUTES ******************/
@@ -52,6 +58,14 @@ app.use("/task", manager);
 app.use("/analytics", manager);
 app.use("/project", project)
 
+app.get("*", (req, res)=> {
+    console.log("inside unknown")
+    const path = __dirname.split("\server")
+    console.log(path[0] + "\n")
+    //console.log(path.join(__dirname, "frontend/build/index.html"))
+    res.sendFile(path[0] +  "frontend/build/index.html")
+    //console.log(path.join(__dirname, "client-side/build/index.html"))
+})
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
