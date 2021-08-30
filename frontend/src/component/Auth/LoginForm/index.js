@@ -24,9 +24,11 @@ const loginForm = yup.object({
 })
 const useStyles = makeStyles(theme => ({
     mainContainer: {
+        
         marginTop: "5em",
 
         [theme.breakpoints.down("xs")]: {
+
             marginTop: 0,
             width: "100%",
             height: "100%"
@@ -36,9 +38,11 @@ const useStyles = makeStyles(theme => ({
     paperContainer: {
         backgroundColor: theme.palette.primary.main,
         width: "25em",
+       
+        
         [theme.breakpoints.down("xs")]: {
             width: "100%",
-            height: "100%"
+            height: "46em"
         },
         minWidth: "120px",
     },
@@ -166,13 +170,13 @@ function Index(props) {
     return (
         <div>
 
-            <Grid container direction={"row"} justify={"center"} className={classes.mainContainer}
+            <Grid container direction={"row"} justify={"center"} className={classes.mainContainer} style={{height: "100%"}}
                   alignItems={"center"}>
                 <Paper className={classes.paperContainer}>
 
                     {/**MAIN GRID**/}
 
-                    <Grid container direction={"column"}>
+                    <Grid container direction={"column"} style={{height: "100%"}} justify={"center"}>
                         <Grid item>
                             <Grid container justify={"center"}>
                                 <Grid item className={classes.logoContainer}>
