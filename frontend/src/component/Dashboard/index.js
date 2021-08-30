@@ -78,7 +78,7 @@ function Index(props) {
                 const activeProject = await axios.get("/dashboard/project/active");
                 setActiveProject(activeProject.data.count);
                 appState.setActiveProject(activeProject.data.count);
-                const backlogProject = await axios.get("/project/status/backlog");
+                const backlogProject = await axios.get("/dashboard/project/status/backlog");
                 setBacklogProject(backlogProject.data.count);
                 appState.setBacklogProject(backlogProject.data.count);
 
