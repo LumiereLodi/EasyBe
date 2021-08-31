@@ -63,7 +63,10 @@ const useStyles = makeStyles(theme => ({
         width: "12.5rem"
 
     },
-    //toolbar: theme.mixins.toolbar,
+    toolbar:{[theme.breakpoints.up("md")]: {
+        ...theme.mixins.toolbar,
+    }  
+},
 
     userId: {
         marginTop: "1rem",
@@ -353,9 +356,72 @@ function AppDrawer(props) {
                 <div className={classes.drawerMargin}/>
                 {/*<img src={easybeLogo} alt="easybe logo"/>*/}
 
-                <div className={classes.userId}></div>
+            <Grid container className={classes.userId}>
+                <Grid item sm={8}>
+                    <Grid container alignItems={"center"} style={{height: "100%"}}>
+                        <Grid item>
+                            <Avatar style={{
+                                height: "1.5em",
+                                width: "1.5em",
+                                marginLeft: "0.2em",
+                                marginRight: "0.5em"
+                            }}>{initial.charAt(0)}</Avatar>
+                        </Grid>
+                        <Grid item>
+                            <Typography style={{fontFamily: 'Open Sans Condensed, sans-serif'}}>
+                                {initial.split(" ", 1)[0].length < 11 ? initial.split(" ", 1)[0].charAt(0).toUpperCase()
+                                    + initial.split(" ", 1)[0].slice(1) :
+                                    <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span>}
+                            </Typography>
+                            <Typography style={{fontSize: "0.7em", color: "#878787"}}>
+                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : undefined} {appState.userInfo.position}
+                            </Typography>
+                        </Grid>
+
+                    </Grid>
+
+                </Grid>
+
+                <Grid item sm={4}>
+                    <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
+                        <IconButton aria-label="display more actions"
+                                    edge="center"
+                                    color="inherit"
+                                    onClick={(e) => handleClick(e)}
+                                    aria-owns={anchorEl ? "logout" : undefined}
+                                    aria-haspopup={anchorEl ? true : undefined}
+
+                        >
+                            <MoreHorizIcon/>
+                        </IconButton>
+                        <Menu
+                            id={"logout"}
+                            open={openMenu}
+                            onClose={handleClose}
+                            MenuListProps={{onMouseLeave: handleClose}}
+                            anchorEl={anchorEl}
+                            classes={{paper: classes.menu}}
+                        >
+                            <MenuItem
+                                onClick={() => {
+                                    handleClose();
+                                    logout()
+                                }}
+                                style={{fontWeight: "bold"}}
+                            >
+                                Log out
+                            </MenuItem>
+                        </Menu>
+
+                    </Grid>
+
+                </Grid>
+                
+
+
+            </Grid>
                 <div className={classes.menuTitle}>Menu</div>
-                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/>
+                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/>
 
             </SwipeableDrawer>
 

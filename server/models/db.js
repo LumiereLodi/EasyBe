@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-require("dotenv").config();
+//require("dotenv").config();
 
 /*
 const pool = new Pool();
@@ -16,6 +16,7 @@ const devConfig = `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@
 
 const proConfig = process.env.DATABASE_URL;
 
+
 const pool = new Pool({
     connectionString:
       process.env.NODE_ENV === "production" ? proConfig : devConfig,
@@ -24,6 +25,7 @@ const pool = new Pool({
       } : undefined
   });
 
+//const pool = new Pool({devConfig})
 
 module.exports =  {
     query: (text, params, callback) => {

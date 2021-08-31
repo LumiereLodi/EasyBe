@@ -84,7 +84,8 @@ function Menu(props) {
                               component={Link}
                               to={route.link}
                               onClick={(e) => {
-                                  setSelectedMenuItem(route.activeIndex)
+                                  setSelectedMenuItem(route.activeIndex);
+                                  props.setOpenMobileDrawer(false)
                               }}
                               selected={route.activeIndex === selectedMenuItem}>
                         {route.icon}

@@ -3,6 +3,7 @@
 /**************** FOLLOWING THE MVC PATTERN **********************/
 
 require("dotenv").config();
+const db = require("./models/db");
 
 /*>>>>>Connection to Express<<<<<<<<<*/
 
@@ -57,6 +58,20 @@ app.use("/team", manager);
 app.use("/task", manager);
 app.use("/analytics", manager);
 app.use("/project", project)
+
+
+app.get("/test", async (req, res)=> {
+
+    try{
+        console.log("inside the test")
+        const result = await db.query("SELECT * FROM employee")
+        console.log(result)
+        res.json(result)
+    }catch(e){
+        res.status(400).json(e.message)
+    }
+    
+})
 
 app.get("*", (req, res)=> {
     console.log("inside unknown")

@@ -91,6 +91,7 @@ function Menu(props) {
                               key={index}
                               onClick={(e) => {
                                   setSelectedMenuItem(route.activeIndex)
+                                  props.setOpenMobileDrawer(false)
                               }}
                               selected={route.activeIndex === selectedMenuItem}
                               component={Link}

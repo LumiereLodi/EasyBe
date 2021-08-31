@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Hidden from "@material-ui/core/Hidden";
 
 import {Grid, Typography} from "@material-ui/core";
 import {useObserver} from "mobx-react"
@@ -36,11 +37,23 @@ const useStyles = makeStyles(theme => ({
         //backgroundColor: theme.palette.secondary.main,
         marginRight: "0.3em",
         paddingRight: "1.5em",
-        paddingLeft: "1.5em"
+        paddingLeft: "1.5em",
+        [theme.breakpoints.down("xs")]: {
+
+            paddingRight: 0,
+            paddingLeft:0
+            
+        }
 
     },
     overviewText: {
-        ...theme.typography.dashboard
+        ...theme.typography.dashboard,
+        [theme.breakpoints.down("xs")]: {
+
+            paddingRight: "1em",
+            paddingLeft: "1em"
+            
+        }
     },
     overviewTitleContainer: {
         backgroundColor: theme.palette.secondary.main,
@@ -52,7 +65,13 @@ const useStyles = makeStyles(theme => ({
         borderRadius: "0.5em",
         marginBottom: "1.1em",
         height: "20.4em",
-        overflow: "auto"
+        overflow: "auto",
+        [theme.breakpoints.down("xs")]: {
+
+            paddingRight: "1em",
+            paddingLeft: "1em"
+            
+        }
 
     },
     overviewData: {
@@ -157,16 +176,20 @@ function Index(props) {
                         <Grid item style={{marginBottom: "1em"}}>
                             <Grid container justify={"center"} className={classes.overviewTitleContainer}
                                   alignItems={"center"}>
-                                <Grid item sm style={{textAlign: "center"}} className={classes.overviewText}>
+                                <Grid item container xs  justify={matches ? "flex-start" : "center"}  className={classes.overviewText} >
                                     Project
                                 </Grid>
-                                <Grid item sm style={{textAlign: "center"}} className={classes.overviewText}>
+                                <Hidden mdDown>
+                                <Grid item container xs  justify={"center"} className={classes.overviewText}>
                                     Task
                                 </Grid>
-                                <Grid item sm style={{textAlign: "center"}} className={classes.overviewText}>
+                                <Grid item container xs  justify={"center"} className={classes.overviewText}>
                                     Status
                                 </Grid>
-                                <Grid item sm style={{textAlign: "center"}} className={classes.overviewText}>
+                                </Hidden>
+                                
+
+                                <Grid item container xs  justify={matches ? "flex-end" : "center"} alignItems={"center"} className={classes.overviewText}>
                                     Progress
                                 </Grid>
                             </Grid>
@@ -175,16 +198,20 @@ function Index(props) {
                             {appState.projectOverview.map((project, index) => (
                                 <Grid key={index} container justify={"center"} className={classes.overviewData}>
 
-                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
-                                        {project.name}
+                                    <Grid item container  xs style={{color: "black", fontFamily: "Roboto"}} justify={matches ? "flex-start" : "center"} >
+                                        {project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> }
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
+
+                                    <Hidden mdDown>
+                                    <Grid item container xs justify={"center"} style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.task}
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
+                                    <Grid item container xs justify={"center"} style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
                                         {project.status}
                                     </Grid>
-                                    <Grid item sm style={{textAlign: "center", color: "black", fontFamily: "Roboto"}}>
+                                    </Hidden>
+                                    
+                                    <Grid item container xs style={{color: "black", fontFamily: "Roboto"}} justify={matches ? "flex-end" : "center"} >
                                         {project.progress}
                                     </Grid>
                                 </Grid>

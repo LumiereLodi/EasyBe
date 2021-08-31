@@ -23,14 +23,14 @@ module.exports = {
     //BEFORE LOGIN WE CHECK WHETHER YOUR CREDENTIALS ARE CORRECT OR NOT.
     login: async (req, res)=>{
         const {email, password} = req.body;
-        console.log("inside login")
+        
         try {
             const user = await db.query("SELECT employeeid, givennames, lastname, dateofbirth, email,address,contract, position, departmentid from employee where email = $1", [email]);
 
             if (user.rowCount === 0) {
                 res.status(200).json({error: "User Doesnt Exist", status: false})
             }
-
+            console.log("inside login")
             const dbPassword = await db.query("SELECT password FROM employee where email = $1 ", [email])
 
             //AT REGISTRATION WE HASHED THE PASSWORD. HERE WE COMPARE THE HASH PASSWORD WITH THE ONE ENTERED BY THE USER
@@ -57,7 +57,7 @@ module.exports = {
             }
 
         } catch (error) {
-            console.log("inside login error")
+            console.log(error)
                 res.status(400).json(error.message)
         }
 
