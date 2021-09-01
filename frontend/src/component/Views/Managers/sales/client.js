@@ -3,18 +3,13 @@ import IconButton from "@material-ui/core/IconButton";
 import {Link, Redirect, Route, Switch} from "react-router-dom";
 import AddIcon from "@material-ui/icons/Add";
 import AppBar from "../../../AppBar"
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles,useTheme} from "@material-ui/styles";
 import {useAppState} from "../../../WithStore";
-import ListLayout from "../../../Layout/ListLayout";
-import Details from "../../../Layout/Details";
-import Grid from "@material-ui/core/Grid";
-import RegisterEmployee from "../humanResource/RegisterEmployee";
-import DepartmentList from "../humanResource/DepartmentList";
-import EmployeeList from "../humanResource/EmployeeList";
-import AddDepartment from "../humanResource/AddDepartment";
-import ClientList from "./ClientList";
+import CustomerList from "./CustomerList";
 import AddClient from "./AddClient";
-
+import Fab from '@material-ui/core/Fab';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Hidden  from '@material-ui/core/Hidden';
 const useStyles = makeStyles(theme =>({
 
     drawerIconContainer: {
@@ -26,6 +21,11 @@ const useStyles = makeStyles(theme =>({
     tab:{
         ...theme.typography.tab,
         opacity: 1
+    },
+    fab: {
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(1),
     }
 
 }))
@@ -34,8 +34,12 @@ function Client(props) {
 
     const classes = useStyles();
     const appState = useAppState()
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down("xs"));
 
-
+    const handleFabClick= ()=>{
+        appState.setShowListLayout(true)
+    }
     const addButton=(
         <div style={{marginLeft: "auto"}}>
             <IconButton component={Link} to={"/drawer/client/addclient" }>
@@ -47,13 +51,21 @@ function Client(props) {
         <div>
 
             <AppBar tab={[]} title={"Customers"} addButton={addButton} link={"/drawer/client/clientlist"}/>
+            <Hidden mdDown={appState.showListLayout}>
+                {matches ? <Fab color={"primary"} className={classes.fab}  component={Link} to={"/drawer/client/addclient" } onClick={()=> handleFabClick()}>
+                    <AddIcon/>
+                </Fab> : null}
+            </Hidden>
+           
+            
+
             <Switch>
                 <Redirect exact from={"/drawer/client"} to={"/drawer/client/clientlist"}/>
             </Switch>
 
             <Switch>
 
-                <Route path={"/drawer/client/clientlist"} component={ClientList}/>
+                <Route path={"/drawer/client/clientlist"} component={CustomerList}/>
                 <Route path={"/drawer/client/addclient"} component={AddClient}/>
 
 

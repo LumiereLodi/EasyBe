@@ -64,6 +64,7 @@ app.get("/test", async (req, res)=> {
 
     try{
         console.log("inside the test")
+        console.log("the JWT_SECRET: " + process.env.JWT_SECRET)
         const result = await db.query("SELECT * FROM employee")
         console.log(result)
         res.json(result)
@@ -74,7 +75,9 @@ app.get("/test", async (req, res)=> {
 })
 
 app.get("*", (req, res)=> {
+
     console.log("inside unknown")
+    
     const path = __dirname.split("\server")
     console.log(path[0] + "\n")
     //console.log(path.join(__dirname, "frontend/build/index.html"))

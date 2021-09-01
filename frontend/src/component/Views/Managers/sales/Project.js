@@ -4,10 +4,14 @@ import {Link, Redirect, Route, Switch} from "react-router-dom";
 import {useAppState} from "../../../WithStore";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles,useTheme} from "@material-ui/styles";
 import ProjectList from "./ProjectList";
 import AddProject from "./AddProject";
 import axios from "axios";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Hidden  from '@material-ui/core/Hidden';
+import Fab from '@material-ui/core/Fab';
+
 
 const useStyles = makeStyles(theme => ({
 
@@ -20,6 +24,11 @@ const useStyles = makeStyles(theme => ({
     tab: {
         ...theme.typography.tab,
         opacity: 1
+    },
+    fab: {
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(1),
     }
 
 }))
@@ -27,7 +36,13 @@ const useStyles = makeStyles(theme => ({
 function Project(props) {
     const classes = useStyles();
     const appState = useAppState()
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down("xs"));
 
+    
+    const handleFabClick= ()=>{
+        appState.setShowListLayout(true)
+    }
     useEffect(() => {
         async function fetchData() {
             try {
@@ -61,6 +76,11 @@ function Project(props) {
         <div>
 
             <AppBar tab={[]} title={"Projects"} addButton={addButton} link={"/drawer/project/projectlist"}/>
+            <Hidden mdDown={appState.showListLayout}>
+                {matches ? <Fab color={"primary"} className={classes.fab}  component={Link} to={"/drawer/project/addproject" } onClick={()=> handleFabClick()}>
+                    <AddIcon/>
+                </Fab> : null}
+            </Hidden>
             <Switch>
                 <Redirect exact from={"/drawer/project"} to={"/drawer/project/projectlist"}/>
             </Switch>

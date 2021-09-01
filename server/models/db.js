@@ -1,6 +1,8 @@
 const { Pool } = require('pg');
-//require("dotenv").config();
+require("dotenv").config();
 
+//const devConfig = `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
+//console.log( devConfig)
 /*
 const pool = new Pool();
 
@@ -10,6 +12,7 @@ module.exports = {
     }
 }
 */
+
 
 const devConfig = `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
 
@@ -25,7 +28,6 @@ const pool = new Pool({
       } : undefined
   });
 
-//const pool = new Pool({devConfig})
 
 module.exports =  {
     query: (text, params, callback) => {

@@ -90,7 +90,7 @@ function Menu(props) {
                               className={selectedMenuItem === route.activeIndex ? [classes.drawerItem, classes.drawerItemSelected] : classes.drawerItem}
                               key={index}
                               onClick={(e) => {
-                                  setSelectedMenuItem(route.activeIndex)
+                                  setSelectedMenuItem(route.activeIndex);
                                   props.setOpenMobileDrawer(false)
                               }}
                               selected={route.activeIndex === selectedMenuItem}

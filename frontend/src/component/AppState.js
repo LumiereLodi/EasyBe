@@ -51,6 +51,10 @@ export function createAppStore(){
             this.staffList.push(
                 ...staff
             )
+        },
+        showListLayout: false,
+        setShowListLayout (isMobile){
+            this.showListLayout = isMobile
         }
     }
 }

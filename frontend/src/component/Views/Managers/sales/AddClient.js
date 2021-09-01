@@ -6,7 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {Button} from "@material-ui/core";
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles,useTheme} from "@material-ui/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {useAppState} from "../../../WithStore";
 import {useFormik} from "formik";
 import axios from "axios";
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: "red"
         }
     },
-    loginButton: {
+    addButton: {
         ...theme.typography.login,
         backgroundColor: theme.palette.primary.main,
         height: 32,
@@ -59,6 +60,11 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             backgroundColor: theme.palette.secondary.light,
             color: "black"
+        },
+        [theme.breakpoints.down("xs")]: {
+            height: 32,
+            width: 150,
+            marginBottom: "2em"
         }
     }
 }))
@@ -68,6 +74,8 @@ function AddClient(props) {
     const classes = useStyles()
     const appState = useAppState()
     const [emailExist, setEmailExist] = useState('')
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down("xs"));
 
 
     const formik = useFormik({
@@ -126,8 +134,8 @@ function AddClient(props) {
             <form onSubmit={formik.handleSubmit}>
 
 
-                <Grid container style={{marginBottom: "1em"}}>
-                    <Grid item sm className={classes.textFieldContainer} style={{marginRight: "1em"}}>
+                <Grid container style={{marginBottom: matches ? 0 : "1em"}}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer} style={{marginRight: matches ? 0 : "1em"}}>
                         <TextField fullWidth
                                    id={"name"}
                                    variant={"filled"}
@@ -146,7 +154,7 @@ function AddClient(props) {
                                    helperText={formik.errors.name}
                         />
                     </Grid>
-                    <Grid item sm className={classes.textFieldContainer}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer}>
                         <TextField fullWidth variant={"filled"}
                                    id={"contactPerson"}
                                    label={"Contact Person"}
@@ -167,8 +175,8 @@ function AddClient(props) {
 
                 </Grid>
 
-                <Grid container style={{marginBottom: "1em"}}>
-                    <Grid item sm className={classes.textFieldContainer} style={{marginRight: "1em"}}>
+                <Grid container style={{marginBottom: matches ? 0 : "1em"}}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer} style={{marginRight: matches ? 0 : "1em"}}>
                         <TextField fullWidth
                                    id={"phone"}
                                    variant={"filled"}
@@ -188,7 +196,7 @@ function AddClient(props) {
                                    }}
                         />
                     </Grid>
-                    <Grid item sm className={classes.textFieldContainer}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer}>
                         <TextField fullWidth
                                    id={"postalCode"}
                                    variant={"filled"}
@@ -209,9 +217,9 @@ function AddClient(props) {
                     </Grid>
 
                 </Grid>
-                <Grid container style={{marginBottom: "1em"}}>
+                <Grid container style={{marginBottom: matches ? 0 : "1em"}}>
 
-                    <Grid item sm className={classes.textFieldContainer}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer}>
                         <TextField fullWidth
                                    id={"email"}
                                    variant={"filled"}
@@ -237,7 +245,7 @@ function AddClient(props) {
 
                 </Grid>
                 <Grid container>
-                    <Grid item sm className={classes.textFieldContainer} style={{marginBottom: "5em"}}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer} style={{marginBottom: matches ? "2em" : "5em"}}>
                         <TextField fullWidth
                                    id={"address"}
                                    variant={"filled"}
@@ -260,7 +268,7 @@ function AddClient(props) {
                 </Grid>
                 <Grid container justify={"center"}>
                     <Grid item>
-                        <Button className={classes.loginButton} type={"submit"}>
+                        <Button className={classes.addButton} type={"submit"}>
                             Add
                         </Button>
                     </Grid>

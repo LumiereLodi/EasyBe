@@ -134,7 +134,13 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down("md")]: {
             paddingLeft: "10px",
             paddingRight: "10px"
+        },
+        [theme.breakpoints.down("xs")]: {
+            paddingLeft: "5px",
+            paddingRight: "5px"
         }
+        
+
     },
     drawerItemSelected: {
         opacity: 1
@@ -327,12 +333,13 @@ function AppDrawer(props) {
             <div className={classes.menuTitle}>Menu</div>
             {/*{(position === "Manager" && department === "2000" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
             {(position === "Manager" && department === "2001") ? <ResearchMenu selectedMenuItem={selectedMenuItem}
-                                                                               setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+                                                                               setSelectedMenuItem={setSelectedMenuItem} 
+                                                                               setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
             {(position === "Manager" && department === "2002") ?
-                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
             {/*{(position === "Manager" && department === "2003" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
             {(position === "Manager" && department === "2004") ?
-                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}
+                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
 
 
         </Drawer>
@@ -421,8 +428,17 @@ function AppDrawer(props) {
 
             </Grid>
                 <div className={classes.menuTitle}>Menu</div>
-                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/>
-
+                {/*<HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} mobile={true}/>*/}
+                 {/*{(position === "Manager" && department === "2000" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
+            {(position === "Manager" && department === "2001") ? <ResearchMenu selectedMenuItem={selectedMenuItem}
+                                                                               setSelectedMenuItem={setSelectedMenuItem} 
+                                                                               setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+            {(position === "Manager" && department === "2002") ?
+                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+            {/*{(position === "Manager" && department === "2003" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
+            {(position === "Manager" && department === "2004") ?
+                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
+                    
             </SwipeableDrawer>
 
             <IconButton
