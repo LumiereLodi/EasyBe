@@ -13,6 +13,11 @@ import FilledInput from '@material-ui/core/FilledInput';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button'
+import ListItem from "@material-ui/core/ListItem";
+
 const useStyles = makeStyles(theme => ({
 
     searchContainer: {
@@ -28,11 +33,13 @@ const useStyles = makeStyles(theme => ({
         "& .MuiInputLabel-root": {
             color: theme.palette.primary.main,
             
+            
         },
         "& .MuiInputBase-root": {
             borderRadius: "0.3em",
             // backgroundColor: "white"
             //height: "2.5em"
+            fontSize: "1em"
         },
         "& .MuiInput-formControl": {
             color:"black",
@@ -40,6 +47,20 @@ const useStyles = makeStyles(theme => ({
         }
         
     },
+    ListContainer: {
+        width: "90%",
+        height: "5em",
+        backgroundColor: "#FFF8DD",
+        marginLeft: "1em",
+        marginRight: "1em",
+        marginTop: "0.7em",
+        //boxShadow: "0px 0.5px 3px  #888888",
+        paddingLeft: "2em",
+        borderRadius: "0.2em",
+        [theme.breakpoints.down("xs")]: {
+            width: "91%",
+        }
+    }
    
    
 }))
@@ -50,7 +71,8 @@ function ProjectList(props) {
     const filter = [
         "All",
         "Current",
-        "Previous"
+        "Prior",
+        "Future"
     ]
     const list = (
         <Fragment>
@@ -112,30 +134,22 @@ function ProjectList(props) {
 
             </ListSubheader>
                 
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
+                {[1,2,3,4,5,8,5,4,5,5,5,5,5,5,55,6].map((value, index)=>(
+                    <Grid item >
+                    
+                    <ListItem className={classes.ListContainer} button disableGutters>
+                            <Grid container alignItems={"center"} style={{height: "100%"}}>
+                                <Typography style={{fontWeight: "bold" }} >
+                                    Web Redesign
+                                </Typography>
+                            </Grid>
+                        </ListItem>
+                   
+                        
+                </Grid>
+                ))}
 
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
-                <ul>bob the bobo</ul>
+            
                 
                 
         </Fragment>
