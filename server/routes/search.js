@@ -8,7 +8,7 @@ const searchController = require("../controller/searchController")
 router.get("/projects/projectName/:name", searchController.searchProjectByName)
 
 /*Searching teams by name route*/
-router.get("/teams/teamName/:name", searchController.searchTeamByName)
+// router.get("/teams/teamName/:name", searchController.searchTeamByName)
 
 /*searching projects by name under Analytics*/
 router.get("/Analytics/projectName/:name", searchController.projectListWithTaskCount)

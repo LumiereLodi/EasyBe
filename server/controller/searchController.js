@@ -17,18 +17,18 @@ module.exports = {
   },
 
 
-  searchTeamByName: async (req, res) => {
-    try {
+  // searchTeamByName: async (req, res) => {
+  //   try {
 
-      const retrieve = await db.query("SELECT team.name, project.name as ProjectName\n" +
-        "     from team , project\n" +
-        "     where project.projectid = team.projectid and team.name LIKE '%'||$1||'%' ", [req.params.name])
+  //     const retrieve = await db.query("SELECT team.name, project.name as ProjectName\n" +
+  //       "     from team , project\n" +
+  //       "     where project.projectid = team.projectid and team.name LIKE '%'||$1||'%' ", [req.params.name])
 
-      res.json(retrieve.rows)
-    } catch (err) {
-      console.error(err.message)
-    }
-  },
+  //     res.json(retrieve.rows)
+  //   } catch (err) {
+  //     console.error(err.message)
+  //   }
+  // },
 
 
   searchEmployeeByName: async (req, res) => {
