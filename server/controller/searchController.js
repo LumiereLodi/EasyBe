@@ -16,15 +16,12 @@ module.exports = {
     }
   },
 
-
-
-
   searchEmployeeByName: async (req, res) => {
     try {
 
       const retrieve = await db.query("SELECT givennames ||' '|| lastname as FullName, position\n" +
         "     from  employee\n" +
-        "     where lastname LIKE '%'||$1||'%' ", [req.params.name])
+        "     where lastname LIKE '%'||$1||'%' order by employeeid", [req.params.name])
 
       res.json(retrieve.rows)
     } catch (err) {
@@ -53,9 +50,8 @@ module.exports = {
     try {
 
       const retrieve = await db.query("SELECT project.name, project.status, count(task.taskid) numberOfTasks\n" +
-        "     from task , team, project\n" +
-        "     where task.teamid = team.teamid\n" +
-        "     and team.projectid = project.projectid\n" +
+        "     from task, project\n" +
+        "     where task.projectid = project.projectid\n" +
         "     and project.name LIKE '%'||$1||'%' group by project.name, project.status",
         [req.params.name])
 
