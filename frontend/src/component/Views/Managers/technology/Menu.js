@@ -47,13 +47,13 @@ function Menu(props) {
             icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>,
             link: "/drawer/project",
             activeIndex: 1
-        },
-        {
-            name: "Customer",
-            icon: <ListItemIcon><BusinessCenterIcon/></ListItemIcon>,
-            link: "/drawer/client",
-            activeIndex: 2
-        },
+        }
+        // {
+        //     name: "Customer",
+        //     icon: <ListItemIcon><BusinessCenterIcon/></ListItemIcon>,
+        //     link: "/drawer/client",
+        //     activeIndex: 2
+        // },
         // {
         //     name: "Analytics",
         //     icon: <ListItemIcon><TimelineIcon/></ListItemIcon>,
@@ -72,14 +72,14 @@ function Menu(props) {
                     }
             }
         })
-        if (window.location.pathname === "/drawer/client/clientlist" || window.location.pathname === "/drawer/client/addclient") {
-            setSelectedMenuItem(2);
-
-        }
-        if (window.location.pathname === "/drawer/project/projectlist" || window.location.pathname === "/drawer/project/addproject") {
-            setSelectedMenuItem(1);
-
-        }
+        // if (window.location.pathname === "/drawer/client/clientlist" || window.location.pathname === "/drawer/client/addclient") {
+        //     setSelectedMenuItem(2);
+        //
+        // }
+        // if (window.location.pathname === "/drawer/project/projectlist" || window.location.pathname === "/drawer/project/addproject") {
+        //     setSelectedMenuItem(1);
+        //
+        // }
     }, [selectedMenuItem]);
     return (
         <div>

@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         },
 
     },
-    loginButton: {
+    addButton: {
         ...theme.typography.login,
         backgroundColor: theme.palette.primary.main,
         height: 32,
@@ -322,7 +322,7 @@ function AddProject(props) {
                 </Grid>
                 <Grid container justify={"center"}>
                     <Grid item>
-                        <Button className={classes.loginButton} type={"submit"}>
+                        <Button className={classes.addButton} type={"submit"}>
                             Add
                         </Button>
                     </Grid>
@@ -335,11 +335,14 @@ function AddProject(props) {
     return useObserver (()=> (
         <div>
 
-            <Grid container>
-                <ListLayout text={"Add Project"}/>
+            {/*<Grid container>*/}
+            {/*    <ListLayout text={"Add Project"}/>*/}
 
-                <Details details={details}/>
-            </Grid>
+            {/*    <Details details={details}/>*/}
+            {/*</Grid>*/}
+
+            {details}
+
         </div>
     ));
 }

@@ -35,9 +35,7 @@ function Menu(props) {
 
     const routes = [
         {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
-        {name: "Team", icon: <ListItemIcon><GroupIcon/></ListItemIcon>, link: "/drawer/hello", activeIndex: 1},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/project", activeIndex: 2},
-        {name: "Analytics", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, activeIndex: 3},
+        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/researchProject", activeIndex: 1},
     ]
     useEffect(()=> {
 
@@ -49,6 +47,13 @@ function Menu(props) {
                     }
             }
         })
+
+        //we will add the dialog screen here
+
+        if (window.location.pathname === "/drawer/researchProject/projectlist") {
+            setSelectedMenuItem(1);
+
+        }
 
     },[selectedMenuItem]);
     return (

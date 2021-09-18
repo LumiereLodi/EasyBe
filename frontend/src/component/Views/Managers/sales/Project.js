@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import AppBar from "../../../AppBar";
 import {Link, Redirect, Route, Switch} from "react-router-dom";
 import {useAppState} from "../../../WithStore";
@@ -11,6 +11,7 @@ import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Hidden  from '@material-ui/core/Hidden';
 import Fab from '@material-ui/core/Fab';
+import Dialog from '@material-ui/core/Dialog';
 
 
 const useStyles = makeStyles(theme => ({
@@ -30,6 +31,32 @@ const useStyles = makeStyles(theme => ({
         bottom: theme.spacing(2),
         right: theme.spacing(1),
         zIndex: 1320
+    },
+    dialogContainer:{
+        "& .MuiDialog-paper": {
+            width: "70em",
+            backgroundColor: theme.palette.secondary.main,
+            padding: "1em",
+            height: "38.3em",
+            marginLeft: "1em",
+            marginRight: "0.3em",
+            // border: "2px solid",
+            // borderColor: "rgba(35,37,38,0.25)",
+            [theme.breakpoints.down("sm")]: {
+                marginTop: "2em",
+                marginLeft: 0
+            },
+            [theme.breakpoints.down("xs")]: {
+                marginTop: "0.5em",
+                marginLeft: 0,
+                marginBottom: "1em"
+            },
+            overflow: "auto",
+            paddingLeft: "1em",
+            paddingRight: "1em",
+            borderRadius: "0.5em",
+        },
+
     }
 
 }))
@@ -39,8 +66,8 @@ function Project(props) {
     const appState = useAppState()
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down("xs"));
+    const [openDialog, setOpenDialog] = useState(false)
 
-    
     const handleFabClick= ()=>{
         appState.setShowListLayout(true)
     }
@@ -68,10 +95,28 @@ function Project(props) {
 
     const addButton = (
         <div style={{marginLeft: "auto"}}>
-            <IconButton component={Link} to={"/drawer/project/addproject"}>
+            {/*<IconButton component={Link} to={"/drawer/project/addproject"}>*/}
+            {/*    <AddIcon className={classes.tab}/>*/}
+            {/*</IconButton>*/}
+            <IconButton onClick={()=> setOpenDialog(true)}>
                 <AddIcon className={classes.tab}/>
             </IconButton>
         </div>
+    )
+
+    const dialogAddProject = (
+        <Fragment>
+            <Dialog
+                open={openDialog}
+                onClose={()=> setOpenDialog(false)}
+                className={classes.dialogContainer}
+                fullWidth={true}
+                maxWidth={"sm"}
+            >
+                <AddProject/>
+
+            </Dialog>
+        </Fragment>
     )
     return (
         <div>
@@ -82,6 +127,8 @@ function Project(props) {
                     <AddIcon/>
                 </Fab> : null}
             </Hidden>
+
+            {dialogAddProject}
             <Switch>
                 <Redirect exact from={"/drawer/project"} to={"/drawer/project/projectlist"}/>
             </Switch>

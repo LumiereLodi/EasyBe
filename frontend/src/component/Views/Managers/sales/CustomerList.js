@@ -118,12 +118,25 @@ function CustomerList(props) {
                 
         </Fragment>
     )
+
+    const details = (
+        <Fragment>
+            <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
+                <Grid item>
+                    <Typography variant={"h1"}>
+                        Customer Name
+                    </Typography>
+                </Grid>
+            </Grid>
+
+        </Fragment>
+    )
     return (
         <div>
             <Grid container>
                 <ListLayout list={list}/>
 
-                <Details details/>
+                <Details details={details}/>
             </Grid>
         </div>
     );

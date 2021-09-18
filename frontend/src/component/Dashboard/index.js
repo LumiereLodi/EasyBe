@@ -138,7 +138,7 @@ function Index(props) {
                             <Typography className={classes.activityStatus}>
                                 Active Projects
                             </Typography>
-                            <Typography style={{fontSize: "4em", color: "green"}}>
+                            <Typography style={{fontSize: "4em", color: "#6ed00c"}}>
                                 {appState.activeProject.length === 0 ? 0 : appState.activeProject}
                             </Typography>
 

@@ -35,7 +35,7 @@ import HRMenu from "../Views/Managers/humanResource/Menu"
 import Admin from "../Views/Managers/humanResource/Admin";
 import Client from "../Views/Managers/sales/client"
 import Project from "../Views/Managers/sales/Project";
-
+import Research from "../Views/Managers/research/research";
 /**APP STATE**/
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
@@ -486,7 +486,16 @@ function AppDrawer(props) {
                         <Route path={"/drawer/admin"}
                                render={() => <Admin setSelectedMenuItem={setSelectedMenuItem}/>}/>
                         <Route path={"/drawer/team"} component={() => <div>Team</div>}/>
+
+                        {/**
+                         *drawer/project
+                         *this will take you to project of Sales & Marketing department.
+                         *it is linked to so many routes that changing it will be a lot
+                         * other routes to project will be more precise
+                         **/}
+
                         <Route path={"/drawer/project"} component={Project}/>
+                        <Route path={"/drawer/researchProject"} component={Research}/>
                         <Route path={"/drawer/client"} component={Client}/>
                         <Route path={"/drawer/analytics"} component={() => <div>Analytics</div>}/>
 

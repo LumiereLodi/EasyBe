@@ -103,7 +103,7 @@ function Try(props) {
                                             label={props.title}
                                             disableRipple
                                             component={Link}
-                                            to={props.link}
+                                            to={props.link ? props.link : undefined }
 
 
                                         />

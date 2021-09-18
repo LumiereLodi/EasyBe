@@ -1,22 +1,13 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 import Grid from "@material-ui/core/Grid";
 import ListLayout from "../../../Layout/ListLayout";
 import Details from "../../../Layout/Details";
 import {makeStyles} from "@material-ui/styles";
-import FormControl from '@material-ui/core/FormControl';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel';
-import SearchIcon from '@material-ui/icons/Search';
-import Input from '@material-ui/core/Input';
-import FilledInput from '@material-ui/core/FilledInput';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button'
-import ListItem from "@material-ui/core/ListItem";
+import ProjectFile from "../../ProjectFile.js"
+import ProjectListComponent from "../../ProjectList.js";
+import Fab from "@material-ui/core/Fab";
+import SendIcon from '@material-ui/icons/Send';
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
 
@@ -39,7 +30,9 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "0.3em",
             // backgroundColor: "white"
             //height: "2.5em"
-            fontSize: "1em"
+            fontSize: "1em",
+
+
         },
         "& .MuiInput-formControl": {
             color:"black",
@@ -56,110 +49,79 @@ const useStyles = makeStyles(theme => ({
         marginTop: "0.7em",
         //boxShadow: "0px 0.5px 3px  #888888",
         paddingLeft: "2em",
-        borderRadius: "0.2em",
+        borderRadius: "0.3em",
         [theme.breakpoints.down("xs")]: {
             width: "91%",
         }
+    },
+
+    fab: {
+        position: 'fixed',
+        top: theme.spacing(19),
+        right: theme.spacing(6),
+        zIndex: 1320
+    },
+    sendButton: {
+        ...theme.typography.login,
+        backgroundColor: theme.palette.primary.main,
+        height: 32,
+        width: 250,
+        borderRadius: "10px",
+        color: "white",
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.light,
+            color: "black"
+        },
+        marginTop: "1em",
+
+    },
+    sendButtonDisabled: {
+
+            backgroundColor: theme.palette.secondary.light,
+            color: "black"
+
     }
-   
-   
 }))
 
 function ProjectList(props) {
     const classes = useStyles()
-
-    const filter = [
-        "All",
-        "Current",
-        "Prior",
-        "Future"
-    ]
+    const [enableSendButton, setEnableSendButton] = useState(false)
     const list = (
+        <ProjectListComponent/>
+    )
+    const sendButton=(
         <Fragment>
-            <ListSubheader disableGutters>
-                <Grid item className={classes.searchContainer}>
-
-                    <Grid container justifyContent={"space-between"}>
-                        <Grid item xs={7} style={{marginRight: "0.1em"}}>
-                            <FormControl fullWidth
-                                    id={"search"}
-                                    variant={"filled"}
-                                    className={classes.form}
-                                    size={"small"}
-
-                                >
-                                <InputLabel id="search"  >Search</InputLabel>
-                                <FilledInput
-                                        id="search"
-                                    
-                                        endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                            aria-label="toggle password visibility"
-                                            >
-                                            <SearchIcon/>
-                                            </IconButton>
-                                        </InputAdornment>
-                                        }
-                                        disableUnderline
-                                        
-                                    />
-                            </FormControl>
-                        </Grid>
-                       
-                        <Grid item xs={4} style={{marginLeft: "0.1em"}}>
-                        <TextField fullWidth
-                                   id={"filter"}
-                                   variant={"filled"}
-                                   InputProps={{disableUnderline: true}}
-                                   label={"Filter"}
-                                   className={classes.form}
-                                   size={"small"}
-                                   select
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {filter.map((filter, index) => (
-                                <MenuItem key={index} value={index}>
-                                    {filter}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        </Grid>
-                    </Grid>
-                    
-
-                </Grid>
-
-            </ListSubheader>
-                
-                {[1,2,3,4,5,8,5,4,5,5,5,5,5,5,55,6].map((value, index)=>(
-                    <Grid item >
-                    
-                    <ListItem className={classes.ListContainer} button disableGutters>
-                            <Grid container alignItems={"center"} style={{height: "100%"}}>
-                                <Typography style={{fontWeight: "bold" }} >
-                                    Web Redesign
-                                </Typography>
-                            </Grid>
-                        </ListItem>
-                   
-                        
-                </Grid>
-                ))}
-
-            
-                
-                
+            {/**ON CLICK WE WILL CHANGE THE STATUS OF THE PROJECT FROM SEND TO SENT
+             *WHEN WE CONFIRM THE STATUS HAS BEEN CHANGED, THEN WE WILL DISABLE THE BUTTON
+             * THE CURRENT USAGE IS A PLACEHOLDER. NOT THE IMPLEMENTATION
+             **/}
+            <Button
+                disabled={enableSendButton}
+                className={classes.sendButton}
+                classes={{disabled: classes.sendButtonDisabled}}
+                onClick={()=> setEnableSendButton(true)}
+            >
+                Send
+            </Button>
         </Fragment>
     )
+    const detail= (
+        <Fragment>
+            <ProjectFile sendButton={sendButton} />
+            {/*<Fab color={"primary"} size={"small"} disabled={false} className={classes.fab} >*/}
+            {/*   <SendIcon size={"small"}/>*/}
+            {/*</Fab>*/}
+        </Fragment>
+
+    )
+
+
     return (
         <div>
             <Grid container>
                <ListLayout list={list}/>
 
-                <Details details/>
+                <Details details={detail} />
             </Grid>
         </div>
     );

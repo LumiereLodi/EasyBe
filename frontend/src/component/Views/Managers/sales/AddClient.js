@@ -245,7 +245,7 @@ function AddClient(props) {
 
                 </Grid>
                 <Grid container>
-                    <Grid item sm xs={12} className={classes.textFieldContainer} style={{marginBottom: matches ? "2em" : "5em"}}>
+                    <Grid item sm xs={12} className={classes.textFieldContainer} style={{marginBottom: matches ? "2em" : "2em"}}>
                         <TextField fullWidth
                                    id={"address"}
                                    variant={"filled"}
@@ -281,11 +281,13 @@ function AddClient(props) {
     return (
         <div>
 
-            <Grid container>
-                <ListLayout text={"Add client"}/>
+            {/*<Grid container>*/}
+            {/*    <ListLayout text={"Add client"}/>*/}
 
-                <Details details={details}/>
-            </Grid>
+            {/*    <Details details={details}/>*/}
+            {/*</Grid>*/}
+
+            {details}
         </div>
     );
 }
