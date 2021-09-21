@@ -231,12 +231,13 @@ function ProjectFile(props) {
                 </Grid>
 
                 <Grid item style={{marginTop: "2em", marginBottom: "2em"}}>
+                    <Grid item container>
+                        <Typography variant={"h1"} style={{fontWeight: "bold" , marginTop: "1em",marginBottom: "1em"}} >
+                            Project Activities
+                        </Typography>
+                    </Grid>
                     <Grid container  className={classes.projectActivities} sm={12} direction={"column"}>
-                        <Grid item>
-                            <Typography  style={{fontWeight: "bold", marginLeft: "1em" , marginTop: "1em"}} >
-                                Project Activities
-                            </Typography>
-                        </Grid>
+
 
                         <Grid item container style={{marginTop: "1.5em", marginBottom: "1em"}}>
 
@@ -329,7 +330,7 @@ function ProjectFile(props) {
                 <Grid item style={{marginTop: "2em"}}>
                     <Grid container >
                         <Grid item xs={6}>
-                            <Grid container justify={"flex-start"}>
+                            <Grid container justify={"flex-start"} >
                                 <Typography variant={"h1"}>
                                     Sales & Marketing
                                 </Typography>
@@ -393,7 +394,7 @@ function ProjectFile(props) {
                 <Grid item style={{marginTop: "2em"}}>
                     <Grid container >
                         <Grid item xs={6}>
-                            <Grid container justify={"flex-start"}>
+                            <Grid container justify={"flex-start"} >
                                 <Typography variant={"h1"}>
                                     Research & Innovation
                                 </Typography>
@@ -418,7 +419,7 @@ function ProjectFile(props) {
                 </Grid>
 
                 <Grid item>
-                    <Grid item sm className={classes.textFieldContainer}>
+                    <Grid item sm >
                         <TextField fullWidth
                                    id={"RIDescription"}
                                    variant={"filled"}
@@ -479,7 +480,7 @@ function ProjectFile(props) {
                     </Grid>
                 </Grid>
                 <Grid item >
-                    <Grid item sm className={classes.textFieldContainer}>
+                    <Grid item sm >
                         <TextField fullWidth
                                    disabled={!editIT}
                                    id={"ITDescription"}

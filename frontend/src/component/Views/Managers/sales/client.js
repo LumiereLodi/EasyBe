@@ -113,8 +113,8 @@ function Client(props) {
             </Switch>
 
             <Switch>
-
-                <Route path={"/drawer/client/clientlist"} component={CustomerList}/>
+                {/**render={() => <Admin setSelectedMenuItem={setSelectedMenuItem}/>}***/}
+                <Route path={"/drawer/client/clientlist"} render={() => <CustomerList setOpenDialog={setOpenDialog}/>}/>
                 <Route path={"/drawer/client/addclient"} component={AddClient}/>
 
 

@@ -43,15 +43,15 @@ function Menu(props) {
             link: "/drawer/dashboard",
             activeIndex: 0
         },
-        {name: "Department", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, link: "/drawer/yes", activeIndex: 1},
+        // {name: "Department", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, link: "/drawer/yes", activeIndex: 1},
         {
             name: "Employee",
             icon: <ListItemIcon><PeopleAltIcon/></ListItemIcon>,
             link: "/drawer/employee",
-            activeIndex: 2
+            activeIndex: 1
         },
-        {name: "Projects", icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/yesy", activeIndex: 3},
-        {name: "Admin", icon: <ListItemIcon><SettingsIcon/></ListItemIcon>, link: "/drawer/admin", activeIndex: 4},
+        {name: "Projects", icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/yesy", activeIndex: 2},
+        {name: "Admin", icon: <ListItemIcon><SettingsIcon/></ListItemIcon>, link: "/drawer/admin", activeIndex: 3},
 
     ]
     useEffect(() => {
@@ -67,7 +67,7 @@ function Menu(props) {
 
         if (window.location.pathname === "/drawer/admin/departmentList" || window.location.pathname === "/drawer/admin/employeeList"
             || window.location.pathname === "/drawer/admin/addDepartment" || window.location.pathname === "/drawer/admin/addEmployee") {
-            setSelectedMenuItem(4);
+            setSelectedMenuItem(3);
 
         }
 

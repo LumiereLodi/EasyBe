@@ -390,11 +390,15 @@ function RegisterEmployee(props) {
 
     )
     return useObserver(() => (
-        <div><Grid container>
-            <ListLayout text={"Employee List"}/>
+        // <div><Grid container>
+        //     <ListLayout text={"Employee List"}/>
+        //
+        //     <Details details={details}/>
+        // </Grid></div>
+        <div>
+            {details}
+        </div>
 
-            <Details details={details}/>
-        </Grid></div>
     ))
 
 }
