@@ -160,7 +160,7 @@ function ProjectFile(props) {
                                     <Grid item xs={6}>
                                         <Grid item container >
                                             {/**ASSIGN BUTTON IS FOR IT & RI MANAGER**/}
-                                            {props.assignButton ? props.assignButton: undefined}
+                                            {(props.assignButton && appState.userInfo.position === "Manager") ? props.assignButton: undefined}
 
                                             {/**SEND BUTTON IS FOR SM MANAGER**/}
                                             {props.sendButton ? props.sendButton: undefined}
@@ -194,6 +194,7 @@ function ProjectFile(props) {
                                 <Grid container>
                                     <Grid item container xs justify={"center"}  >
                                         <Typography >
+                                            {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
                                             Lumiere
                                         </Typography>
 
@@ -267,7 +268,7 @@ function ProjectFile(props) {
                                     Manager
                                 </Typography>
                             </Grid>
-                            {props.openDialog ?
+                            {(props.editButton && appState.userInfo.position === "Manager") ?
                                 <Grid item container xs={1} justify={"center"} >
                                     <Typography style={{fontWeight: "bold"}}>
 
@@ -281,12 +282,14 @@ function ProjectFile(props) {
 
                             <Grid item container xs justify={"center"} alignItems={"center"}>
                                 <Typography >
+                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
                                     Task Name
                                 </Typography>
 
                             </Grid>
                             <Grid item container xs justify={"center"} alignItems={"center"} >
                                 <Typography >
+                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
                                     Assign To
                                 </Typography>
                             </Grid>
@@ -313,7 +316,7 @@ function ProjectFile(props) {
                             {/*    </IconButton>*/}
 
                             {/*</Grid>*/}
-                            {props.openDialog ? props.openDialog : undefined}
+                            {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
 
                         </Grid>
 

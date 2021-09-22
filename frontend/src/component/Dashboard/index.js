@@ -128,7 +128,7 @@ function Index(props) {
     }, [appState.completedProject])
     return useObserver(() => (
         <div>
-            <AppBar title="Dashboard" location="dashboard" tab={[]} addButton link/>
+            <AppBar title="Dashboard" location="dashboard"   link/>
             <Grid container direction={"column"} style={{marginTop: "1em"}}>
 
                 {/**ACTIVE COMPLETED AND BACKLOG**/}

@@ -87,7 +87,7 @@ function ProjectList(props) {
     const classes = useStyles()
     const [enableSendButton, setEnableSendButton] = useState(false)
     const list = (
-        <ProjectListComponent/>
+        <ProjectListComponent search={"Search"} filter={"Filter"}/>
     )
     const sendButton=(
         <Fragment>

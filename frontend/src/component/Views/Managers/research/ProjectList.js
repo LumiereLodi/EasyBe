@@ -92,7 +92,7 @@ function ProjectList(props) {
         }
     });
     const list = (
-        <ProjectListComponent/>
+        <ProjectListComponent search={"Search by name"}/>
     )
     const assignButton =(
         <Fragment>
@@ -237,7 +237,7 @@ function ProjectList(props) {
     )
     const detail= (
         <Fragment>
-            <ProjectFile assignButton={assignButton} openDialog={editButton}/>
+            <ProjectFile assignButton={assignButton} editButton={editButton}/>
         </Fragment>
 
     )

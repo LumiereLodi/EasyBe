@@ -70,13 +70,38 @@ function ProjectList(props) {
         "Prior",
         "Future"
     ]
+
+    const filterComponent = (
+        <Fragment>
+            <Grid item xs={4} style={{marginLeft: "0.1em"}}>
+                <TextField fullWidth
+                           id={"filter"}
+                           variant={"filled"}
+                           InputProps={{disableUnderline: true}}
+                           label={"Filter"}
+                           className={classes.form}
+                           size={"small"}
+                           select
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {filter.map((filter, index) => (
+                        <MenuItem key={index} value={index}>
+                            {filter}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </Grid>
+        </Fragment>
+    )
     return (
         <Fragment>
             <ListSubheader disableGutters>
                 <Grid item className={classes.searchContainer}>
 
                     <Grid container justifyContent={"space-between"}>
-                        <Grid item xs={7} style={{marginRight: "0.1em"}}>
+                        <Grid item xs style={{marginRight: "0.1em"}}>
                             <FormControl fullWidth
                                          id={"search"}
                                          variant={"filled"}
@@ -84,7 +109,7 @@ function ProjectList(props) {
                                          size={"small"}
 
                             >
-                                <InputLabel id="search"  >Search</InputLabel>
+                                <InputLabel id="search"  >{props.search ? props.search : undefined}</InputLabel>
                                 <FilledInput
                                     id="search"
 
@@ -103,26 +128,8 @@ function ProjectList(props) {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={4} style={{marginLeft: "0.1em"}}>
-                            <TextField fullWidth
-                                       id={"filter"}
-                                       variant={"filled"}
-                                       InputProps={{disableUnderline: true}}
-                                       label={"Filter"}
-                                       className={classes.form}
-                                       size={"small"}
-                                       select
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                {filter.map((filter, index) => (
-                                    <MenuItem key={index} value={index}>
-                                        {filter}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        </Grid>
+
+                        {props.filter ? filterComponent : undefined}
                     </Grid>
 
 
@@ -136,6 +143,8 @@ function ProjectList(props) {
                     <ListItem className={classes.ListContainer} button disableGutters>
                         <Grid container alignItems={"center"} style={{height: "100%"}}>
                             <Typography style={{fontWeight: "bold" }} >
+
+                                {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
                                 Web Redesign
                             </Typography>
                         </Grid>

@@ -49,17 +49,20 @@ function Try(props) {
     }
 
     useEffect(() => {
-        [...props.tab].forEach(route => {
-            switch (window.location.pathname) {
-                case `${route.link}` :
-                    if (props.value !== route.activeIndexes) {
-                        props.setValue(route.activeIndexes)
-                    }
-                    break;
-                default:
-                    break;
-            }
-        })
+        if(props.tab){
+            [...props.tab].forEach(route => {
+                switch (window.location.pathname) {
+                    case `${route.link}` :
+                        if (props.value !== route.activeIndexes) {
+                            props.setValue(route.activeIndexes)
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            })
+        }
+
     })
     return (
         <Fragment>
@@ -69,14 +72,14 @@ function Try(props) {
                         <Grid item style={{width: "100%"}}>
                             <Toolbar>
 
-                                {props.location === "admin" ?
+                                {(props.location && props.location === "admin") ?
                                     <Tabs
                                         value={props.value}
                                         onChange={handleChange}
                                         indicatorColor="none"
 
                                     >
-                                        {props.tab.map((tab, index) => (
+                                        {props.tab ? props.tab.map((tab, index) => (
 
                                             <Tab
                                                 key={index}
@@ -87,7 +90,7 @@ function Try(props) {
                                             />
 
 
-                                        ))}
+                                        )) : undefined}
 
 
                                     </Tabs>
@@ -110,7 +113,7 @@ function Try(props) {
                                     </Tabs>
 
                                 }
-                                {props.addButton}
+                                {props.addButton ? props.addButton : undefined}
 
                             </Toolbar>
                         </Grid>

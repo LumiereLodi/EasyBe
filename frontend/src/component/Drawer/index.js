@@ -36,6 +36,7 @@ import Admin from "../Views/Managers/humanResource/Admin";
 import Client from "../Views/Managers/sales/client"
 import Project from "../Views/Managers/sales/Project";
 import Research from "../Views/Managers/research/research";
+import hrProject from "../Views/Managers/humanResource/Project"
 /**APP STATE**/
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
@@ -480,7 +481,7 @@ function AppDrawer(props) {
 
 
                     <Switch>
-                        <Route path={"/drawer/yes"} component={() => <div>YES YES</div>}/>
+
                         <Route path={"/drawer/dashboard"} component={Dashboard}/>
                         {/**we dont need to pass the prop to the Admin component. this is for learning purpose***/}
                         <Route path={"/drawer/admin"}

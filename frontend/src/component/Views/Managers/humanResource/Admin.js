@@ -12,6 +12,7 @@ import Dialog from "@material-ui/core/Dialog";
 import AddDepartment from "./AddDepartment";
 import axios from "axios";
 import {useAppState} from "../../../WithStore"
+import hrProject from "./Project";
 
 const useStyles = makeStyles(theme => ({
 
@@ -139,9 +140,14 @@ function Admin(props) {
 
     }, [])
     return (
-        <div>
 
-            <AppBar tab={tab} addButton={addButton} value={value} setValue={setValue} location={"admin"}/>
+
+        <div>
+            {/**this is not the best way to do this operation**/}
+
+            {window.location.pathname === "/drawer/admin/hrProject" ? <AppBar title={"Project"} link={"/drawer/admin/hrProject"}/>
+                : <AppBar tab={tab} addButton={addButton} value={value} setValue={setValue} location={"admin"}/> }
+
             <Switch>
                 <Redirect exact from={"/drawer/admin"} to={"/drawer/admin/departmentList"}/>
             </Switch>
@@ -160,14 +166,15 @@ function Admin(props) {
                 {/*    </div>*/}
 
                 {/*}/>*/}
-                <Route path={"/drawer/admin/add"} component={() =>
-                    <div>
-                        {value === 0 ? <AddDepartment/> : AddEmployeeDialog}
-                    </div>
+                {/*<Route path={"/drawer/admin/add"} component={() =>*/}
+                {/*    <div>*/}
+                {/*        {value === 0 ? <AddDepartment/> : AddEmployeeDialog}*/}
+                {/*    </div>*/}
 
-                }/>
+                {/*}/>*/}
                 <Route path={"/drawer/admin/addDepartment"} component={AddDepartment}/>
                 <Route path={"/drawer/admin/addEmployee"} component={RegisterEmployee}/>
+                <Route path={"/drawer/admin/hrProject"} component={hrProject}/>
 
             </Switch>
 

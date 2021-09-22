@@ -165,7 +165,7 @@ function EmployeeList(props) {
                         </Grid>
                         <Grid item container direction={"column"} xs >
                             <Typography style={{fontSize: "3em", color: "black"}}>
-                                183
+                                1
                             </Typography>
                             <Typography style={{fontSize: "1em",color: "black"}}>
                                 Tasks In Progress

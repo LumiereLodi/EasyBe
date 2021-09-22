@@ -15,6 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import ListItem from "@material-ui/core/ListItem";
 import EditIcon from "@material-ui/icons/Edit";
+import ProjectList from "../../ProjectList";
+
 
 const useStyles = makeStyles(theme => ({
 
@@ -78,61 +80,13 @@ const useStyles = makeStyles(theme => ({
 function CustomerList(props) {
     const classes = useStyles()
 
+
     const list = (
         <Fragment>
-            <ListSubheader disableGutters>
-                <Grid item className={classes.searchContainer}>
+            <ProjectList search={"Search by name"} />
 
-                    
-                    <FormControl fullWidth
-                            id={"search"}
-                            variant={"filled"}
-                            className={classes.form}
-                            size={"small"}
-
-                        >
-                        <InputLabel id="search"  >Search by name</InputLabel>
-                        <FilledInput
-                                id="search"
-                            
-                                endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="toggle password visibility"
-                                    >
-                                    <SearchIcon/>
-                                    </IconButton>
-                                </InputAdornment>
-                                }
-                                disableUnderline
-                                
-                            />
-                    </FormControl>
-
-                </Grid>
-
-            </ListSubheader>
-                
-            {[1,2,3,4,5,8,5,4,5,5,5,5,5,5,55,6].map((value, index)=>(
-                    <Grid item >
-                    
-                    <ListItem className={classes.ListContainer} button disableGutters>
-                            <Grid container alignItems={"center"} style={{height: "100%"}}>
-                                <Typography style={{fontWeight: "bold" }} >
-                                    Web Redesign
-                                </Typography>
-                            </Grid>
-                        </ListItem>
-                   
-                        
-                </Grid>
-                ))}
-
-                
-                
         </Fragment>
     )
-
     const details = (
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
