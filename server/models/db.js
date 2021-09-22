@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-require("dotenv").config();
+//require("dotenv").config();
 
 //const devConfig = `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
 //console.log( devConfig)

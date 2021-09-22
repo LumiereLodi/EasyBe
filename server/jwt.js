@@ -4,7 +4,7 @@ const createTokens =  (user) => {
 
     return sign(
         {employeeid: user.employeeid, email: user.email, position: user.position, departmentid: user.departmentid, givennames: user.givennames},
-        process.env.JWT_SECRET
+        process.env.REACT_APP_JWT_SECRET
 
     );
 
@@ -16,7 +16,7 @@ const validateToken = (req, res, next) => {
         return res.status(200).json({ error: "User not Authenticated!", authenticated: false });
 
     try {
-        const validToken = verify(accessToken, process.env.JWT_SECRET);
+        const validToken = verify(accessToken, process.env.REACT_APP_JWT_SECRET);
         if (validToken) {
             req.position = validToken.position;
             req.employeeid = validToken.employeeid;
@@ -37,7 +37,7 @@ const salesmanagerValidation = (req, res, next)=>{
         return res.status(200).json({ error: "User not Authenticated!", authenticated: false });
     }
 
-    const validToken = verify(accessToken, process.env.JWT_SECRET);
+    const validToken = verify(accessToken, process.env.REACT_APP_JWT_SECRET);
 
     if(validToken){
         if(validToken.departmentid !== '2002'){
@@ -50,8 +50,6 @@ const salesmanagerValidation = (req, res, next)=>{
             next()
         }
     }
-
-
 
 }
 

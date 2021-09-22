@@ -6,8 +6,8 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 // import Grid from "@material-ui/core/Grid";
 import LoginForm from "./component/Auth/LoginForm"
 import appDrawer from "./component/Drawer";
-import admin from "./component/Views/Managers/humanResource/Admin"
-import departmentlist from  "./component/Views/Managers/humanResource/DepartmentList"
+import admin from "./component/Views/HRCEO/Admin"
+import departmentlist from "./component/Views/HRCEO/DepartmentList"
 import {useObserver} from "mobx-react"
 function App() {
     return (

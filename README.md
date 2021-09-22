@@ -17,9 +17,26 @@ COMPONENT:
     
     -VIEWS : 
         -MANAGER : The view of each manager depending on their department. 
+            
+            -humanResource : 
+                *AddDepartment & RegisterEmployee : 
+                    Those 2 components are dialogues. 
+                    When click on + button you see a dialogue according to your current location (Department or Employee)
+                    
+                *Admin: this component holds everything together. 
+                
+                *DepartmentList & EmployeeList: 
+                    Those 2 components holds the main layouts. List on the left, details on the right for department and employee.
+                    
+                *Project: Component has the project overviews or analysis. 
+                
+                *Menu: This is the component that has the menu for HR department. 
+            
+            
         -STAFF : view of each staff members depending on their department. 
         
         
+    -
 
 
 IN MORE DETAILS:  

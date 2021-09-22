@@ -29,14 +29,14 @@ import Typography from "@material-ui/core/Typography";
 import Dashboard from "../Dashboard";
 
 /**MENU**/
-import ResearchMenu from "../Views/Managers/research/Menu"
-import SalesMenu from "../Views/Managers/sales/Menu"
-import HRMenu from "../Views/Managers/humanResource/Menu"
-import Admin from "../Views/Managers/humanResource/Admin";
-import Client from "../Views/Managers/sales/client"
-import Project from "../Views/Managers/sales/Project";
-import Research from "../Views/Managers/research/research";
-import hrProject from "../Views/Managers/humanResource/Project"
+import ITRIMenu from "../Views/ITRI/Menu"
+import SalesMenu from "../Views/Sales/Menu"
+import HRCEOMenu from "../Views/HRCEO/Menu"
+import Admin from "../Views/HRCEO/Admin";
+import Customer from "../Views/Sales/Customer"
+import Project from "../Views/Sales/Project";
+import Main from "../Views/ITRI/Main";
+import hrProject from "../Views/HRCEO/Project"
 /**APP STATE**/
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
@@ -332,17 +332,13 @@ function AppDrawer(props) {
             </Grid>
 
             <div className={classes.menuTitle}>Menu</div>
-            {/*{(position === "Manager" && department === "2000" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
-            {(position === "Manager" && department === "2001") ? <ResearchMenu selectedMenuItem={selectedMenuItem}
-                                                                               setSelectedMenuItem={setSelectedMenuItem} 
-                                                                               setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
-            {(position === "Manager" && department === "2002") ?
+            {(department === "2000" || department === "2001") ? <ITRIMenu selectedMenuItem={selectedMenuItem}
+                                                                          setSelectedMenuItem={setSelectedMenuItem}
+                                                                          setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+            {(department === "2002") ?
                 <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
-            {/*{(position === "Manager" && department === "2003" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
-            {(position === "Manager" && department === "2004") ?
-                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
-
-
+            {(department === "2003" || department === "2004") ?
+                <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
         </Drawer>
 
     )
@@ -428,18 +424,15 @@ function AppDrawer(props) {
 
 
             </Grid>
+
                 <div className={classes.menuTitle}>Menu</div>
-                {/*<HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} mobile={true}/>*/}
-                 {/*{(position === "Manager" && department === "2000" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
-            {(position === "Manager" && department === "2001") ? <ResearchMenu selectedMenuItem={selectedMenuItem}
-                                                                               setSelectedMenuItem={setSelectedMenuItem} 
-                                                                               setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
-            {(position === "Manager" && department === "2002") ?
-                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
-            {/*{(position === "Manager" && department === "2003" ) ?  <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}/> : undefined}*/}
-            {(position === "Manager" && department === "2004") ?
-                <HRMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
-                    
+                {(department === "2000" || department === "2001") ? <ITRIMenu selectedMenuItem={selectedMenuItem}
+                                                                              setSelectedMenuItem={setSelectedMenuItem}
+                                                                              setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                {(department === "2002") ?
+                    <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                {(department === "2003" || department === "2004") ?
+                    <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
             </SwipeableDrawer>
 
             <IconButton
@@ -496,8 +489,8 @@ function AppDrawer(props) {
                          **/}
 
                         <Route path={"/drawer/project"} component={Project}/>
-                        <Route path={"/drawer/researchProject"} component={Research}/>
-                        <Route path={"/drawer/client"} component={Client}/>
+                        <Route path={"/drawer/researchProject"} component={Main}/>
+                        <Route path={"/drawer/client"} component={Customer}/>
                         <Route path={"/drawer/analytics"} component={() => <div>Analytics</div>}/>
 
                     </Switch>

@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 /*>>>>> first field of the URL <<<<<<<<<*/
 
-app.use("/sales", sales);
+app.use("/Sales", sales);
 app.use("/hr", hr);
 app.use("/user", user);
 app.use("/authenticate", auth);
@@ -64,7 +64,7 @@ app.get("/test", async (req, res)=> {
 
     try{
         console.log("inside the test")
-        console.log("the JWT_SECRET: " + process.env.JWT_SECRET)
+        console.log("the JWT_SECRET: " + process.env.REACT_APP_JWT_SECRET)
         const result = await db.query("SELECT * FROM employee")
         console.log(result)
         res.json(result)
