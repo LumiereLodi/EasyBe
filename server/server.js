@@ -14,14 +14,14 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const path = require("path")
 
-app.use(express.static(path[0] +  "frontend/build"))
+app.use(express.static(path[0] + "frontend/build"))
 
-if(process.env.NODE_ENV === "production"){
+if (process.env.NODE_ENV === "production") {
     const path = __dirname.split("\server")
-    app.use(express.static(path[0] +  "frontend/build"))
+    app.use(express.static(path[0] + "frontend/build"))
     //D:\lumie\Coding\IE Project\EasyBe\frontend\build
     //frontend\build
-} 
+}
 
 /************* CONNECTION TO THE ROUTES ******************/
 
@@ -33,7 +33,9 @@ const dashboard = require("./routes/dashboard");
 const manager = require("./routes/manager");
 const project = require("./routes/project");
 
-
+/**Diloma changes Changes made here**/
+const IT = require("./routes/IT")
+const searchList = require("./routes/search")
 
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -43,7 +45,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 /*>>>>> first field of the URL <<<<<<<<<*/
@@ -59,29 +61,32 @@ app.use("/task", manager);
 app.use("/analytics", manager);
 app.use("/project", project)
 
+/**Diloma changes made here**/
+app.use("/IT", IT)
+app.use("/search", searchList)
 
-app.get("/test", async (req, res)=> {
+app.get("/test", async (req, res) => {
 
-    try{
+    try {
         console.log("inside the test")
         console.log("the JWT_SECRET: " + process.env.REACT_APP_JWT_SECRET)
         const result = await db.query("SELECT * FROM employee")
         console.log(result)
         res.json(result)
-    }catch(e){
+    } catch (e) {
         res.status(400).json(e.message)
     }
-    
+
 })
 
-app.get("*", (req, res)=> {
+app.get("*", (req, res) => {
 
     console.log("inside unknown")
-    
+
     const path = __dirname.split("\server")
     console.log(path[0] + "\n")
     //console.log(path.join(__dirname, "frontend/build/index.html"))
-    res.sendFile(path[0] +  "frontend/build/index.html")
+    res.sendFile(path[0] + "frontend/build/index.html")
     //console.log(path.join(__dirname, "client-side/build/index.html"))
 })
 
