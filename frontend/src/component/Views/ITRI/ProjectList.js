@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     dialogContainer:{
         "& .MuiDialog-paper": {
             width: "75em",
-            height: "25em",
+            height: "35em",
             backgroundColor: theme.palette.secondary.main,
             padding: "1em"
         }
@@ -71,6 +71,18 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: "red"
         },
 
+    },
+    completedButton: {
+        ...theme.typography.login,
+        backgroundColor: theme.palette.primary.main,
+        height: 32,
+        width: 150,
+        borderRadius: "10px",
+        color: "white",
+        "&:hover": {
+            backgroundColor: theme.palette.secondary.light,
+            color: "black"
+        }
     },
 }))
 
@@ -93,8 +105,10 @@ function ProjectList(props) {
         onSubmit: async (values, {resetForm}) => {
         }
     });
+
+    //here we will pass list of project for manager, list of tasks for staff.
     const list = (
-        <ProjectListComponent search={"Search by name"}/>
+        <ProjectListComponent search={"Search by name"} filter={"Filter"}/>
     )
     const assignButton =(
         <Fragment>
@@ -210,6 +224,30 @@ function ProjectList(props) {
                         </Grid>
 
                     </Grid>
+                    <Grid container style={{marginTop: "2em"}}>
+
+                        <Grid item sm className={classes.textFieldContainer}>
+                            <TextField fullWidth
+                                       id={"description"}
+                                       variant={"filled"}
+                                       InputProps={{
+                                           disableUnderline: true,
+                                           autoComplete: 'new-password',
+                                           form: {
+                                               autoComplete: 'off'
+                                           }
+                                       }}
+                                       label={"Description"}
+                                       className={classes.form}
+                                       onChange={formik.handleChange}
+                                       value={formik.values.description}
+                                       multiline
+                                       rows={5}
+
+                            />
+                        </Grid>
+
+                    </Grid>
 
                     <Grid container justify={"center"} style={{marginTop: "1em"}}>
                         <Grid item>
@@ -225,6 +263,18 @@ function ProjectList(props) {
         </Fragment>
     )
 
+    const completedButton = (
+
+        //The title of the button will come from the Database.
+        <Fragment>
+            <Button
+                className={classes.completedButton}
+
+            >
+                COMPLETE
+            </Button>
+        </Fragment>
+    )
     const editButton=(
         <Fragment>
             <Grid item container xs={1} justify={"center"} >
@@ -240,7 +290,7 @@ function ProjectList(props) {
     const detail= (
         <Fragment>
             <ProjectFile assignButton={appState.userInfo.position === "Manager" ? assignButton : undefined}
-                         editButton={appState.userInfo.position === "Manager" ? editButton : undefined}/>
+                         editButton={appState.userInfo.position === "Manager" ? editButton : undefined} completedButton={completedButton}/>
         </Fragment>
 
     )

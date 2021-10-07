@@ -12,6 +12,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/styles";
+import {useAppState} from "../WithStore";
+import {useObserver} from "mobx-react"
 
 const useStyles = makeStyles(theme => ({
 
@@ -63,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 function ProjectList(props) {
 
     const classes = useStyles()
+    const appState = useAppState()
 
     const filter = [
         "All",
@@ -95,7 +98,9 @@ function ProjectList(props) {
             </Grid>
         </Fragment>
     )
-    return (
+    return useObserver(()=> (
+
+
         <Fragment>
             <ListSubheader disableGutters>
                 <Grid item className={classes.searchContainer}>
@@ -129,7 +134,7 @@ function ProjectList(props) {
                         </Grid>
 
 
-                        {props.filter ? filterComponent : undefined}
+                        {/*{props.filter ? filterComponent : undefined}*/}
                     </Grid>
 
 
@@ -137,15 +142,15 @@ function ProjectList(props) {
 
             </ListSubheader>
 
-            {[1,2,3,4,5,8,5,4,5,5,5,5,5,5,55,6].map((value, index)=>(
+            {/*{props.projects}*/}
+            {appState.projectList.map((value, index)=>(
                 <Grid item >
 
-                    <ListItem className={classes.ListContainer} button disableGutters>
+                    <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
                         <Grid container alignItems={"center"} style={{height: "100%"}}>
                             <Typography style={{fontWeight: "bold" }} >
-
-                                {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                Web Redesign
+                                {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
+                                {/*{value.name}*/}
                             </Typography>
                         </Grid>
                     </ListItem>
@@ -156,9 +161,8 @@ function ProjectList(props) {
 
 
 
-
         </Fragment>
-    );
+    ));
 }
 
 export default ProjectList;

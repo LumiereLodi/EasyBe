@@ -50,6 +50,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use("/Sales", sales);
 app.use("/hr", hr);
+app.use("/department", hr);
 app.use("/user", user);
 app.use("/authenticate", auth);
 app.use("/dashboard", dashboard);

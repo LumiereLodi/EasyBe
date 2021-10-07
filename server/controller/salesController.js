@@ -49,26 +49,123 @@ module.exports={
             res.status(400).json(error.message)
         }
     },
-    addProject: async (req, res)=> {
+    addProject: async (req, res, next)=> {
         try {
             const outcome = await db.query("INSERT INTO \n" +
                 "project( name, customerid,\n" +
-                "\t\t description,startdate,\n" +
+                "\t\t startdate,\n" +
                 "\t\t enddate, staff,createdby)\n" +
-                "VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *", [
+                "VALUES($1,$2,$3,$4,$5,$6) RETURNING *", [
                 req.body.name,
                 req.body.customer,
-                req.body.description,
                 req.body.startDate,
                 req.body.endDate,
                 req.body.staff,
                 req.params.managerid
             ]);
 
-            res.json(outcome.rows[0]);
+            req.newProject = outcome.rows[0]
+
+            next()
+            //res.json(outcome.rows[0]);
 
         } catch (e) {
             console.log(e)
         }
+    },
+
+    projectFile: async(req, res) => {
+        let result;
+        try{
+            if(req.body.description){
+
+                if(req.newProject){
+                    await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4)", [
+
+                        req.newProject.projectid,
+                        req.newProject.staff,
+                        req.params.departmentid,
+                        req.body.description
+                    ])
+                }else{
+                     result = await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4) RETURNING * ", [
+
+                        req.params.projectid,
+                        req.params.employeeid,
+                        req.params.departmentid,
+                        req.body.description
+                    ])
+                }
+            }
+
+            res.status(200).json({newProject : req.newProject, projectFile:  result.rows[0]})
+        }catch (error){
+            res.status(400).json(error.message)
+        }
+    },
+
+    sendProject: async (req, res) => {
+        try{
+            const result = await db.query("UPDATE project SET location = '1', status = '1' where projectid = $1 RETURNING *", [req.params.projectid])
+            res.status(200).json({editedProject : result.rows[0]})
+
+        }catch (error){
+            res.status(400).json(error.message)
+        }
+    },
+    completeProject: async (req, res) => {
+        try{
+            const result = await db.query("UPDATE project SET status = '2' where projectid = $1 RETURNING *", [req.params.projectid])
+            res.status(200).json({editedProject : result.rows[0]})
+
+        }catch (error){
+            res.status(400).json(error.message)
+        }
+    },
+    getLocation: async (req, res) => {
+        try{
+            const result = await db.query("SELECT location from project where projectid = $1", [req.params.projectid])
+            res.status(200).json(result.rows[0])
+
+        }catch (error){
+            res.status(400).json(error.message)
+        }
+    },
+    getStatus : async(req, res) => {
+        try{
+        const result = await db.query("SELECT status from project where projectid = $1", [req.params.projectid])
+        res.status(200).json(result.rows[0])
+
+    }catch (error){
+        res.status(400).json(error.message)
+        }
+    },
+    getAllTasks : async(req, res) => {
+    try{
+
+        let query = "select task.*, employee.lastname from task \n" +
+            "join employee\n" +
+            "on task.staff = employee.employeeid\n"
+
+        if(req.params.departmentid !== '2002'){
+            query = query + "where task.projectid = $1 "
+        }
+
+        let result;
+        if(req.params.departmentid === '2002'){
+             result = await db.query(query)
+
+        }
+        else{
+             result = await db.query(query, [req.params.projectid])
+        }
+
+
+
+        res.status(200).json(result.rows)
+
+    }catch (error){
+        res.status(400).json(error.message)
     }
+},
 }

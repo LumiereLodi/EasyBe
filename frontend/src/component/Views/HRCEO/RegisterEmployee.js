@@ -23,6 +23,7 @@ import {
 import {useFormik} from "formik";
 import * as yup from 'yup';
 import axios from "axios";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 //const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
@@ -78,6 +79,7 @@ function RegisterEmployee(props) {
     const appState = useAppState()
 
     const [emailExist, setEmailExist] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
 
     const positions = [
         "Admin",
@@ -89,6 +91,20 @@ function RegisterEmployee(props) {
         "Part-Time"
     ]
 
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={()=> setOpenSnackbar(false) }
+                message={"Successful login"}
+                autoHideDuration={3000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
 
     const formik = useFormik({
         initialValues: {
@@ -117,13 +133,16 @@ function RegisterEmployee(props) {
 
                     const data = JSON.stringify(updatedValues)
                     console.log(data);
-                    const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
-                        headers: {
-                            'Content-Type': "application/json"
-                        }
-                    });
+                    // const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
+                    //     headers: {
+                    //         'Content-Type': "application/json"
+                    //     }
+                    // });
                     // use a snackbar to show the admin that the empoyee has been added.
-                    alert("The employee " + response.data.data[0].givennames + " " + response.data.data[0].lastname + " has been added")
+                    //alert("The employee " + response.data.data[0].givennames + " " + response.data.data[0].lastname + " has been added")
+                    props.setOpenEmployeeDialog(false)
+                    props.setOpenSnackbar(true)
+
                     resetForm()
 
                 }
@@ -377,7 +396,7 @@ function RegisterEmployee(props) {
                 </Grid>
                 <Grid container justify={"center"}>
                     <Grid item>
-                        <Button className={classes.loginButton} type={"submit"}>
+                        <Button className={classes.loginButton} type={"submit"} >
                             Add
                         </Button>
                     </Grid>
@@ -389,6 +408,7 @@ function RegisterEmployee(props) {
     )
     return useObserver(() => (
         <div>
+            {snackBarComponent}
             {details}
         </div>
 

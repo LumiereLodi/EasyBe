@@ -84,6 +84,30 @@ function Project(props) {
                 console.log(staff.data)
                 appState.setStaffList(staff.data)
 
+                const projectlistAll = await axios.get(`/project/projectlist`);
+                console.log(projectlistAll)
+                appState.setProjectListAll(projectlistAll.data)
+
+                const defaultproject = await axios.get(`/project/defaultproject`);
+                console.log(defaultproject.data.project)
+                appState.setSelectedProject(defaultproject.data.project[0])
+
+                const startDate = new Date(defaultproject.data.project[0].startdate)
+                const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
+                appState.setStartDate(startDateFormat)
+
+                const endDate = new Date(defaultproject.data.project[0].enddate)
+                const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
+                appState.setEndDate(endDateFormat)
+
+                console.log()
+                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+
+
+                const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
+                appState.setTaskList(activities.data)
+                console.log(activities.data)
             } catch (error) {
                 alert(error)
             }
@@ -121,7 +145,7 @@ function Project(props) {
     return (
         <div>
 
-            <AppBar tab={[]} title={"Projects"} addButton={appState.userInfo.position === "Manager" ? addButton : undefined} link={"/drawer/project/projectlist"}/>
+            <AppBar tab={[]} title={appState.userInfo.position === "Manager" ?  "Projects" : "Tasks"} addButton={appState.userInfo.position === "Manager" ? addButton : undefined} link={"/drawer/project/projectlist"}/>
             <Hidden mdDown={appState.showListLayout}>
                 {matches ? <Fab color={"primary"} className={classes.fab}  component={Link} to={"/drawer/project/addproject" } onClick={()=> handleFabClick()}>
                     <AddIcon/>
@@ -135,7 +159,7 @@ function Project(props) {
 
             <Switch>
 
-                <Route path={"/drawer/project/projectlist"} component={ProjectList}/>
+                <Route path={"/drawer/project/projectlist"} render={()=> <ProjectList setOpenDialog={setOpenDialog} />}/>
                 <Route path={"/drawer/project/addproject"} component={AddProject}/>
 
 

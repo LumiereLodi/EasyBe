@@ -12,5 +12,6 @@ router.get("/admin",hr.admin);
 
 router.get("/admin/department/departmentlist", hr.departmentList);
 
+router.post("/addDepartment/:id", hr.addDepartment, hr.assignManager)
 
 module.exports = router

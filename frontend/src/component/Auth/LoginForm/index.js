@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment,useEffect, useState} from 'react';
 import {
     Grid,
     Paper,
@@ -8,8 +8,8 @@ import {
 } from "@material-ui/core";
 import {useAppState} from "../../WithStore"
 import {useHistory} from "react-router-dom";
-
 import {makeStyles} from "@material-ui/styles";
+import Snackbar from '@material-ui/core/Snackbar';
 
 import easybeLogo from "../../../assets/EasyBe.png";
 
@@ -117,6 +117,7 @@ function Index(props) {
     const appState = useAppState()
     const history = useHistory();
 
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     useEffect(() => {
         async function authenticate() {
             const result = await axios.get("/authenticate", {
@@ -157,7 +158,9 @@ function Index(props) {
                     setPasswordMessage('');
 
                     appState.setAuth(true);
+                    setOpenSnackbar(true)
                     history.replace('/drawer')
+
 
                 }
 
@@ -167,9 +170,22 @@ function Index(props) {
 
         }
     });
+
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={()=> setOpenSnackbar(false) }
+                message={"Successful login"}
+                autoHideDuration={3000}
+            />
+        </Fragment>
+
+    )
     return (
         <div>
-
+            {snackBarComponent}
             <Grid container direction={"row"} justify={"center"} className={classes.mainContainer} style={{height: "100%"}}
                   alignItems={"center"}>
                 <Paper className={classes.paperContainer}>

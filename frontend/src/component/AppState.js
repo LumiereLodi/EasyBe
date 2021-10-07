@@ -55,6 +55,49 @@ export function createAppStore(){
         showListLayout: false,
         setShowListLayout (isMobile){
             this.showListLayout = isMobile
+        },
+        projectList : [],
+        setProjectListAll (allProject){
+            this.projectList.splice(0,this.projectList.length)
+            this.projectList.push(
+                ...allProject
+            )
+        },
+        selectedProject : {},
+        setSelectedProject (project){
+            this.selectedProject = project
+        },
+        startDate: '',
+        setStartDate(date){
+                this.startDate = date
+        },
+        endDate : '',
+        setEndDate(date){
+            this.endDate = date
+        },
+        completedTask : '',
+        setCompletedTask (number){
+                this.completedTask = number
+        },
+        activeTask : '',
+        setActiveTask (number){
+            this.activeTask = number
+        },
+        enableSendButton: false,
+        setEnableSendButton(enable){
+                this.enableSendButton = enable
+        },
+        enableCompletedButton: false,
+        setEnableCompletedButton(enable){
+                this.enableCompletedButton = enable
+        },
+        taskList: [],
+        setTaskList(tasks){
+            this.taskList.splice(0,this.taskList.length)
+            this.taskList.push(
+                ...tasks
+            )
         }
+
     }
 }

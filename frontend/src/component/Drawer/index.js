@@ -41,6 +41,7 @@ import hrProject from "../Views/HRCEO/Project"
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
 import axios from "axios";
+import Snackbar from "@material-ui/core/Snackbar";
 
 
 const marginLeft = 100;
@@ -170,6 +171,14 @@ const useStyles = makeStyles(theme => ({
     },
     menu: {
         borderRadius: 0
+    },
+    snackbar:{
+
+            //backgroundColor: "red",
+            "& .MuiSnackbarContent-root": {
+                backgroundColor: "#6ed00c"
+            }
+
     }
 
 }))
@@ -195,6 +204,7 @@ function AppDrawer(props) {
     const [position, setPosition] = useState('')
     const [reload, setReload] = useState(false);
     const [initial, setInitial] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
 
     const handleChange = (e, newValue) => {
         setValue(newValue)
@@ -240,6 +250,7 @@ function AppDrawer(props) {
                 setDepartment(result.data.departmentid)
                 setPosition(result.data.position)
                 setInitial(result.data.givennames)
+                setOpenSnackbar(true)
             }
 
 
@@ -250,6 +261,22 @@ function AppDrawer(props) {
 
 
     }, [reload])
+
+
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={()=> setOpenSnackbar(false) }
+                message={"Successful login"}
+                autoHideDuration={3000}
+               classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
     const permanentDrawer = (
 
         <Drawer
@@ -285,7 +312,7 @@ function AppDrawer(props) {
                                     <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span>}
                             </Typography>
                             <Typography style={{fontSize: "0.7em", color: "#878787"}}>
-                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : undefined} {appState.userInfo.position}
+                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : appState.userInfo.departmentname} {appState.userInfo.position}
                             </Typography>
                         </Grid>
 
@@ -448,7 +475,9 @@ function AppDrawer(props) {
 
     return useObserver(() => (
 
+
         <div>
+            {snackBarComponent}
             <Grid container>
 
                 {matches ? <ElevationScroll>

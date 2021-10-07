@@ -29,29 +29,64 @@ module.exports = {
 
     //OVERVIEW OF PROJECTS AND TASKS WITHIN THE USER DEPARTMENT
     overview: async(req, res)=> {
+
+
         try{
             const result = await db.query("select projects.projectid as projectid, projects.name,totalTasks.totalNumberTasks as Task, (Case when projects.enddate > Now() then 'Delayed' else 'on Track' end) as Status,\n" +
                 "         completedTasks.TaskProgress * 100 / totalTasks.totalNumberTasks || '%' as progress from project as projects\n" +
                 "         inner join(\n" +
-                "           select project.projectid, count(task.taskid) as TaskProgress from task, team, project\n" +
-                "         where project.projectid = team.projectid\n" +
-                "         and team.teamid = task.teamid\n" +
-                "\t\tand project.location = $1\n" +
-                "         and task.taskStatus = 'completed'  group by task.teamid, project.projectid\n" +
+                "           select project.projectid, count(task.taskid) as TaskProgress from task, project\n" +
+                "         where " +
+                "         project.projectid = task.projectid and\n" +
+                "         task.departmentid = $1\n" +
+                "\t\tand project.location = $2\n" +
+                "         and task.status = '2'  group by project.projectid\n" +
                 "\n" +
                 "         ) as completedTasks\n" +
                 "         on projects.projectid = completedTasks.projectid\n" +
                 "\n" +
                 "         inner join(\n" +
-                "           select project.projectid, count(task.taskid) as totalNumberTasks from task, team, project\n" +
-                "         where project.projectid = team.projectid\n" +
-                "\t\t\t and project.location = $1\n" +
-                "         and team.teamid = task.teamid group by task.teamid,project.projectid\n" +
+                "           select project.projectid, count(task.taskid) as totalNumberTasks from task, project\n" +
+                "         where " +
+                "         project.projectid = task.projectid and\n" +
+                "\t\t\t   project.location = $2\n" +
+                "         and task.departmentid = $1 group by project.projectid\n" +
                 "         ) as totalTasks\n" +
                 "         on projects.projectid = totalTasks.projectid \n" +
                 "\t\t \n" +
-                "\t\t ", [req.params.departmentid])
+                "\t\t ", [req.params.departmentid,'1'])
 
+            res.status(200).json({data: result.rows})
+
+        }catch (err) {
+            res.status(400).json(err.message)
+        }
+    },
+    overviewAdmin: async(req, res)=> {
+
+        console.log("inside hr overview")
+        try{
+            const result = await db.query("select projects.projectid as projectid, projects.name,totalTasks.totalNumberTasks as Task, (Case when projects.enddate > Now() then 'Delayed' else 'on Track' end) as Status,\n" +
+                "         completedTasks.TaskProgress * 100 / totalTasks.totalNumberTasks || '%' as progress from project as projects\n" +
+                "         inner join(\n" +
+                "           select project.projectid, count(task.taskid) as TaskProgress from task, project\n" +
+                "         where " +
+                "         project.projectid = task.projectid\n" +
+                "\t\t     and project.location = '1'\n" +
+                "         and task.status = '2'  group by project.projectid\n" +
+                "         ) as completedTasks\n" +
+                "         on projects.projectid = completedTasks.projectid\n" +
+                "\n" +
+                "         inner join(\n" +
+                "           select project.projectid, count(task.taskid) as totalNumberTasks from task, project\n" +
+                "         where " +
+                "         project.projectid = task.projectid and\n" +
+                "\t\t\t   project.location = '1'\n" +
+                "         group by project.projectid\n" +
+                "         ) as totalTasks\n" +
+                "         on projects.projectid = totalTasks.projectid ")
+
+            console.log("check check " + result.rows)
             res.status(200).json({data: result.rows})
 
         }catch (err) {

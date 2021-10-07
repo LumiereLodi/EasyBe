@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import ListSubheader from "@material-ui/core/ListSubheader";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -103,13 +103,27 @@ function ProjectFile(props) {
     const [editSM, setEditSM] = useState(false)
     const [editRI, setEditRI] = useState(false)
     const [editIT, setEditIT] = useState(false)
+    const [startDate, setStartDate] = useState('')
     const appState = useAppState()
 
     const [descriptionTextColor, setDescriptionTextColor] = useState("black")
     const handleSave = (e) => {
         //alert("I was clicked")
     }
-    return (
+
+    useEffect(()=> {
+        if(appState.selectedProject.startdate){
+            const startdate = new Date(appState.selectedProject.startdate)
+            const startDateFormat = startdate.getDate() + "/" + startdate.getMonth() + "/" + startdate.getFullYear();
+            setStartDate(startDateFormat)
+            //const startDateFormat = startdate.getFullYear() + "/" + startdate.getMonth() + "/" + startdate.getDate();
+        }
+
+    },[])
+
+    //const defaultValue = "Hello there how are \n" + "\nI am good thank you."
+    const defaultValue = `Hello there how are \n\nI am good thank you.`
+    return useObserver(()=> (
         <Fragment>
 
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
@@ -117,7 +131,9 @@ function ProjectFile(props) {
                     <Grid container justify={"center"} style={{marginBottom: "1em", marginTop: "1em"}}>
                         <Grid item>
                             <Typography variant={"h1"} style={{fontSize: "2em"}}>
-                                Web Redesign
+                                {/*{appState.selectedProject.name !== null ? appState.selectedProject.name.toUpperCase() : null}*/}
+                                {/*{appState.selectedProject.name.length < 50 ? appState.selectedProject.name.toUpperCase() : <span>{appState.selectedProject.name.substring(0, 50)}...</span> }*/}
+                                {appState.selectedProject.name && appState.selectedProject.name.length < 50 ? appState.selectedProject.name.toUpperCase() : appState.selectedProject.name  ? <span>{appState.selectedProject.name.substring(0, 50)}...</span> : null}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -127,7 +143,7 @@ function ProjectFile(props) {
                     <Grid container>
                         <Grid item container direction={"column"} xs alignItems={"flex-end"} style={{marginRight: "4em"}} >
                             <Typography style={{fontSize: "3em", color: "black"}}>
-                                739
+                                {appState.completedTask}
                             </Typography>
                             <Typography style={{fontSize: "1em", color: "black"}}>
                                 Completed Tasks
@@ -135,10 +151,10 @@ function ProjectFile(props) {
                         </Grid>
                         <Grid item container direction={"column"} xs style={{marginLeft: "4em"}}>
                             <Typography style={{fontSize: "3em", color: "black"}}>
-                                132
+                                {appState.activeTask}
                             </Typography>
                             <Typography style={{fontSize: "1em",color: "black"}}>
-                                Pending Tasks
+                                Active Tasks
                             </Typography>
                         </Grid>
                     </Grid>
@@ -188,27 +204,37 @@ function ProjectFile(props) {
                                             End Date
                                         </Typography>
                                     </Grid>
+                                    {(props.editProject && appState.userInfo.position === "Manager") ?
+                                        <Grid item container xs={1} justify={"center"} >
+                                            <Typography style={{fontWeight: "bold"}}>
+
+                                            </Typography>
+                                        </Grid>
+                                        : undefined}
                                 </Grid>
                             </Grid>
                             <Grid item>
                                 <Grid container>
-                                    <Grid item container xs justify={"center"}  >
+                                    <Grid item container xs justify={"center"}  alignItems={"center"}>
                                         <Typography >
                                             {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                            Lumiere
+                                            { appState.selectedProject.lastname && appState.selectedProject.lastname.length < 20 ? appState.selectedProject.lastname : appState.selectedProject.lastname !== undefined ? <span>{appState.selectedProject.lastname.substring(0, 20)}...</span> : undefined}
+                                            {/**                                {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
+                                             **/}
                                         </Typography>
 
                                     </Grid>
-                                    <Grid item container xs justify={"center"} >
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
                                         <Typography >
-                                            19/09/2021
+                                            {appState.startDate}
                                         </Typography>
                                     </Grid>
-                                    <Grid item container xs justify={"center"} >
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
                                         <Typography>
-                                            10/10/2021
+                                            {appState.endDate}
                                         </Typography>
                                     </Grid>
+                                    {(props.editProject && appState.userInfo.position === "Manager") ? props.editProject : undefined}
                                 </Grid>
                             </Grid>
 
@@ -221,10 +247,14 @@ function ProjectFile(props) {
                                         Remaining Days
                                     </Typography>
                                 </Grid>
+                                {/**#6ed00c**/}
                                 <Grid item style={{marginTop: "1em"}}>
-                                    <Typography style={{ fontFamily: "Roboto", fontSize: "4em", color: "#6ed00c"}}>
-                                        105
+                                    <Typography style={{ fontFamily: "Roboto", fontSize: "4em", color: appState.selectedProject.remainingdays >= 0 ? "#6ed00c" : "red"}}>
+                                        {appState.selectedProject.remainingdays}
                                     </Typography>
+                                </Grid>
+                                <Grid item>
+                                    {props.completedButton ? props.completedButton : undefined }
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -253,11 +283,11 @@ function ProjectFile(props) {
                                     Assign To
                                 </Typography>
                             </Grid>
-                            <Grid item container xs justify={"center"} >
-                                <Typography style={{fontWeight: "bold"}}>
-                                    Deadline
-                                </Typography>
-                            </Grid>
+                            {/*<Grid item container xs justify={"center"} >*/}
+                            {/*    <Typography style={{fontWeight: "bold"}}>*/}
+                            {/*        Deadline*/}
+                            {/*    </Typography>*/}
+                            {/*</Grid>*/}
                             <Grid item container xs justify={"center"} >
                                 <Typography style={{fontWeight: "bold"}}>
                                     Status
@@ -278,47 +308,51 @@ function ProjectFile(props) {
 
 
                         </Grid>
-                        <Grid item container style={{marginBottom: "0.3em"}}>
+                        {appState.taskList.map((task, index) => (
 
-                            <Grid item container xs justify={"center"} alignItems={"center"}>
-                                <Typography >
-                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                    Task Name
-                                </Typography>
+                            <Grid item container style={{marginBottom: "0.3em"}}>
+
+                                <Grid item container xs justify={"center"} alignItems={"center"}>
+                                    <Typography>
+                                        {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
+                                        {task.name.length < 20 ? task.name : <span>{task.name.substring(0, 20)}...</span>}
+                                    </Typography>
+
+                                </Grid>
+                                <Grid item container xs justify={"center"} alignItems={"center"} >
+                                    <Typography >
+                                        {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
+                                        {task.lastname.length < 20 ? task.lastname : <span>{task.lastname.substring(0, 20)}...</span>}
+                                    </Typography>
+                                </Grid>
+                                {/*<Grid item container xs justify={"center"} alignItems={"center"} >*/}
+                                {/*    <Typography>*/}
+                                {/*        Deadline*/}
+                                {/*    </Typography>*/}
+                                {/*</Grid>*/}
+                                <Grid item container xs justify={"center"} alignItems={"center"}>
+                                    <Typography >
+                                        {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : "Delayed" }
+                                    </Typography>
+                                </Grid>
+                                <Grid item container xs justify={"center"} alignItems={"center"}>
+                                    <Typography >
+                                        {task.departmentid}
+                                    </Typography>
+                                </Grid>
+                                {/*<Grid item container xs={1} justify={"center"} >*/}
+                                {/*    <IconButton*/}
+                                {/*        onClick={()=> props.openDialog ? props.openDialog(true) : undefined}*/}
+                                {/*    >*/}
+                                {/*        <EditIcon fontSize="small" htmlColor={"black"}/>*/}
+                                {/*    </IconButton>*/}
+
+                                {/*</Grid>*/}
+                                {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
 
                             </Grid>
-                            <Grid item container xs justify={"center"} alignItems={"center"} >
-                                <Typography >
-                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                    Assign To
-                                </Typography>
-                            </Grid>
-                            <Grid item container xs justify={"center"} alignItems={"center"} >
-                                <Typography>
-                                    Deadline
-                                </Typography>
-                            </Grid>
-                            <Grid item container xs justify={"center"} alignItems={"center"}>
-                                <Typography >
-                                    Status
-                                </Typography>
-                            </Grid>
-                            <Grid item container xs justify={"center"} alignItems={"center"}>
-                                <Typography >
-                                    Department
-                                </Typography>
-                            </Grid>
-                            {/*<Grid item container xs={1} justify={"center"} >*/}
-                            {/*    <IconButton*/}
-                            {/*        onClick={()=> props.openDialog ? props.openDialog(true) : undefined}*/}
-                            {/*    >*/}
-                            {/*        <EditIcon fontSize="small" htmlColor={"black"}/>*/}
-                            {/*    </IconButton>*/}
+                        ))}
 
-                            {/*</Grid>*/}
-                            {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
-
-                        </Grid>
 
                     </Grid>
                 </Grid>
@@ -439,7 +473,7 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {"Helo sir babe"}
+                                   defaultValue = {defaultValue}
 
                         />
                     </Grid>
@@ -523,7 +557,7 @@ function ProjectFile(props) {
 
             </Grid>
         </Fragment>
-    );
+    ));
 }
 
 export default ProjectFile;

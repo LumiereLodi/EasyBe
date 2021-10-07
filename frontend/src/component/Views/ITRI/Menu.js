@@ -11,6 +11,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
 import {makeStyles} from "@material-ui/styles";
+import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
+import {useAppState} from "../../WithStore";
+import {useObserver} from "mobx-react"
 
 const useStyles = makeStyles(theme =>({
 
@@ -30,13 +33,28 @@ const useStyles = makeStyles(theme =>({
 
 function Menu(props) {
     const classes = useStyles()
+    const appState = useAppState()
 
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
 
-    const routes = [
+    let routes = [
         {name: "Dashboard", icon: <ListItemIcon ><DashboardIcon/></ListItemIcon>, link: "/drawer/dashboard", activeIndex: 0},
-        {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/researchProject", activeIndex: 1},
+       // {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/researchProject", activeIndex: 1},
     ]
+    if(appState.userInfo.position === "Manager"){
+        routes = [
+            ...routes,
+            {name: "Project", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/researchProject", activeIndex: 1}
+
+        ]
+    }
+    else{
+        routes = [
+            ...routes,
+            {name: "Task", icon:<ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/researchProject", activeIndex: 1}
+
+        ]
+    }
     useEffect(()=> {
 
         [...routes].forEach(route => {

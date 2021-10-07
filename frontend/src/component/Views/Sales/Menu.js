@@ -43,16 +43,33 @@ function Menu(props) {
             icon: <ListItemIcon><DashboardIcon/></ListItemIcon>,
             link: "/drawer/dashboard",
             activeIndex: 0
-        },
-        {
-            name: "Project",
-            icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>,
-            link: "/drawer/project",
-            activeIndex: 1
         }
 
     ]
+
     if(appState.userInfo.position === "Manager"){
+        routes = [
+            ...routes,
+            {
+                name: "Project",
+                icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>,
+                link: "/drawer/project",
+                activeIndex: 1
+            }
+        ]
+    }
+    else{
+        routes = [
+            ...routes,
+            {
+                name: "Task",
+                icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>,
+                link: "/drawer/project",
+                activeIndex: 1
+            }
+        ]
+    }
+    if(appState.userInfo.position === "Manager" && appState.userInfo.departmentid === '2002'){
         routes = [
             ...routes,
             {

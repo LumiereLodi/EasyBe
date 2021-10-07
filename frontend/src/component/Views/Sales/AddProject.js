@@ -264,6 +264,7 @@ function AddProject(props) {
                                 helperText={formik.errors.startDate}
                                 maxDate={formik.values.endDate}
                                 autoOk
+                                disabled={false}
 
 
                             />

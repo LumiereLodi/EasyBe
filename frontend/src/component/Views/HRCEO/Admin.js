@@ -13,6 +13,7 @@ import AddDepartment from "./AddDepartment";
 import axios from "axios";
 import {useAppState} from "../../WithStore"
 import hrProject from "./Project";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const useStyles = makeStyles(theme => ({
 
@@ -51,6 +52,14 @@ const useStyles = makeStyles(theme => ({
             borderRadius: "0.5em",
         },
 
+    },
+    snackbar:{
+
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#6ed00c"
+        }
+
     }
 
 
@@ -64,6 +73,7 @@ function Admin(props) {
     const [value, setValue] = useState(0)
     const [openDepartmentDialog, setOpenDepartmentDialog] = useState(false);
     const [openEmployeeDialog, setOpenEmployeeDialog] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false)
 
     const handlePlusButton = ()=> {
         if(window.location.pathname === "/drawer/admin/departmentList"){
@@ -115,7 +125,7 @@ function Admin(props) {
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-            <RegisterEmployee/>
+            <RegisterEmployee setOpenEmployeeDialog={setOpenEmployeeDialog} setOpenSnackbar={setOpenSnackbar}/>
 
             </Dialog>
         </Fragment>
@@ -139,6 +149,21 @@ function Admin(props) {
 
 
     }, [])
+
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={()=> setOpenSnackbar(false) }
+                message={"Employee successfully added"}
+                autoHideDuration={3000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
     return (
 
 
@@ -151,7 +176,7 @@ function Admin(props) {
             <Switch>
                 <Redirect exact from={"/drawer/admin"} to={"/drawer/admin/departmentList"}/>
             </Switch>
-
+            {snackBarComponent}
             {AddEmployeeDialog}
             {AddDepartmentDialog}
             <Switch>
