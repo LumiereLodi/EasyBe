@@ -65,10 +65,11 @@ const useStyles = makeStyles(theme => ({
         width: "12.5rem"
 
     },
-    toolbar:{[theme.breakpoints.up("md")]: {
-        ...theme.mixins.toolbar,
-    }  
-},
+    toolbar: {
+        [theme.breakpoints.up("md")]: {
+            ...theme.mixins.toolbar,
+        }
+    },
 
     userId: {
         marginTop: "1rem",
@@ -141,7 +142,7 @@ const useStyles = makeStyles(theme => ({
             paddingLeft: "5px",
             paddingRight: "5px"
         }
-        
+
 
     },
     drawerItemSelected: {
@@ -172,12 +173,12 @@ const useStyles = makeStyles(theme => ({
     menu: {
         borderRadius: 0
     },
-    snackbar:{
+    snackbar: {
 
-            //backgroundColor: "red",
-            "& .MuiSnackbarContent-root": {
-                backgroundColor: "#6ed00c"
-            }
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#6ed00c"
+        }
 
     }
 
@@ -202,7 +203,7 @@ function AppDrawer(props) {
     const [value, setValue] = useState()
     const [department, setDepartment] = useState('')
     const [position, setPosition] = useState('')
-    const [reload, setReload] = useState(false);
+    const [reloadDrawer, setReloadDrawer] = useState(false);
     const [initial, setInitial] = useState('')
     const [openSnackbar, setOpenSnackbar] = useState(false)
 
@@ -229,38 +230,140 @@ function AppDrawer(props) {
         } catch (err) {
             alert(err)
         }
-        setReload(!reload)
+        setReloadDrawer(!reloadDrawer)
 
     }
 
 
     useEffect(() => {
-        async function authenticate() {
+        async function fetchData() {
 
-            const result = await axios.get("/authenticate", {
-                withCredentials: true
-            })
 
-            if (!result.data.authenticated) {
-                history.replace('/')
-            } else {
+            /****AUTHENTICATE******/
+            try {
+                const result = await axios.get("/authenticate", {
+                    withCredentials: true
+                })
+                if (!result.data.authenticated) {
+                    history.replace('/')
+                } else {
+                    const response = await axios.get(`/user/userinformation/${result.data.employeeid}`)
+                    appState.setUserInfo(response.data.user)
+                    setDepartment(result.data.departmentid)
+                    setPosition(result.data.position)
+                    setInitial(result.data.givennames)
 
-                const response = await axios.get(`/user/userinformation/${result.data.employeeid}`)
-                appState.setUserInfo(response.data.user)
-                setDepartment(result.data.departmentid)
-                setPosition(result.data.position)
-                setInitial(result.data.givennames)
-                setOpenSnackbar(true)
+                    if(appState.loggedIn){
+                        setOpenSnackbar(false)
+                        //appState.setLoggedIn(false)
+                    }else {
+                        setOpenSnackbar(true)
+                        appState.setLoggedIn(true)
+                    }
+
+                }
+
+                /*** PROJECT LIST ***/
+
+                const projectlistAll = await axios.get(`/project/projectlist`);
+                console.log(projectlistAll);
+                appState.setProjectListAll(projectlistAll.data);
+
+                /*** CUSTOMER LIST ***/
+
+                const response = await axios.get("/Sales/customerlist", {
+                    withCredentials: true
+                })
+                console.log(response.data)
+                appState.setCustomerList(response.data)
+
+                /*** STAFF LIST ***/
+
+                const staff = await axios.get(`/employee/employeelist/${appState.userInfo.departmentid}`)
+                console.log(staff.data)
+                appState.setStaffList(staff.data)
+
+                /********GET DEFAULT VALUES FOR PROJECT********/
+
+                const defaultproject = await axios.get(`/project/defaultproject`);
+                console.log(defaultproject.data.project);
+                appState.setSelectedProject(defaultproject.data.project[0]);
+
+                const startDate = new Date(defaultproject.data.project[0].startdate);
+                const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
+                appState.setStartDate(startDateFormat)
+
+                const endDate = new Date(defaultproject.data.project[0].enddate)
+                const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
+                appState.setEndDate(endDateFormat)
+
+                console.log()
+                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+
+
+                const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
+                appState.setTaskList(activities.data)
+                console.log(activities.data)
+
+                const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+                const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+                //enable or disable send button
+                if (location.data.location === '1') {
+                    appState.setEnableSendButton(true)
+                    console.log(location.data.location)
+                } else {
+                    appState.setEnableSendButton(false)
+
+                }
+
+                //enable or disable complete button
+
+                if (status.data.status === '2') {
+                    appState.setEnableCompletedButton(true)
+                } else {
+                    appState.setEnableCompletedButton(false)
+                }
+
+                /****PROJECT FILE*****/
+                let SMProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2002`)
+                let RIProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2001`)
+                let ITProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2000`)
+
+                SMProjectFile = SMProjectFile.data[0] ? '\n' + SMProjectFile.data[0].description : '';
+                RIProjectFile = RIProjectFile.data[0] ? '\n' + RIProjectFile.data[0].description : '';
+                ITProjectFile = ITProjectFile.data[0] ? '\n' + ITProjectFile.data[0].description : '';
+
+                appState.setSMProjectFile(SMProjectFile);
+                appState.setRIProjectFile(RIProjectFile);
+                appState.setITProjectFile(ITProjectFile);
+
+
+
+                /******* DEFAULT CUSTOMER VALUES ********/
+
+                const defaultcustomer = await axios.get(`/sales/defaultcustomer`);
+                appState.setSelectedCustomer(defaultcustomer.data)
+                console.log(defaultcustomer.data)
+
+                const defaultCustomerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`)
+
+                console.log(defaultCustomerProject.data)
+                appState.setSelectedCustomerProjects(defaultCustomerProject.data)
+
+
+                console.log(appState.selectedCustomerProjects.length)
+            } catch (error) {
+                console.log(error)
             }
-
-
         }
 
 
-        authenticate()
+        fetchData()
 
 
-    }, [reload])
+    }, [reloadDrawer])
 
 
     const snackBarComponent = (
@@ -268,10 +371,10 @@ function AppDrawer(props) {
             <Snackbar
                 anchorOrigin={{vertical: "bottom", horizontal: "right"}}
                 open={openSnackbar}
-                onClose={()=> setOpenSnackbar(false) }
+                onClose={() => setOpenSnackbar(false)}
                 message={"Successful login"}
                 autoHideDuration={3000}
-               classes={{root: classes.snackbar}}
+                classes={{root: classes.snackbar}}
 
             />
         </Fragment>
@@ -361,11 +464,13 @@ function AppDrawer(props) {
             <div className={classes.menuTitle}>Menu</div>
             {(department === "2000" || department === "2001") ? <ITRIMenu selectedMenuItem={selectedMenuItem}
                                                                           setSelectedMenuItem={setSelectedMenuItem}
-                                                                          setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                                                                          setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
             {(department === "2002") ?
-                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}
+                           setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
             {(department === "2003" || department === "2004") ?
-                <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
+                <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}
+                           setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
         </Drawer>
 
     )
@@ -387,79 +492,80 @@ function AppDrawer(props) {
                 <div className={classes.drawerMargin}/>
                 {/*<img src={easybeLogo} alt="easybe logo"/>*/}
 
-            <Grid container className={classes.userId}>
-                <Grid item sm={8}>
-                    <Grid container alignItems={"center"} style={{height: "100%"}}>
-                        <Grid item>
-                            <Avatar style={{
-                                height: "1.5em",
-                                width: "1.5em",
-                                marginLeft: "0.2em",
-                                marginRight: "0.5em"
-                            }}>{initial.charAt(0)}</Avatar>
-                        </Grid>
-                        <Grid item>
-                            <Typography style={{fontFamily: 'Open Sans Condensed, sans-serif'}}>
-                                {initial.split(" ", 1)[0].length < 11 ? initial.split(" ", 1)[0].charAt(0).toUpperCase()
-                                    + initial.split(" ", 1)[0].slice(1) :
-                                    <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span>}
-                            </Typography>
-                            <Typography style={{fontSize: "0.7em", color: "#878787"}}>
-                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : undefined} {appState.userInfo.position}
-                            </Typography>
+                <Grid container className={classes.userId}>
+                    <Grid item sm={8}>
+                        <Grid container alignItems={"center"} style={{height: "100%"}}>
+                            <Grid item>
+                                <Avatar style={{
+                                    height: "1.5em",
+                                    width: "1.5em",
+                                    marginLeft: "0.2em",
+                                    marginRight: "0.5em"
+                                }}>{initial.charAt(0)}</Avatar>
+                            </Grid>
+                            <Grid item>
+                                <Typography style={{fontFamily: 'Open Sans Condensed, sans-serif'}}>
+                                    {initial.split(" ", 1)[0].length < 11 ? initial.split(" ", 1)[0].charAt(0).toUpperCase()
+                                        + initial.split(" ", 1)[0].slice(1) :
+                                        <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span>}
+                                </Typography>
+                                <Typography style={{fontSize: "0.7em", color: "#878787"}}>
+                                    {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : undefined} {appState.userInfo.position}
+                                </Typography>
+                            </Grid>
+
                         </Grid>
 
                     </Grid>
 
-                </Grid>
+                    <Grid item sm={4}>
+                        <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
+                            <IconButton aria-label="display more actions"
+                                        edge="center"
+                                        color="inherit"
+                                        onClick={(e) => handleClick(e)}
+                                        aria-owns={anchorEl ? "logout" : undefined}
+                                        aria-haspopup={anchorEl ? true : undefined}
 
-                <Grid item sm={4}>
-                    <Grid container style={{height: "100%"}} alignItems={"center"} justify={"flex-end"}>
-                        <IconButton aria-label="display more actions"
-                                    edge="center"
-                                    color="inherit"
-                                    onClick={(e) => handleClick(e)}
-                                    aria-owns={anchorEl ? "logout" : undefined}
-                                    aria-haspopup={anchorEl ? true : undefined}
-
-                        >
-                            <MoreHorizIcon/>
-                        </IconButton>
-                        <Menu
-                            id={"logout"}
-                            open={openMenu}
-                            onClose={handleClose}
-                            MenuListProps={{onMouseLeave: handleClose}}
-                            anchorEl={anchorEl}
-                            classes={{paper: classes.menu}}
-                        >
-                            <MenuItem
-                                onClick={() => {
-                                    handleClose();
-                                    logout()
-                                }}
-                                style={{fontWeight: "bold"}}
                             >
-                                Log out
-                            </MenuItem>
-                        </Menu>
+                                <MoreHorizIcon/>
+                            </IconButton>
+                            <Menu
+                                id={"logout"}
+                                open={openMenu}
+                                onClose={handleClose}
+                                MenuListProps={{onMouseLeave: handleClose}}
+                                anchorEl={anchorEl}
+                                classes={{paper: classes.menu}}
+                            >
+                                <MenuItem
+                                    onClick={() => {
+                                        handleClose();
+                                        logout()
+                                    }}
+                                    style={{fontWeight: "bold"}}
+                                >
+                                    Log out
+                                </MenuItem>
+                            </Menu>
+
+                        </Grid>
 
                     </Grid>
 
+
                 </Grid>
-                
-
-
-            </Grid>
 
                 <div className={classes.menuTitle}>Menu</div>
                 {(department === "2000" || department === "2001") ? <ITRIMenu selectedMenuItem={selectedMenuItem}
                                                                               setSelectedMenuItem={setSelectedMenuItem}
-                                                                              setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                                                                              setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
                 {(department === "2002") ?
-                    <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer} /> : undefined}
+                    <SalesMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}
+                               setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
                 {(department === "2003" || department === "2004") ?
-                    <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
+                    <HRCEOMenu selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem}
+                               setOpenMobileDrawer={setOpenMobileDrawer}/> : undefined}
             </SwipeableDrawer>
 
             <IconButton
@@ -517,9 +623,9 @@ function AppDrawer(props) {
                          * other routes to project will be more precise
                          **/}
 
-                        <Route path={"/drawer/project"} component={Project}/>
+                        <Route path={"/drawer/project"} render={()=> <Project  reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer} />}/>
                         <Route path={"/drawer/researchProject"} component={Main}/>
-                        <Route path={"/drawer/client"} component={Customer}/>
+                        <Route path={"/drawer/client"} render={() => <Customer reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer} />}/>
                         <Route path={"/drawer/analytics"} component={() => <div>Analytics</div>}/>
 
                     </Switch>

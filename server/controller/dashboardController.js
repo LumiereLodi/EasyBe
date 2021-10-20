@@ -19,7 +19,7 @@ module.exports = {
     backlog: async (req, res)=> {
         try {
 
-            const retrieve = await db.query("SELECT count(*) from project where enddate > Now()")
+            const retrieve = await db.query("SELECT count(*) from project where enddate < Now()")
 
             res.status(200).json(retrieve.rows[0])
         } catch (err) {

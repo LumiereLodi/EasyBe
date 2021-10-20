@@ -91,7 +91,7 @@ function Customer(props) {
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-                <AddCustomer/>
+                <AddCustomer reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
 
             </Dialog>
         </Fragment>

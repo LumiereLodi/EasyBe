@@ -18,6 +18,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {useObserver} from "mobx-react"
+import Snackbar from "@material-ui/core/Snackbar";
 
 
 
@@ -77,14 +78,33 @@ const useStyles = makeStyles(theme => ({
                 borderBottom: `2px solid red`
             },
         }
+    },
+
+    snackbar: {
+
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#6ed00c"
+        }
+    },
+    errorSnackbar: {
+
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#ea0b37"
+        }
     }
-}))
+
+    }))
 
 function AddProject(props) {
 
     const classes = useStyles()
     const appState = useAppState()
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
 
+    const [projectName, setProjectName] = useState('')
 
 
     const formik = useFormik({
@@ -106,22 +126,30 @@ function AddProject(props) {
                 console.log("inside submit")
                 const data = JSON.stringify(updatedValue)
 
-                const response = await axios.post("/Sales/addproject/" + appState.userInfo.employeeid, data, {
+                const response = await axios.post(`/Sales/addproject/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`, data, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': "application/json"
                     }
                 });
                 //use a snackbar to show the admin that the empoyee has been added.
-                alert("Project " +  response.data.name +  " has been added ")
+               //alert("Project " +  response.data.newProject.name +  " has been added ")
+
+                console.log(response.data.newProject)
+                setProjectName(response.data.newProject.name)
                 //console.log(response)
               //alert(data)
+                setOpenSnackbar(true)
                 resetForm({})
-            }catch (error) {
-                console.log("there was an error")
-                alert(error)
-            }
 
+
+            }catch (error) {
+                setProjectName(formik.values.name)
+                setOpenErrorSnackbar(true)
+            }
+            console.log("what is the state before: => " + props.reloadDrawer)
+            props.setReloadDrawer(!props.reloadDrawer)
+            console.log("what is the state after: => " + props.reloadDrawer)
         }
     });
     const MenuProps = {
@@ -132,6 +160,34 @@ function AddProject(props) {
             },
         },
     };
+
+    const errorSnackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openErrorSnackbar}
+                onClose={() => setOpenErrorSnackbar(false)}
+                message={`Project ${projectName} could not be added`}
+                autoHideDuration={6000}
+                classes={{root: classes.errorSnackbar}}
+
+            />
+        </Fragment>
+    )
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                message={`Project ${projectName} has been added`}
+                autoHideDuration={6000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
 
     const details = useObserver (()=>(
         <Fragment>
@@ -335,6 +391,8 @@ function AddProject(props) {
     ))
     return useObserver (()=> (
         <div>
+            {snackBarComponent}
+            {errorSnackBarComponent}
 
             {/*<Grid container>*/}
             {/*    <ListLayout text={"Add Project"}/>*/}

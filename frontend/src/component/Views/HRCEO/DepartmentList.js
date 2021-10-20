@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from "@material-ui/icons/Edit";
-import ProjectList from "../ProjectList";
+import List from "../List";
 import UserOverview from "../UserOverview";
 import ObjectInformation from "../ObjectInformation";
 const useStyles = makeStyles(theme => ({
@@ -113,7 +113,7 @@ function DepartmentList(props) {
     )
     const list = (
         <Fragment>
-            <ProjectList search={"Search by name"}/>
+            <List search={"Search by name"}/>
 
         </Fragment>
     )

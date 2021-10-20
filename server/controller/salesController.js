@@ -20,7 +20,7 @@ module.exports={
     //CODES BELOW ARE SELF EXPLANATORY.
     customerList: async(req, res)=> {
         try{
-            const result = await db.query("SELECT customerid, name FROM customer ORDER BY createdat ASC")
+            const result = await db.query("SELECT customerid, name FROM customer ORDER BY createdat DESC")
             res.status(200).json(result.rows)
         }catch (err) {
             res.status(400).json(err.message)
@@ -79,27 +79,38 @@ module.exports={
         try{
             if(req.body.description){
 
-                if(req.newProject){
-                    await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4)", [
+                // if(req.newProject){
+                //     await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4)", [
+                //
+                //         req.newProject.projectid,
+                //         req.newProject.staff,
+                //         req.params.departmentid,
+                //         req.body.description
+                //     ])
+                // }else{
+                //      result = await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4) RETURNING * ", [
+                //
+                //         req.params.projectid,
+                //         req.params.employeeid,
+                //         req.params.departmentid,
+                //         req.body.description
+                //     ])
+                // }
 
+                     result = await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4)", [
                         req.newProject.projectid,
                         req.newProject.staff,
                         req.params.departmentid,
                         req.body.description
                     ])
-                }else{
-                     result = await db.query("INSERT INTO projectfile (projectid, employeeid, departmentid, description) VALUES($1, $2, $3, $4) RETURNING * ", [
-
-                        req.params.projectid,
-                        req.params.employeeid,
-                        req.params.departmentid,
-                        req.body.description
-                    ])
-                }
             }
 
+            console.log("DONE DONE DONE MR. BOB")
             res.status(200).json({newProject : req.newProject, projectFile:  result.rows[0]})
+
+
         }catch (error){
+            console.log("DONE BUT WITH ERROR MR. BOB")
             res.status(400).json(error.message)
         }
     },
@@ -115,7 +126,7 @@ module.exports={
     },
     completeProject: async (req, res) => {
         try{
-            const result = await db.query("UPDATE project SET status = '2' where projectid = $1 RETURNING *", [req.params.projectid])
+            const result = await db.query("UPDATE project SET status = '2', location = '1' where projectid = $1 RETURNING *", [req.params.projectid])
             res.status(200).json({editedProject : result.rows[0]})
 
         }catch (error){
@@ -141,31 +152,48 @@ module.exports={
         }
     },
     getAllTasks : async(req, res) => {
-    try{
+        try{
 
-        let query = "select task.*, employee.lastname from task \n" +
-            "join employee\n" +
-            "on task.staff = employee.employeeid\n"
+            let query = "select task.*, employee.lastname from task \n" +
+                "join employee\n" +
+                "on task.staff = employee.employeeid\n" +
+                "where task.projectid = $1 "
+            let result
+            result = await db.query(query, [req.params.projectid])
 
-        if(req.params.departmentid !== '2002'){
-            query = query + "where task.projectid = $1 "
+            res.status(200).json(result.rows)
+
+        }catch (error){
+            res.status(400).json(error.message)
         }
+    },
+    defaultCustomer: async (req, res) => {
+        try{
+            const result = await db.query("SELECT * FROM customer ORDER BY createdat DESC LIMIT 1")
 
-        let result;
-        if(req.params.departmentid === '2002'){
-             result = await db.query(query)
+            res.status(200).json(result.rows[0])
 
+        }catch (error){
+            res.status(400).json(error.message)
         }
-        else{
-             result = await db.query(query, [req.params.projectid])
+    },
+    getCustomer: async (req, res) => {
+        try{
+            const result = await db.query("SELECT * FROM customer WHERE customerid = $1", [req.params.customerid])
+
+            res.status(200).json(result.rows[0])
+
+        }catch (error){
+            res.status(400).json(error.message)
         }
+    },
 
-
-
-        res.status(200).json(result.rows)
-
-    }catch (error){
-        res.status(400).json(error.message)
+    getCustomerProject : async (req, res) => {
+        try{
+            const result = await db.query("SELECT project.*, to_char(startdate, $1 ) as formatedStartDate,to_char(enddate, $2 ) as formatedEndDate,  employee.lastname FROM project join employee on employee.employeeid = project.staff WHERE project.customerid = $3", ['DD/MM/YYYY', 'DD/MM/YYYY', req.params.customerid])
+            res.status(200).json(result.rows)
+        }catch (error){
+            res.status(400).json(error.message)
+        }
     }
-},
 }

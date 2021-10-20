@@ -2,7 +2,7 @@ import React, {Fragment, useState} from 'react';
 import Grid from "@material-ui/core/Grid";
 import ListLayout from "../../Layout/ListLayout";
 import Details from "../../Layout/Details";
-import ProjectListComponent from "../ProjectList";
+import ProjectListComponent from "../List";
 import ProjectFile from "../ProjectFile";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';

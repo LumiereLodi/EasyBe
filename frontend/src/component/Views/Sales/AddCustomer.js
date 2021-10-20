@@ -111,6 +111,7 @@ function AddCustomer(props) {
                     console.log(response)
                     resetForm({})
 
+                    props.setReloadDrawer(!props.reloadDrawer)
                 }
 
 

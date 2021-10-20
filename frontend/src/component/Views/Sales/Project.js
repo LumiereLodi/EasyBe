@@ -67,6 +67,7 @@ function Project(props) {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down("xs"));
     const [openDialog, setOpenDialog] = useState(false)
+    const [reload, setReload] = useState(false)
 
     const handleFabClick= ()=>{
         appState.setShowListLayout(true)
@@ -74,55 +75,31 @@ function Project(props) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get("/Sales/customerlist", {
-                    withCredentials: true
-                })
-                console.log(response.data)
-                appState.setCustomerList(response.data)
+                // const response = await axios.get("/Sales/customerlist", {
+                //     withCredentials: true
+                // })
+                // console.log(response.data)
+                // appState.setCustomerList(response.data)
+                //
+                // const staff = await axios.get(`/employee/employeelist/${appState.userInfo.departmentid}`)
+                // console.log(staff.data)
+                // appState.setStaffList(staff.data)
 
-                const staff = await axios.get(`/employee/employeelist/${appState.userInfo.departmentid}`)
-                console.log(staff.data)
-                appState.setStaffList(staff.data)
-
-                const projectlistAll = await axios.get(`/project/projectlist`);
-                console.log(projectlistAll)
-                appState.setProjectListAll(projectlistAll.data)
-
-                const defaultproject = await axios.get(`/project/defaultproject`);
-                console.log(defaultproject.data.project)
-                appState.setSelectedProject(defaultproject.data.project[0])
-
-                const startDate = new Date(defaultproject.data.project[0].startdate)
-                const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
-                appState.setStartDate(startDateFormat)
-
-                const endDate = new Date(defaultproject.data.project[0].enddate)
-                const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
-                appState.setEndDate(endDateFormat)
-
-                console.log()
-                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
-
-
-                const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
-                appState.setTaskList(activities.data)
-                console.log(activities.data)
             } catch (error) {
                 alert(error)
             }
         }
-
         fetchData()
-    }, [])
+
+    }, [reload])
 
 
     const addButton = (
         <div style={{marginLeft: "auto"}}>
-            {/*<IconButton component={Link} to={"/drawer/project/addproject"}>*/}
-            {/*    <AddIcon className={classes.tab}/>*/}
-            {/*</IconButton>*/}
-            <IconButton onClick={()=> setOpenDialog(true)}>
+            <IconButton onClick={()=> {
+                setOpenDialog(true);
+                setReload(!reload)
+            }}>
                 <AddIcon className={classes.tab}/>
             </IconButton>
         </div>
@@ -137,7 +114,7 @@ function Project(props) {
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-                <AddProject/>
+                <AddProject reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
 
             </Dialog>
         </Fragment>
@@ -151,18 +128,14 @@ function Project(props) {
                     <AddIcon/>
                 </Fab> : null}
             </Hidden>
-
             {dialogAddProject}
             <Switch>
                 <Redirect exact from={"/drawer/project"} to={"/drawer/project/projectlist"}/>
             </Switch>
 
             <Switch>
-
-                <Route path={"/drawer/project/projectlist"} render={()=> <ProjectList setOpenDialog={setOpenDialog} />}/>
-                <Route path={"/drawer/project/addproject"} component={AddProject}/>
-
-
+                <Route path={"/drawer/project/projectlist"} render={()=> <ProjectList setOpenDialog={setOpenDialog} setReload={setReload} reload={reload}/>}/>
+                <Route path={"/drawer/project/addproject"} render={()=> <AddProject reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
             </Switch>
         </div>
     );

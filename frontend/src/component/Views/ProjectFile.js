@@ -7,6 +7,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/styles";
+import axios from "axios";
 
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore";
@@ -26,7 +27,6 @@ const useStyles = makeStyles(theme => ({
         "& .MuiInputLabel-root": {
             color: theme.palette.primary.main,
 
-
         },
         "& .MuiInputBase-root": {
             borderRadius: "0.3em",
@@ -35,9 +35,11 @@ const useStyles = makeStyles(theme => ({
             fontSize: "1em",
 
 
+
         },
         "& .MuiInput-formControl": {
             color:"black",
+
 
         }
 
@@ -107,6 +109,11 @@ function ProjectFile(props) {
     const appState = useAppState()
 
     const [descriptionTextColor, setDescriptionTextColor] = useState("black")
+
+    const [RIDescription, setRIDescription] = useState('')
+    const [ITDescription, setITDescription] = useState('')
+    const [SMDescription, setSMDescription] = useState('')
+
     const handleSave = (e) => {
         //alert("I was clicked")
     }
@@ -119,10 +126,41 @@ function ProjectFile(props) {
             //const startDateFormat = startdate.getFullYear() + "/" + startdate.getMonth() + "/" + startdate.getDate();
         }
 
+        //alert("inside Project file")
     },[])
 
-    //const defaultValue = "Hello there how are \n" + "\nI am good thank you."
-    const defaultValue = `Hello there how are \n\nI am good thank you.`
+    const saveRIProjectfile = async () => {
+        try{
+            const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
+                {description: RIDescription} );
+
+            console.log(result.data)
+        }catch (error) {
+            alert(error)
+        }
+    }
+    const saveITProjectfile = async () => {
+        try{
+            const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
+                {description: ITDescription} );
+
+            console.log(result.data)
+        }catch (error) {
+            alert(error)
+        }
+    }
+    const saveSMProjectfile = async () => {
+        //console.log(SMDescription)
+        try{
+            const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
+                {description: SMDescription} );
+
+            console.log(result.data)
+        }catch (error) {
+            alert(error)
+        }
+
+    }
     return useObserver(()=> (
         <Fragment>
 
@@ -269,45 +307,48 @@ function ProjectFile(props) {
                     </Grid>
                     <Grid container  className={classes.projectActivities} sm={12} direction={"column"}>
 
+                        <ListSubheader disableGutters style={{zIndex: "0"}}>
+                            <Grid item container style={{marginTop: "1.5em"}}>
 
-                        <Grid item container style={{marginTop: "1.5em", marginBottom: "1em"}}>
-
-                            <Grid item container xs justify={"center"} >
-                                <Typography style={{fontWeight: "bold"}}>
-                                    Task Name
-                                </Typography>
-
-                            </Grid>
-                            <Grid item container xs justify={"center"} >
-                                <Typography style={{fontWeight: "bold"}}>
-                                    Assign To
-                                </Typography>
-                            </Grid>
-                            {/*<Grid item container xs justify={"center"} >*/}
-                            {/*    <Typography style={{fontWeight: "bold"}}>*/}
-                            {/*        Deadline*/}
-                            {/*    </Typography>*/}
-                            {/*</Grid>*/}
-                            <Grid item container xs justify={"center"} >
-                                <Typography style={{fontWeight: "bold"}}>
-                                    Status
-                                </Typography>
-                            </Grid>
-                            <Grid item container xs justify={"center"} >
-                                <Typography style={{fontWeight: "bold"}}>
-                                    Manager
-                                </Typography>
-                            </Grid>
-                            {(props.editButton && appState.userInfo.position === "Manager") ?
-                                <Grid item container xs={1} justify={"center"} >
+                                <Grid item container xs justify={"center"} >
                                     <Typography style={{fontWeight: "bold"}}>
+                                        Task Name
+                                    </Typography>
 
+                                </Grid>
+                                <Grid item container xs justify={"center"} >
+                                    <Typography style={{fontWeight: "bold"}}>
+                                        Assign To
                                     </Typography>
                                 </Grid>
-                                : undefined}
+                                {/*<Grid item container xs justify={"center"} >*/}
+                                {/*    <Typography style={{fontWeight: "bold"}}>*/}
+                                {/*        Deadline*/}
+                                {/*    </Typography>*/}
+                                {/*</Grid>*/}
+                                <Grid item container xs justify={"center"} >
+                                    <Typography style={{fontWeight: "bold"}}>
+                                        Status
+                                    </Typography>
+                                </Grid>
+                                <Grid item container xs justify={"center"} >
+                                    <Typography style={{fontWeight: "bold"}}>
+                                        Manager
+                                    </Typography>
+                                </Grid>
+                                {(props.editButton && appState.userInfo.position === "Manager") ?
+                                    <Grid item container xs={1} justify={"center"} >
+                                        <Typography style={{fontWeight: "bold"}}>
+
+                                        </Typography>
+                                    </Grid>
+                                    : undefined}
 
 
-                        </Grid>
+                            </Grid>
+                        </ListSubheader>
+
+
                         {appState.taskList.map((task, index) => (
 
                             <Grid item container style={{marginBottom: "0.3em"}}>
@@ -332,7 +373,7 @@ function ProjectFile(props) {
                                 {/*</Grid>*/}
                                 <Grid item container xs justify={"center"} alignItems={"center"}>
                                     <Typography >
-                                        {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : "Delayed" }
+                                        {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : task.status === '2' ? "Delayed" : undefined}
                                     </Typography>
                                 </Grid>
                                 <Grid item container xs justify={"center"} alignItems={"center"}>
@@ -410,7 +451,8 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {"Helo sir babe yahoo google gmail"}
+                                   defaultValue = {appState.SMProjectFile }
+                                   onChange={(event) => setSMDescription(event.target.value)}
 
                         />
                     </Grid>
@@ -420,7 +462,7 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditSM(false); handleSave(e)}}
+                                onClick={(e)=> {setEditSM(false); saveSMProjectfile()}}
                             >
                                 Save
                             </Button>
@@ -473,8 +515,8 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {defaultValue}
-
+                                   defaultValue = {appState.RIProjectFile }
+                                   onChange={(event) => setRIDescription(event.target.value)}
                         />
                     </Grid>
                 </Grid>
@@ -483,7 +525,7 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditRI(false); handleSave(e)}}
+                                onClick={(e)=> {setEditRI(false); saveRIProjectfile()}}
                             >
                                 Save
                             </Button>
@@ -534,8 +576,8 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {"Helo sir babe"}
-
+                                   defaultValue = {appState.ITProjectFile }
+                                   onChange={(event) => setITDescription(event.target.value)}
                         />
                     </Grid>
                 </Grid>
@@ -544,7 +586,7 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditIT(false); handleSave(e)}}
+                                onClick={(e)=> {setEditIT(false); saveITProjectfile()}}
                             >
                                 Save
                             </Button>

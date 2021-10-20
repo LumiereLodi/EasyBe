@@ -1,4 +1,4 @@
-import React,{Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 import ListLayout from "../../Layout/ListLayout";
 import Details from "../../Layout/Details";
 import Grid from "@material-ui/core/Grid";
@@ -15,7 +15,11 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import ListItem from "@material-ui/core/ListItem";
 import EditIcon from "@material-ui/icons/Edit";
-import ProjectList from "../ProjectList";
+import List from "../List";
+import ListComponent from "../List";
+import {useAppState} from "../../WithStore";
+import {useObserver} from "mobx-react"
+import axios from "axios";
 
 
 const useStyles = makeStyles(theme => ({
@@ -79,21 +83,41 @@ const useStyles = makeStyles(theme => ({
 
 function CustomerList(props) {
     const classes = useStyles()
+    const [reload, setReload] = useState(false)
+    const appState = useAppState()
 
+
+    const handleCustomerClick = async (customerid)=> {
+
+        try{
+            const customer = await axios.get(`/sales/customer/${customerid}`);
+            appState.setSelectedCustomer(customer.data)
+            console.log(customer.data)
+
+            const customerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`)
+
+            console.log(customerProject.data)
+            appState.setSelectedCustomerProjects(customerProject.data)
+        }catch (error) {
+            console.log(error)
+        }
+
+
+
+
+    }
 
     const list = (
-        <Fragment>
-            <ProjectList search={"Search by name"} />
-
-        </Fragment>
+        <ListComponent search={"Search by name"} filter={"Filter"} list={appState.customerList} setReload={setReload} reload={reload} handleClick={handleCustomerClick}/>
     )
-    const details = (
+    const details = useObserver(()=> (
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
                     <Grid item>
                         <Typography variant={"h1"} style={{fontSize: "2em"}}>
-                            Customer Name
+                            {appState.selectedCustomer.name ? appState.selectedCustomer.name.toUpperCase() : <span>...</span>}
+
                         </Typography>
                     </Grid>
                 </Grid>
@@ -156,27 +180,27 @@ function CustomerList(props) {
                         <Grid container direction={"column"}>
                             <Grid item style={{marginLeft: "4em", marginBottom: "1em"}}>
                                 <Typography>
-                                    Lumiere
+                                    {appState.selectedCustomer.contactpersonname ? appState.selectedCustomer.contactpersonname : <span>...</span>}
                                 </Typography>
                             </Grid>
                             <Grid item style={{marginLeft: "4em", marginBottom: "1em"}}>
                                 <Typography>
-                                    lumiere@gmail.com
+                                    {appState.selectedCustomer.email ? appState.selectedCustomer.email : <span>...</span>}
                                 </Typography>
                             </Grid>
                             <Grid item style={{marginLeft: "4em", marginBottom: "1em"}}>
                                 <Typography>
-                                    0820435516
+                                    {appState.selectedCustomer.phone ? appState.selectedCustomer.phone : <span>...</span>}
                                 </Typography>
                             </Grid>
                             <Grid item style={{marginLeft: "4em", marginBottom: "1em"}}>
                                 <Typography>
-                                    Amarosa Ridge
+                                    {appState.selectedCustomer.address ?  appState.selectedCustomer.address : <span>...</span>}
                                 </Typography>
                             </Grid>
                             <Grid item style={{marginLeft: "4em", marginBottom: "1em"}}>
                                 <Typography>
-                                    1724
+                                    {appState.selectedCustomer.postalcode ? appState.selectedCustomer.postalcode : <span>...</span>}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -194,72 +218,81 @@ function CustomerList(props) {
             </Grid>
             <Grid container className={classes.customerProjectContainer} style={{marginTop: "2em", marginBottom: "1em"}}>
                 <Grid container  sm={12} direction={"column"}>
-                    <Grid item container style={{marginTop: "1.5em", marginBottom: "1em"}}>
 
-                        <Grid item container xs justify={"center"} >
-                            <Typography style={{fontWeight: "bold"}}>
-                                Project Name
-                            </Typography>
+                    <ListSubheader disableGutters style={{zIndex: "0"}}>
+                        <Grid item container style={{marginTop: "1.5em"}}>
 
-                        </Grid>
-                        <Grid item container xs justify={"center"} >
-                            <Typography style={{fontWeight: "bold"}}>
-                                Sales Person
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} >
-                            <Typography style={{fontWeight: "bold"}}>
-                                Start Date
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} >
-                            <Typography style={{fontWeight: "bold"}}>
-                                End Date
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} >
-                            <Typography style={{fontWeight: "bold"}}>
-                                Status
-                            </Typography>
-                        </Grid>
+                            <Grid item container xs justify={"center"} >
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Project Name
+                                </Typography>
 
-                    </Grid>
-                    <Grid item container style={{marginBottom: "0.3em"}}>
-
-                        <Grid item container xs justify={"center"} alignItems={"center"}>
-                            <Typography >
-                                Web Redesign
-                            </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} >
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Sales Person
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} >
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Start Date
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} >
+                                <Typography style={{fontWeight: "bold"}}>
+                                    End Date
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} >
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Status
+                                </Typography>
+                            </Grid>
 
                         </Grid>
-                        <Grid item container xs justify={"center"} alignItems={"center"} >
-                            <Typography >
-                                Lumiere
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} alignItems={"center"} >
-                            <Typography>
-                                19/09/2021
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} alignItems={"center"}>
-                            <Typography >
-                                10/10/2021
-                            </Typography>
-                        </Grid>
-                        <Grid item container xs justify={"center"} alignItems={"center"}>
-                            <Typography >
-                                Completed
-                            </Typography>
-                        </Grid>
+                    </ListSubheader>
 
-                    </Grid>
+
+                    {appState.selectedCustomerProjects.length ? appState.selectedCustomerProjects.map((value, index) => (
+                        <Grid item container style={{marginBottom: "1em"}}>
+
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography >
+                                    {value.name && value.name.length < 20 ? value.name : value.name ? <span>{value.name.substring(0, 20)}...</span> : <span>...</span>}
+                                </Typography>
+
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"} >
+                                <Typography >
+                                    {value.lastname && value.lastname.length < 20 ? value.lastname : value.lastname ? <span>{value.lastname.substring(0, 20)}...</span> : <span>...</span>}
+
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"} >
+                                <Typography>
+                                    {value.formatedstartdate}
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography >
+                                    {value.formatedenddate}
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography >
+                                    {value.status === '0' ? "TO DO" : value.status === '1' ? "DOING" : value.status === '2' ? "DONE" : <span>...</span>}
+                                </Typography>
+                            </Grid>
+
+                        </Grid>
+                    )): undefined}
+
 
                 </Grid>
             </Grid>
 
         </Fragment>
-    )
+    ))
     return (
         <div>
             <Grid container>

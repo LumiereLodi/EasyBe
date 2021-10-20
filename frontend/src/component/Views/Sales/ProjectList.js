@@ -4,7 +4,7 @@ import ListLayout from "../../Layout/ListLayout";
 import Details from "../../Layout/Details";
 import {makeStyles} from "@material-ui/styles";
 import ProjectFile from "../ProjectFile.js"
-import ProjectListComponent from "../ProjectList.js";
+import ProjectListComponent from "../List.js";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from '@material-ui/icons/Send';
 import Button from "@material-ui/core/Button";
@@ -116,9 +116,101 @@ function ProjectList(props) {
 
     //here we will pass list of project for manager, list of tasks for staff.
 
+    const handleProjectCLick = async (projectid)=> {
+        try{
+            const result = await axios.get(`/project/projectlist/${projectid}`)
+
+            //console.log(result.data)
+            appState.setSelectedProject(result.data.project[0])
+
+            //console.log(appState.selectedProject.givennames)
+
+
+            const startDate = new Date(result.data.project[0].startdate);
+            //console.log(result.data)
+            const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
+            appState.setStartDate(startDateFormat)
+
+            const endDate = new Date(result.data.project[0].enddate)
+            const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
+            appState.setEndDate(endDateFormat)
+
+            appState.setCompletedTask(result.data.completedTask[0].taskcompleted)
+            appState.setActiveTask(result.data.activeTask[0].taskactive)
+
+            const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
+            appState.setTaskList(activities.data)
+
+            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            //enable or disable send button
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                //setReload(!reload)
+                //console.log(location.data.location)
+            } else {
+                appState.setEnableSendButton(false)
+                //setReload(!reload)
+            }
+
+            //enable or disable complete button
+
+            if (status.data.status === '2') {
+                appState.setEnableCompletedButton(true)
+                //setReload(!reload)
+            } else {
+                appState.setEnableCompletedButton(false)
+                //setReload(!reload)
+            }
+
+            //GET PROJECT FILE
+
+
+            let SMProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2002`)
+            let RIProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2001`)
+            let ITProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2000`)
+
+            SMProjectFile = SMProjectFile.data[0] ? '\n' + SMProjectFile.data[0].description : '';
+            RIProjectFile = RIProjectFile.data[0] ? '\n' + RIProjectFile.data[0].description : '';
+            ITProjectFile = ITProjectFile.data[0] ? '\n' + ITProjectFile.data[0].description : '';
+
+            console.log(SMProjectFile)
+            console.log(RIProjectFile)
+            console.log(ITProjectFile)
+
+            appState.setSMProjectFile(SMProjectFile);
+            appState.setRIProjectFile(RIProjectFile);
+            appState.setITProjectFile(ITProjectFile);
+
+
+            props.setReload(!props.reload)
+
+
+        }catch (error) {
+            console.log(error)
+        }
+
+        //setReload(!reload)
+
+        //CHANGE THE STATE IN ORDER TO RELOAD STATE DATA
+
+        //props.setReload = (!props.reload)
+    }
     const handleSendButtonClick = async ()=> {
         try{
             await axios.put(`/sales/sendproject/${appState.selectedProject.projectid}`)
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                setReload(!reload)
+                //console.log(location.data.location)
+            } else {
+                appState.setEnableSendButton(false)
+                setReload(!reload)
+            }
+
             setReload(!reload)
         }catch (error) {
             alert(error)
@@ -129,6 +221,28 @@ function ProjectList(props) {
     const handleCompleteClick = async ()=>{
         try{
             await axios.put(`/sales/completeproject/${appState.selectedProject.projectid}`)
+            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            if(status.data.status === '2') {
+                appState.setEnableCompletedButton(true)
+            }
+            else{
+                appState.setEnableCompletedButton(false)
+
+            }
+
+
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                setReload(!reload)
+                //console.log(location.data.location)
+            } else {
+                appState.setEnableSendButton(false)
+                setReload(!reload)
+            }
+
             setReload(!reload)
 
         }catch (error) {
@@ -137,69 +251,37 @@ function ProjectList(props) {
     }
     useEffect(()=>{
 
-        async function fetchData(){
-
-            try{
-                const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
-                if(location.data.location === '1') {
-                    appState.setEnableSendButton(true)
-                    console.log(location.data.location)
-                }
-                else{
-                    appState.setEnableSendButton(false)
-                }
-            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
-                console.log(status.data.status)
-                if(status.data.status === '2'){
-                    appState.setEnableCompletedButton(true)
-                }
-                else{
-                    appState.setEnableCompletedButton(false)
-                }
-            }catch (error) {
-                alert(error)
-            }
-        }
-        fetchData()
+        // async function fetchData(){
+        //
+        //     try{
+        //         const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+        //         if(location.data.location === '1') {
+        //             appState.setEnableSendButton(true)
+        //             console.log(location.data.location)
+        //         }
+        //         else{
+        //             appState.setEnableSendButton(false)
+        //
+        //         }
+        //     const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+        //         console.log(status.data.status)
+        //         if(status.data.status === '2'){
+        //             appState.setEnableCompletedButton(true)
+        //
+        //         }
+        //         else{
+        //             appState.setEnableCompletedButton(false)
+        //
+        //         }
+        //     }catch (error) {
+        //         alert(error)
+        //     }
+        // }
+        // fetchData()
     },[])
 
-
-    const handleProjectCLick = async (projectid)=> {
-        try{
-            const result = await axios.get(`/project/projectlist/${projectid}`)
-
-            console.log(result.data)
-            appState.setSelectedProject(result.data[0])
-
-            setReload(!reload)
-
-
-        }catch (error) {
-            alert(error)
-        }
-    }
-
-    const projects = (
-        <Fragment>
-            {appState.projectList.map((value, index)=>(
-                <Grid item >
-
-                    <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters onClick={()=> handleProjectCLick(value.projectid)}>
-                        <Grid container alignItems={"center"} style={{height: "100%"}}>
-                            <Typography style={{fontWeight: "bold" }} >
-                                {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
-                                {/*{value.name}*/}
-                            </Typography>
-                        </Grid>
-                    </ListItem>
-
-
-                </Grid>
-            ))}
-        </Fragment>
-    )
     const list = (
-        <ProjectListComponent search={"Search by name"} filter={"Filter"} />
+        <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList} setReload={props.setReload} reload={props.reload} handleClick={handleProjectCLick}/>
     )
     const sendButton= useObserver(()=> (
         <Fragment>
@@ -220,7 +302,7 @@ function ProjectList(props) {
 
     const editProject=(
         <Fragment>
-            <Grid item container xs={1} justify={"center"} >
+            <Grid item container xs={1} justify={"center"}>
                 <IconButton
                     onClick={()=> props.setOpenDialog(true)}
                 >
@@ -260,7 +342,7 @@ function ProjectList(props) {
             <Grid container>
                <ListLayout list={list}/>
 
-                <Details details={detail} />
+                <Details details={detail}/>
             </Grid>
         </div>
     );

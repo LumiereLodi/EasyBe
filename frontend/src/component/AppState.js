@@ -56,10 +56,10 @@ export function createAppStore(){
         setShowListLayout (isMobile){
             this.showListLayout = isMobile
         },
-        projectList : [],
+        leftList : [],
         setProjectListAll (allProject){
-            this.projectList.splice(0,this.projectList.length)
-            this.projectList.push(
+            this.leftList.splice(0,this.leftList.length)
+            this.leftList.push(
                 ...allProject
             )
         },
@@ -97,7 +97,72 @@ export function createAppStore(){
             this.taskList.push(
                 ...tasks
             )
+        },
+        reload: false,
+        setReload(status){
+                this.reload = status;
+        },
+        ITProjectFile: '',
+        RIProjectFile: '',
+        SMProjectFile: '',
+
+        setSMProjectFile(description){
+            if(description !== ''){
+                this.SMProjectFile = '';
+                this.SMProjectFile = description;
+            }
+            else{
+                this.SMProjectFile = '';
+            }
+        },
+        setRIProjectFile(description){
+            if(description !== ''){
+
+                this.RIProjectFile = '';
+                this.RIProjectFile = description;
+            }
+            else{
+                this.RIProjectFile = '';
+            }
+        },
+        setITProjectFile(description){
+            if(description !== ''){
+
+                this.ITProjectFile = '';
+                this.ITProjectFile = description;
+            }
+            else{
+                this.ITProjectFile = '';
+            }
+
+
+        },
+        loggedIn: false,
+        setLoggedIn(status){
+                this.loggedIn = status
+        },
+
+        selectedCustomer: {},
+        setSelectedCustomer(customer){
+                this.selectedCustomer = customer
+        },
+        selectedCustomerProjects : [],
+        setSelectedCustomerProjects(projects){
+            this.selectedCustomerProjects.splice(0,this.selectedCustomerProjects.length)
+            this.selectedCustomerProjects.push(
+                ...projects
+            )
+        },
+        customerProjectEndDate: '',
+        customerProjectStartDate: '',
+
+        setCustomerProjectEndDate(date){
+            this.customerProjectEndDate = date
+        },
+        setCustomerProjectStartDate(date){
+            this.setCustomerProjectStartDate = date
         }
+
 
     }
 }
