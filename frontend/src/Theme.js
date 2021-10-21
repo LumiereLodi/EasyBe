@@ -72,5 +72,25 @@ export default createTheme({
                 }
             }
         }
-    }
+    },
+    snackbar: {
+
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#6ed00c"
+        }
+    },
+    errorSnackbar: {
+        //backgroundColor: "red",
+        "& .MuiSnackbarContent-root": {
+            backgroundColor: "#ea0b37"
+        }
+    },
+    completedButton: {
+        backgroundColor: easyBlue,
+        height: 32,
+        width: 150,
+        borderRadius: "10px",
+        color: "white"
+    },
 })

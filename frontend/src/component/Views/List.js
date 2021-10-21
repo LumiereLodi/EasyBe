@@ -232,7 +232,8 @@ function List(props) {
             {/*{props.list ? props.list : undefined}*/}
             {props.list ? props.list.map((value, index)=>(
                 <Grid item key={index}
-                      onClick={()=> window.location.pathname === '/drawer/project/projectlist' ? props.handleClick(value.projectid)
+                      onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
+                          window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
                           : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
 
                     <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >

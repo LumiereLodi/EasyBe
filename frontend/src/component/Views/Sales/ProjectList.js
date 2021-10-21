@@ -5,16 +5,14 @@ import Details from "../../Layout/Details";
 import {makeStyles} from "@material-ui/styles";
 import ProjectFile from "../ProjectFile.js"
 import ProjectListComponent from "../List.js";
-import Fab from "@material-ui/core/Fab";
-import SendIcon from '@material-ui/icons/Send';
+
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
 import {useAppState} from "../../WithStore";
 import {useObserver} from "mobx-react"
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+
 
 const useStyles = makeStyles(theme => ({
 
@@ -90,11 +88,7 @@ const useStyles = makeStyles(theme => ({
     },
     completedButton: {
         ...theme.typography.login,
-        backgroundColor: theme.palette.primary.main,
-        height: 32,
-        width: 150,
-        borderRadius: "10px",
-        color: "white",
+        ...theme.completedButton,
         "&:hover": {
             backgroundColor: theme.palette.secondary.light,
             color: "black"

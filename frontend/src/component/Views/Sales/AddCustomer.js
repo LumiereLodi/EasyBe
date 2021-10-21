@@ -12,6 +12,7 @@ import {useAppState} from "../../WithStore";
 import {useFormik} from "formik";
 import axios from "axios";
 import * as yup from "yup";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 //const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
@@ -66,6 +67,12 @@ const useStyles = makeStyles(theme => ({
             width: 150,
             marginBottom: "2em"
         }
+    },
+    snackbar: {
+        ...theme.snackbar
+    },
+    errorSnackbar: {
+        ...theme.errorSnackbar
     }
 }))
 
@@ -76,7 +83,10 @@ function AddCustomer(props) {
     const [emailExist, setEmailExist] = useState('')
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down("xs"));
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
 
+    const [projectName, setProjectName] = useState('')
 
     const formik = useFormik({
         initialValues: {
@@ -107,21 +117,55 @@ function AddCustomer(props) {
                         }
                     });
                     //use a snackbar to show the admin that the empoyee has been added.
-                    alert("Customer " + response.data.name + " has been added")
+                    //alert("Customer " + response.data.name + " has been added")
                     console.log(response)
-                    resetForm({})
+                    setProjectName(response.data.name)
 
+                    setOpenSnackbar(true)
+                    resetForm({})
                     props.setReloadDrawer(!props.reloadDrawer)
+
                 }
 
 
             } catch (error) {
-                console.log("there was an error")
-                alert(error)
+
+                setProjectName(formik.values.name)
+                setOpenErrorSnackbar(true)
+
+                // console.log("there was an error")
+                // alert(error)
             }
         }
     });
 
+    const errorSnackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openErrorSnackbar}
+                onClose={() => setOpenErrorSnackbar(false)}
+                message={`Project ${projectName} could not be added`}
+                autoHideDuration={6000}
+                classes={{root: classes.errorSnackbar}}
+
+            />
+        </Fragment>
+    )
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                message={`Customer ${projectName} has been added`}
+                autoHideDuration={6000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
     const details = (
         <Fragment>
 
@@ -282,6 +326,8 @@ function AddCustomer(props) {
     return (
         <div>
 
+            {snackBarComponent}
+            {errorSnackBarComponent}
             {/*<Grid container>*/}
             {/*    <ListLayout text={"Add client"}/>*/}
 

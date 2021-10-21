@@ -39,11 +39,13 @@ export function createAppStore(){
 
         customerList: [],
         setCustomerList(customers){
-            this.customerList.splice(0,this.customerList.length)
-            this.customerList.push(
-                ...customers
-            )
 
+            if(customers){
+                this.customerList.splice(0,this.customerList.length)
+                this.customerList.push(
+                    ...customers
+                )
+            }
         },
         staffList: [],
         setStaffList(staff){
@@ -161,6 +163,13 @@ export function createAppStore(){
         },
         setCustomerProjectStartDate(date){
             this.setCustomerProjectStartDate = date
+        },
+        departmentStaffList:[],
+        setDepartmentStaffList(staffList){
+            this.departmentStaffList.splice(0,this.departmentStaffList.length)
+            this.departmentStaffList.push(
+                ...staffList
+            )
         }
 
 

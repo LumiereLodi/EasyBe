@@ -1,11 +1,7 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {Drawer} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import GroupIcon from '@material-ui/icons/Group';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
+
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import useTheme from "@material-ui/styles/useTheme";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -36,7 +32,6 @@ import Admin from "../Views/HRCEO/Admin";
 import Customer from "../Views/Sales/Customer"
 import Project from "../Views/Sales/Project";
 import Main from "../Views/ITRI/Main";
-import hrProject from "../Views/HRCEO/Project"
 /**APP STATE**/
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
@@ -265,17 +260,37 @@ function AppDrawer(props) {
 
                 /*** PROJECT LIST ***/
 
-                const projectlistAll = await axios.get(`/project/projectlist`);
-                console.log(projectlistAll);
-                appState.setProjectListAll(projectlistAll.data);
+                if(appState.userInfo.position === 'Manager'){
+                    if(appState.userInfo.departmentid === '2002'){
+                        const projectlistAll = await axios.get(`/project/projectlist`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+                    }
+                    else if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
+                        const projectlistAll = await axios.get(`/project/sentProject`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+                    }
+
+                }else if(appState.userInfo.position === 'Staff'){
+                    const projectlistAll = await axios.get(`/project/projectstafflist/staff/${appState.userInfo.employeeid}`);
+                    console.log(projectlistAll);
+                    appState.setProjectListAll(projectlistAll.data);
+                }
+
 
                 /*** CUSTOMER LIST ***/
 
-                const response = await axios.get("/Sales/customerlist", {
-                    withCredentials: true
-                })
-                console.log(response.data)
-                appState.setCustomerList(response.data)
+                if(appState.userInfo.departmentid === '2002' && appState.userInfo.position === 'Manager'){
+
+                    console.log("came here")
+                    const response = await axios.get("/Sales/customerlist", {
+                        withCredentials: true
+                    })
+                    console.log(response.data)
+                    appState.setCustomerList(response.data)
+                }
+
 
                 /*** STAFF LIST ***/
 
@@ -285,7 +300,14 @@ function AppDrawer(props) {
 
                 /********GET DEFAULT VALUES FOR PROJECT********/
 
-                const defaultproject = await axios.get(`/project/defaultproject`);
+                // const result = await axios.get(`/project/projectlist/${projectid}`)
+                // appState.setSelectedProject(result.data.project[0])
+
+                // const defaultproject = await axios.get(`/project/defaultproject`);
+                // console.log(defaultproject.data.project);
+                // appState.setSelectedProject(defaultproject.data.project[0]);
+
+                const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
                 console.log(defaultproject.data.project);
                 appState.setSelectedProject(defaultproject.data.project[0]);
 
@@ -326,7 +348,7 @@ function AppDrawer(props) {
                     appState.setEnableCompletedButton(false)
                 }
 
-                /****PROJECT FILE*****/
+                /**** PROJECT FILE *****/
                 let SMProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2002`)
                 let RIProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2001`)
                 let ITProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2000`)
@@ -339,21 +361,22 @@ function AppDrawer(props) {
                 appState.setRIProjectFile(RIProjectFile);
                 appState.setITProjectFile(ITProjectFile);
 
-
+                /***** DEFAULT STAFF FOR A SPECIFIC DEPARTMENT ******/
+                const departmentStaff = await axios.get(`/project/stafflist/${appState.userInfo.departmentid}`)
+                console.log(departmentStaff.data)
+                appState.setDepartmentStaffList(departmentStaff.data)
 
                 /******* DEFAULT CUSTOMER VALUES ********/
-
                 const defaultcustomer = await axios.get(`/sales/defaultcustomer`);
-                appState.setSelectedCustomer(defaultcustomer.data)
-                console.log(defaultcustomer.data)
+                appState.setSelectedCustomer(defaultcustomer.data);
+                console.log(defaultcustomer.data);
 
-                const defaultCustomerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`)
+                const defaultCustomerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`);
 
-                console.log(defaultCustomerProject.data)
-                appState.setSelectedCustomerProjects(defaultCustomerProject.data)
+                console.log(defaultCustomerProject.data);
+                appState.setSelectedCustomerProjects(defaultCustomerProject.data);
 
-
-                console.log(appState.selectedCustomerProjects.length)
+                console.log(appState.selectedCustomerProjects.length);
             } catch (error) {
                 console.log(error)
             }

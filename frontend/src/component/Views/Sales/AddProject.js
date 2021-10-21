@@ -81,18 +81,10 @@ const useStyles = makeStyles(theme => ({
     },
 
     snackbar: {
-
-        //backgroundColor: "red",
-        "& .MuiSnackbarContent-root": {
-            backgroundColor: "#6ed00c"
-        }
+        ...theme.snackbar
     },
     errorSnackbar: {
-
-        //backgroundColor: "red",
-        "& .MuiSnackbarContent-root": {
-            backgroundColor: "#ea0b37"
-        }
+        ...theme.errorSnackbar
     }
 
     }))

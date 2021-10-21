@@ -132,9 +132,10 @@ function ProjectFile(props) {
     const saveRIProjectfile = async () => {
         try{
             const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
-                {description: RIDescription} );
+                {description: RIDescription});
 
             console.log(result.data)
+
         }catch (error) {
             alert(error)
         }
@@ -264,12 +265,12 @@ function ProjectFile(props) {
                                     </Grid>
                                     <Grid item container xs justify={"center"} alignItems={"center"}>
                                         <Typography >
-                                            {appState.startDate}
+                                            {appState.selectedProject.formatstartdate}
                                         </Typography>
                                     </Grid>
                                     <Grid item container xs justify={"center"} alignItems={"center"}>
                                         <Typography>
-                                            {appState.endDate}
+                                            {appState.selectedProject.formatenddate}
                                         </Typography>
                                     </Grid>
                                     {(props.editProject && appState.userInfo.position === "Manager") ? props.editProject : undefined}

@@ -5,18 +5,10 @@ import Details from "../../Layout/Details";
 import ProjectListComponent from "../List";
 import ProjectFile from "../ProjectFile";
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/styles";
 import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import * as yup from "yup";
@@ -25,6 +17,12 @@ import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import {useAppState} from "../../WithStore";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+
 
 const formValidation = yup.object({
     customer: yup.string().required('Select a Customer'),
@@ -74,22 +72,24 @@ const useStyles = makeStyles(theme => ({
     },
     completedButton: {
         ...theme.typography.login,
-        backgroundColor: theme.palette.primary.main,
-        height: 32,
-        width: 150,
-        borderRadius: "10px",
-        color: "white",
+        ...theme.completedButton,
         "&:hover": {
             backgroundColor: theme.palette.secondary.light,
             color: "black"
         }
     },
+    completedButtonDisabled: {
+        backgroundColor: theme.palette.secondary.light,
+        color: "black"
+    },
 }))
 
 function ProjectList(props) {
-    const classes = useStyles()
+    const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const appState = useAppState()
+    const appState = useAppState();
+    const [reload, setReload] = useState(false);
+
 
 
     const formik = useFormik({
@@ -103,18 +103,147 @@ function ProjectList(props) {
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
+
+            console.log("in here")
+            const startDateFormat = values.startDate.getFullYear() + "/" + parseInt(values.startDate.getMonth() + 1) + "/" + values.startDate.getDate();
+            const endtDateFormat = values.endDate.getFullYear() + "/" + parseInt(values.endDate.getMonth() + 1) + "/" + values.endDate.getDate();
+
+            const updatedValue = {...values, startDate: startDateFormat,endDate: endtDateFormat}
+
+            console.log(updatedValue)
         }
     });
+    const handleProjectCLick = async (projectid)=> {
+        try{
+            const result = await axios.get(`/project/projectlist/${projectid}`)
 
+            //console.log(result.data)
+            appState.setSelectedProject(result.data.project[0])
+
+            //console.log(appState.selectedProject.givennames)
+
+
+            const startDate = new Date(result.data.project[0].startdate);
+            //console.log(result.data)
+            const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
+            appState.setStartDate(startDateFormat)
+
+            const endDate = new Date(result.data.project[0].enddate)
+            const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
+            appState.setEndDate(endDateFormat)
+
+            appState.setCompletedTask(result.data.completedTask[0].taskcompleted)
+            appState.setActiveTask(result.data.activeTask[0].taskactive)
+
+            const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
+            appState.setTaskList(activities.data)
+
+            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            //enable or disable send button
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                //setReload(!reload)
+                //console.log(location.data.location)
+            } else {
+                appState.setEnableSendButton(false)
+                //setReload(!reload)
+            }
+
+            //enable or disable complete button
+
+            if (status.data.status === '2') {
+                appState.setEnableCompletedButton(true)
+                //setReload(!reload)
+            } else {
+                appState.setEnableCompletedButton(false)
+                //setReload(!reload)
+            }
+
+            //GET PROJECT FILE
+
+
+            let SMProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2002`)
+            let RIProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2001`)
+            let ITProjectFile = await axios.get( `/project/projectfile/${appState.selectedProject.projectid}/2000`)
+
+            SMProjectFile = SMProjectFile.data[0] ? '\n' + SMProjectFile.data[0].description : '';
+            RIProjectFile = RIProjectFile.data[0] ? '\n' + RIProjectFile.data[0].description : '';
+            ITProjectFile = ITProjectFile.data[0] ? '\n' + ITProjectFile.data[0].description : '';
+
+            console.log(SMProjectFile)
+            console.log(RIProjectFile)
+            console.log(ITProjectFile)
+
+            appState.setSMProjectFile(SMProjectFile);
+            appState.setRIProjectFile(RIProjectFile);
+            appState.setITProjectFile(ITProjectFile);
+
+
+            props.setReload(!props.reload)
+
+
+        }catch (error) {
+            console.log(error)
+        }
+
+        //setReload(!reload)
+
+        //CHANGE THE STATE IN ORDER TO RELOAD STATE DATA
+
+        //props.setReload = (!props.reload)
+    }
+    const handleCompleteClick = async ()=>{
+        try{
+            await axios.put(`/sales/completeproject/${appState.selectedProject.projectid}`)
+            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            if(status.data.status === '2') {
+                appState.setEnableCompletedButton(true)
+            }
+            else{
+                appState.setEnableCompletedButton(false)
+
+            }
+
+
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                setReload(!reload)
+                //console.log(location.data.location)
+            } else {
+                appState.setEnableSendButton(false)
+                setReload(!reload)
+            }
+
+            setReload(!reload)
+
+        }catch (error) {
+            alert(error)
+        }
+    }
     //here we will pass list of project for manager, list of tasks for staff.
     const list = (
-        <ProjectListComponent search={"Search by name"} filter={"Filter"}/>
+        <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList} handleClick={handleProjectCLick}/>
     )
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: 225,
+                width: 250,
+            },
+        },
+    };
     const assignButton =(
         <Fragment>
             <Button
                 className={classes.assignButton}
                 onClick={()=> setOpen(true)}
+                classes={{disabled: classes.completedButtonDisabled}}
+                disabled={appState.enableCompletedButton}
             >
                 Assign Task
             </Button>
@@ -136,7 +265,7 @@ function ProjectList(props) {
                                                autoComplete: 'off'
                                            }
                                        }}
-                                       label={"Project Name"}
+                                       label={"Task Name"}
                                        className={classes.form}
                                        onChange={formik.handleChange}
                                        value={formik.values.name}
@@ -168,6 +297,7 @@ function ProjectList(props) {
                                     value={formik.values.startDate}
                                     error={Boolean(formik.errors.startDate)}
                                     helperText={formik.errors.startDate}
+                                    minDate={new Date(appState.selectedProject.startdate)}
                                     maxDate={formik.values.endDate}
                                     autoOk
 
@@ -195,6 +325,7 @@ function ProjectList(props) {
                                     error={Boolean(formik.errors.endDate)}
                                     helperText={formik.errors.endDate}
                                     minDate={formik.values.startDate }
+                                    maxDate={new Date(appState.selectedProject.enddate)}
                                     autoOk
 
                                 />
@@ -202,25 +333,43 @@ function ProjectList(props) {
                         </Grid>
 
                     </Grid>
-                    <Grid container style={{marginBottom: "0.5em", marginTop: "2em"}}>
+
+                    <Grid container style={{marginBottom: "0.5em", marginTop: "1em"}}>
                         <Grid item xs className={classes.textFieldContainer}>
-                            <TextField fullWidth
-                                       id={"name"}
-                                       variant={"filled"}
-                                       InputProps={{
-                                           disableUnderline: true,
-                                           autoComplete: 'new-password',
-                                           form: {
-                                               autoComplete: 'off'
-                                           }
-                                       }}
-                                       label={"Project Name"}
-                                       className={classes.form}
-                                       onChange={formik.handleChange}
-                                       value={formik.values.name}
-                                       error={Boolean(formik.errors.name)}
-                                       helperText={formik.errors.name}
-                            />
+                            <FormControl fullWidth
+                                         id={"customer"}
+                                         variant={"filled"}
+                                         className={classes.form}
+                                         onChange={formik.handleChange("customer")}
+                                         error={Boolean(formik.errors.customer)}
+
+                            >
+                                <InputLabel id="customer"  >Staff</InputLabel>
+                                <Select
+                                    labelId="staff"
+                                    MenuProps={MenuProps}
+                                    className={classes.selectInput}
+                                    onChange={formik.handleChange("staff")}
+                                    value={formik.values.staff}
+                                    disableUnderline
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {appState.departmentStaffList.map((staff, index) => (
+                                        <MenuItem key={index} value={staff.employeeid}>
+                                            {staff.lastname}
+                                        </MenuItem>
+                                    ))}
+
+                                </Select>
+                                {Boolean(formik.errors.staff) ? <FormHelperText id="customer">Staff is required</FormHelperText> : undefined }
+
+
+
+
+
+                            </FormControl>
                         </Grid>
 
                     </Grid>
@@ -242,7 +391,7 @@ function ProjectList(props) {
                                        onChange={formik.handleChange}
                                        value={formik.values.description}
                                        multiline
-                                       rows={5}
+                                       rows={10}
 
                             />
                         </Grid>
@@ -269,6 +418,9 @@ function ProjectList(props) {
         <Fragment>
             <Button
                 className={classes.completedButton}
+                classes={{disabled: classes.completedButtonDisabled}}
+                disabled={appState.enableCompletedButton}
+                onClick={()=> handleCompleteClick()}
 
             >
                 COMPLETE

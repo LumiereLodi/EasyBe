@@ -26,17 +26,37 @@ module.exports = {
             console.error(err.message)
         }
     },
+    projectListStaff: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from project WHERE staff = $1 ORDER BY createdat DESC, name DESC", [req.params.staffid])
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
+    sentProjectList: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from project WHERE location = '1' ORDER BY createdat DESC, name DESC")
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
 
     defaultProject: async (req, res, next)=> {
         try {
-            const results = await db.query("select project.*, employee.lastname, remainingDays.remainingDays from project\n" +
+            const results = await db.query("select project.*, to_char(startdate, $1) as formatStartdate, to_char(enddate, $1) as formatEnddate, employee.lastname, remainingDays.remainingDays from project\n" +
                 "inner join(\n" +
                 "\tselect to_char((enddate - Now()), 'dd') as remainingDays, projectid from project ORDER BY createdat DESC, name DESC LIMIT 1\n" +
                 ") as remainingDays\n" +
                 "on project.projectid = remainingDays.projectid\n" +
                 "join employee\n" +
                 "on employee.employeeid = project.staff ORDER BY createdat DESC, name DESC LIMIT 1\n" +
-                "\n", [])
+                "\n", ['DD/MM/YYYY'])
 
             //res.json(results.rows);
 
@@ -50,14 +70,14 @@ module.exports = {
     },
     projectDetails: async (req, res, next)=> {
         try {
-            const results = await db.query("select project.*, employee.lastname, remainingDays.remainingDays from project\n" +
+            const results = await db.query("select project.*,to_char(startdate, $2) as formatStartdate, to_char(enddate, $2) as formatEnddate, employee.lastname, remainingDays.remainingDays from project\n" +
                 "inner join(\n" +
                 "\tselect to_char((enddate - Now()), 'dd') as remainingDays, projectid from project where projectid = $1\n" +
                 ") as remainingDays\n" +
                 "on project.projectid = remainingDays.projectid\n" +
                 "join employee\n" +
                 "on employee.employeeid = project.staff where project.projectid = $1\n" +
-                "\n", [req.params.projectid])
+                "\n", [req.params.projectid, 'DD/MM/YYYY'])
 
             req.result = results.rows
             next()
@@ -137,13 +157,23 @@ module.exports = {
                     req.body.description
                 ])
 
-                res.json(result.rows)
+                res.status(200).json(result.rows)
+            }else{
+                res.status(200).json("empty string")
             }
 
         }catch (err) {
             console.error(err.message)
         }
-    }
+    },
 
+    stafflist: async (req, res)=> {
+        try{
+            const activeTask = await db.query("SELECT * FROM employee WHERE departmentid = $1", [req.params.departmentid])
+            res.json(activeTask.rows);
+        }catch (err) {
+            res.json(err)
+        }
+    },
 
 }
