@@ -39,7 +39,7 @@ module.exports = {
     sentProjectList: async (req, res)=> {
 
         try {
-            const results = await db.query("SELECT * from project WHERE location = '1' ORDER BY createdat DESC, name DESC")
+            const results = await db.query("SELECT * from project WHERE location = '1' ORDER BY createdat DESC, name ASC")
             res.json(results.rows);
 
         } catch (err) {
@@ -175,5 +175,45 @@ module.exports = {
             res.json(err)
         }
     },
+    addTask: async (req, res)=> {
 
+        try {
+            const results = await db.query("INSERT INTO task(name, startdate, enddate, description,staff, projectid, departmentid, createdby) VALUES($1, $2,$3, $4,$5,$6,$7,$8) returning name ",
+                [
+                    req.body.name,
+                    req.body.startDate,
+                    req.body.endDate,
+                    req.body.description,
+                    req.body.staff,
+                    req.params.projectid,
+                    req.params.departmentid,
+                    req.params.managerid
+                ])
+            res.json(results.rows[0]);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
+    taskListStaff: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from task WHERE staff = $1 ORDER BY createdat DESC, name ASC", [req.params.staffid])
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
+    taskDetails: async (req, res, next)=> {
+        try {
+            const results = await db.query("select task.*,to_char(startdate, $2) as formatStartdate, to_char(enddate, $2) as formatEnddate, to_char((enddate - Now()), 'dd') as remainingDays from task\n" +
+                "where taskid = $1\n", [req.params.taskid, 'DD/MM/YYYY'])
+
+           res.json(results.rows)
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
 }

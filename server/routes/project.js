@@ -15,8 +15,11 @@ router.get("/projectfile/:projectid/:departmentid",projectController.getProjectf
 router.get("/projectstafflist/staff/:staffid",projectController.projectListStaff)
 router.get("/sentProject/",projectController.sentProjectList)
 router.get("/stafflist/:departmentid",projectController.stafflist)
+router.get("/taskstafflist/:staffid",projectController.taskListStaff)
+router.get("/taskDetails/:taskid", projectController.taskDetails)
 
 
+router.post("/addTask/:managerid/:projectid/:departmentid",projectController.addTask)
 router.post("/projectfile/description/:projectid/:employeeid/:departmentid",projectController.setProjectFile)
 
 

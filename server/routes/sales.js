@@ -4,8 +4,10 @@ const {createTokens, validateToken,salesmanagerValidation} = require('../jwt');
 const router = express.Router();
 const sales = require("../controller/salesController");
 
-/******* ROUTES FOR THE SALES AND MARKETING MANAGER *******/
-
+/*** ROUTES FOR THE SALES AND MARKETING MANAGER
+ * ROUTE FOR TASKS AND PROJECTS ARE MISTAKENLY PUT HERE.
+ * THEY ARE SUPPOSED TO BE ON THE PROJECT.JS
+ */
 router.get("/customer/email/:email",sales.customerEmail);
 router.get("/location/:projectid", sales.getLocation)
 router.get("/status/:projectid", sales.getStatus)

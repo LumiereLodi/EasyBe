@@ -230,24 +230,82 @@ function List(props) {
             </ListSubheader>
 
             {/*{props.list ? props.list : undefined}*/}
-            {props.list ? props.list.map((value, index)=>(
-                <Grid item key={index}
-                      onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
-                          window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
-                          : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
 
-                    <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
-                        <Grid container alignItems={"center"} style={{height: "100%"}}>
-                            <Typography style={{fontWeight: "bold" }} >
-                                {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
-                                {/*{value.name}*/}
-                            </Typography>
+            {appState.userInfo.position === 'Staff' ? appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+                props.list ? props.list.map((value, index)=>(
+                        <Grid item key={index}
+                              onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
+                                  window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
+                                  : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
+
+                            <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
+                                <Grid container alignItems={"center"} style={{height: "100%"}}>
+                                    <Typography style={{fontWeight: "bold" }} >
+                                        {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
+                                        {/*{value.name}*/}
+                                    </Typography>
+                                </Grid>
+                            </ListItem>
+
+
                         </Grid>
-                    </ListItem>
+                    )) : undefined
+                : props.list ? props.list.map((value, index)=>(
+                    <Grid item key={index}
+                          onClick={()=> (props.handleClick(value.taskid))}>
+
+                        <ListItem className={classes.ListContainer} value={value.taskid} button disableGutters >
+                            <Grid container alignItems={"center"} style={{height: "100%"}}>
+                                <Typography style={{fontWeight: "bold" }} >
+                                    {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
+                                    {/*{value.name}*/}
+                                </Typography>
+                            </Grid>
+                        </ListItem>
 
 
-                </Grid>
-            )) : undefined}
+                    </Grid>
+                )) : undefined
+                :
+                props.list ? props.list.map((value, index)=>(
+                    <Grid item key={index}
+                          onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
+                              window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
+                              : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
+
+                        <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
+                            <Grid container alignItems={"center"} style={{height: "100%"}}>
+                                <Typography style={{fontWeight: "bold" }} >
+                                    {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
+                                    {/*{value.name}*/}
+                                </Typography>
+                            </Grid>
+                        </ListItem>
+
+
+                    </Grid>
+                )) : undefined
+            }
+
+
+            {/*{props.list ? props.list.map((value, index)=>(*/}
+            {/*    <Grid item key={index}*/}
+            {/*          onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||*/}
+            {/*              window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)*/}
+            {/*              : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>*/}
+
+            {/*        <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >*/}
+            {/*            <Grid container alignItems={"center"} style={{height: "100%"}}>*/}
+            {/*                <Typography style={{fontWeight: "bold" }} >*/}
+            {/*                    {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}*/}
+            {/*                    /!*{value.name}*!/*/}
+            {/*                </Typography>*/}
+            {/*            </Grid>*/}
+            {/*        </ListItem>*/}
+
+
+            {/*    </Grid>*/}
+            {/*)) : undefined}*/}
 
 
 

@@ -261,6 +261,7 @@ function AppDrawer(props) {
                 /*** PROJECT LIST ***/
 
                 if(appState.userInfo.position === 'Manager'){
+
                     if(appState.userInfo.departmentid === '2002'){
                         const projectlistAll = await axios.get(`/project/projectlist`);
                         console.log(projectlistAll);
@@ -272,10 +273,44 @@ function AppDrawer(props) {
                         appState.setProjectListAll(projectlistAll.data);
                     }
 
+
+                    /********GET DEFAULT VALUES FOR PROJECT********/
+
+                    const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                    console.log(defaultproject.data.project);
+                    appState.setSelectedProject(defaultproject.data.project[0]);
+
+                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+
                 }else if(appState.userInfo.position === 'Staff'){
-                    const projectlistAll = await axios.get(`/project/projectstafflist/staff/${appState.userInfo.employeeid}`);
-                    console.log(projectlistAll);
-                    appState.setProjectListAll(projectlistAll.data);
+                    if(appState.userInfo.departmentid === '2002'){
+                        const projectlistAll = await axios.get(`/project/projectstafflist/staff/${appState.userInfo.employeeid}`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+
+
+                        /********GET DEFAULT VALUES FOR PROJECT********/
+
+                        const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                        console.log(defaultproject.data.project);
+                        appState.setSelectedProject(defaultproject.data.project[0]);
+
+                        appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                        appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                    }
+                    else  if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
+                        const projectlistAll = await axios.get(`/project/taskstafflist/${appState.userInfo.employeeid}`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+
+                        /********GET DEFAULT VALUES FOR TASKS********/
+
+                        const defaultproject = await axios.get(`/project/taskDetails/${appState.leftList[0].taskid}`);
+                        console.log(defaultproject.data[0]);
+                        appState.setSelectedProject(defaultproject.data[0]);
+                    }
+
                 }
 
 
@@ -300,28 +335,20 @@ function AppDrawer(props) {
 
                 /********GET DEFAULT VALUES FOR PROJECT********/
 
-                // const result = await axios.get(`/project/projectlist/${projectid}`)
-                // appState.setSelectedProject(result.data.project[0])
-
-                // const defaultproject = await axios.get(`/project/defaultproject`);
+                // const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
                 // console.log(defaultproject.data.project);
                 // appState.setSelectedProject(defaultproject.data.project[0]);
 
-                const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                console.log(defaultproject.data.project);
-                appState.setSelectedProject(defaultproject.data.project[0]);
+                // const startDate = new Date(defaultproject.data.project[0].startdate);
+                // const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
+                // appState.setStartDate(startDateFormat)
+                //
+                // const endDate = new Date(defaultproject.data.project[0].enddate)
+                // const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
+                // appState.setEndDate(endDateFormat)
 
-                const startDate = new Date(defaultproject.data.project[0].startdate);
-                const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
-                appState.setStartDate(startDateFormat)
-
-                const endDate = new Date(defaultproject.data.project[0].enddate)
-                const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
-                appState.setEndDate(endDateFormat)
-
-                console.log()
-                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                // appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                // appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
 
 
                 const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
@@ -647,7 +674,7 @@ function AppDrawer(props) {
                          **/}
 
                         <Route path={"/drawer/project"} render={()=> <Project  reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer} />}/>
-                        <Route path={"/drawer/researchProject"} component={Main}/>
+                        <Route path={"/drawer/researchProject"} render={()=> <Main reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer}/>}/>
                         <Route path={"/drawer/client"} render={() => <Customer reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer} />}/>
                         <Route path={"/drawer/analytics"} component={() => <div>Analytics</div>}/>
 

@@ -157,7 +157,7 @@ module.exports={
             let query = "select task.*, employee.lastname from task \n" +
                 "join employee\n" +
                 "on task.staff = employee.employeeid\n" +
-                "where task.projectid = $1 "
+                "where task.projectid = $1 ORDER BY task.createdat DESC, name DESC"
             let result
             result = await db.query(query, [req.params.projectid])
 

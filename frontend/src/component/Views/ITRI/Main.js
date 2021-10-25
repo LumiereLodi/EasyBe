@@ -3,6 +3,7 @@ import AppBar from "../../AppBar";
 import {Link, Redirect, Route, Switch} from "react-router-dom";
 import ProjectList from "./ProjectList";
 import {useAppState} from "../../WithStore";
+import AddProject from "../Sales/AddProject";
 
 function Main(props) {
 
@@ -20,7 +21,7 @@ function Main(props) {
             </Switch>
 
             <Switch>
-                <Route path={"/drawer/researchProject/projectlist"} render={()=> <ProjectList setReload={setReload} reload={reload}/>}/>
+                <Route path={"/drawer/researchProject/projectlist"} render={()=> <ProjectList reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
             </Switch>
         </div>
     );

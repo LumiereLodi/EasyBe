@@ -35,10 +35,32 @@ const useStyles = makeStyles(theme => ({
             fontSize: "1em",
 
 
+        },
+        "& .MuiInput-formControl": {
+            color: "black",
+
+
+        }
+
+    },
+    description: {
+        marginTop: "1em",
+        //marginLeft: "1em",
+
+        "& .MuiInputLabel-root": {
+            color: theme.palette.primary.main,
+
+        },
+        "& .MuiInputBase-root": {
+            borderRadius: "0.3em",
+            backgroundColor: "#fff8dd",
+            //height: "2.5em"
+            fontSize: "1em",
+
 
         },
         "& .MuiInput-formControl": {
-            color:"black",
+            color: "black",
 
 
         }
@@ -47,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     ListContainer: {
         width: "90%",
         height: "5em",
-        backgroundColor: "#FFF8DD",
+        backgroundColor: "#fff8dd",
         marginLeft: "1em",
         marginRight: "1em",
         marginTop: "0.7em",
@@ -64,18 +86,19 @@ const useStyles = makeStyles(theme => ({
         borderRadius: "0.3em",
         height: "12em"
     },
-    remainingDaysContainer:{
+    remainingDaysContainer: {
         borderRadius: "0.3em",
         height: "12em",
         borderColor: "rgba(35,37,38,0.25)",
         border: "2px solid",
 
     },
-    projectActivities:{
+    projectActivities: {
         borderRadius: "0.3em",
         backgroundColor: "#FFF8DD",
         overflow: "auto",
-        height: "20em"
+        height: "20em",
+
     },
     saveButton: {
         ...theme.typography.login,
@@ -90,7 +113,7 @@ const useStyles = makeStyles(theme => ({
         },
         marginTop: "1em"
     },
-    editButton:{
+    editButton: {
 
         borderWidth: 2,
         borderRadius: 50,
@@ -99,6 +122,7 @@ const useStyles = makeStyles(theme => ({
 
 
 }))
+
 function ProjectFile(props) {
     const classes = useStyles()
 
@@ -118,8 +142,8 @@ function ProjectFile(props) {
         //alert("I was clicked")
     }
 
-    useEffect(()=> {
-        if(appState.selectedProject.startdate){
+    useEffect(() => {
+        if (appState.selectedProject.startdate) {
             const startdate = new Date(appState.selectedProject.startdate)
             const startDateFormat = startdate.getDate() + "/" + startdate.getMonth() + "/" + startdate.getFullYear();
             setStartDate(startDateFormat)
@@ -127,42 +151,179 @@ function ProjectFile(props) {
         }
 
         //alert("inside Project file")
-    },[])
+    }, [])
 
     const saveRIProjectfile = async () => {
-        try{
+        try {
             const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
                 {description: RIDescription});
 
             console.log(result.data)
 
-        }catch (error) {
+        } catch (error) {
             alert(error)
         }
     }
     const saveITProjectfile = async () => {
-        try{
+        try {
             const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
-                {description: ITDescription} );
+                {description: ITDescription});
 
             console.log(result.data)
-        }catch (error) {
+        } catch (error) {
             alert(error)
         }
     }
     const saveSMProjectfile = async () => {
         //console.log(SMDescription)
-        try{
+        try {
             const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
-                {description: SMDescription} );
+                {description: SMDescription});
 
             console.log(result.data)
-        }catch (error) {
+        } catch (error) {
             alert(error)
         }
 
     }
-    return useObserver(()=> (
+
+    const projectActivities = (
+        <Fragment>
+            <Grid item style={{marginTop: "2em", marginBottom: "2em"}}>
+                <Grid item container>
+                    <Typography variant={"h1"} style={{fontWeight: "bold", marginTop: "1em", marginBottom: "1em"}}>
+                        Project Activities
+                    </Typography>
+                </Grid>
+                <Grid container className={classes.projectActivities} sm={12} direction={"column"}>
+
+                    <ListSubheader disableGutters style={{zIndex: "0"}}>
+                        <Grid item container style={{marginTop: "1.5em"}}>
+
+                            <Grid item container xs justify={"center"}>
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Task Name
+                                </Typography>
+
+                            </Grid>
+                            <Grid item container xs justify={"center"}>
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Assign To
+                                </Typography>
+                            </Grid>
+                            {/*<Grid item container xs justify={"center"} >*/}
+                            {/*    <Typography style={{fontWeight: "bold"}}>*/}
+                            {/*        Deadline*/}
+                            {/*    </Typography>*/}
+                            {/*</Grid>*/}
+                            <Grid item container xs justify={"center"}>
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Status
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"}>
+                                <Typography style={{fontWeight: "bold"}}>
+                                    Manager
+                                </Typography>
+                            </Grid>
+                            {(props.editButton && appState.userInfo.position === "Manager") ?
+                                <Grid item container xs={1} justify={"center"}>
+                                    <Typography style={{fontWeight: "bold"}}>
+
+                                    </Typography>
+                                </Grid>
+                                : undefined}
+
+
+                        </Grid>
+                    </ListSubheader>
+
+
+                    {appState.taskList.map((task, index) => (
+
+                        <Grid item container style={{marginBottom: "0.3em"}}>
+
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography>
+                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
+                                    {task.name.length < 20 ? task.name : <span>{task.name.substring(0, 20)}...</span>}
+                                </Typography>
+
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography>
+                                    {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
+                                    {task.lastname.length < 20 ? task.lastname :
+                                        <span>{task.lastname.substring(0, 20)}...</span>}
+                                </Typography>
+                            </Grid>
+                            {/*<Grid item container xs justify={"center"} alignItems={"center"} >*/}
+                            {/*    <Typography>*/}
+                            {/*        Deadline*/}
+                            {/*    </Typography>*/}
+                            {/*</Grid>*/}
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography>
+                                    {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : task.status === '2' ? "Delayed" : undefined}
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs justify={"center"} alignItems={"center"}>
+                                <Typography>
+                                    {task.departmentid}
+                                </Typography>
+                            </Grid>
+                            {/*<Grid item container xs={1} justify={"center"} >*/}
+                            {/*    <IconButton*/}
+                            {/*        onClick={()=> props.openDialog ? props.openDialog(true) : undefined}*/}
+                            {/*    >*/}
+                            {/*        <EditIcon fontSize="small" htmlColor={"black"}/>*/}
+                            {/*    </IconButton>*/}
+
+                            {/*</Grid>*/}
+                            {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
+
+                        </Grid>
+                    ))}
+
+
+                </Grid>
+            </Grid>
+        </Fragment>
+    )
+
+    const projectActivitiesForStaff = (
+        <Fragment>
+            <Grid item style={{marginTop: "2em", marginBottom: "2em"}}>
+                <Grid item container>
+                    <Typography variant={"h1"} style={{fontWeight: "bold", marginTop: "1em", marginBottom: "1em"}}>
+                        Task Description
+                    </Typography>
+                </Grid>
+
+                <Grid item sm className={classes.textFieldContainer}>
+                    <TextField fullWidth
+                               id={"SMDescription"}
+                               variant={"filled"}
+                               InputProps={{
+                                   disableUnderline: true,
+                                   autoComplete: 'new-password',
+                                   form: {
+                                       autoComplete: 'off'
+                                   },
+                                   readOnly: true
+                               }}
+
+                               className={classes.description}
+                               multiline
+                               rows={15}
+                               defaultValue={appState.selectedProject.description}
+
+                    />
+                </Grid>
+            </Grid>
+        </Fragment>
+    )
+    return useObserver(() => (
         <Fragment>
 
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
@@ -172,15 +333,37 @@ function ProjectFile(props) {
                             <Typography variant={"h1"} style={{fontSize: "2em"}}>
                                 {/*{appState.selectedProject.name !== null ? appState.selectedProject.name.toUpperCase() : null}*/}
                                 {/*{appState.selectedProject.name.length < 50 ? appState.selectedProject.name.toUpperCase() : <span>{appState.selectedProject.name.substring(0, 50)}...</span> }*/}
-                                {appState.selectedProject.name && appState.selectedProject.name.length < 50 ? appState.selectedProject.name.toUpperCase() : appState.selectedProject.name  ? <span>{appState.selectedProject.name.substring(0, 50)}...</span> : null}
+                                {appState.selectedProject.name && appState.selectedProject.name.length < 50 ? appState.selectedProject.name.toUpperCase() : appState.selectedProject.name ?
+                                    <span>{appState.selectedProject.name.substring(0, 50)}...</span> : null}
                             </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
 
                 <Grid item style={{marginBottom: "1.5em", marginTop: "2em"}}>
-                    <Grid container>
-                        <Grid item container direction={"column"} xs alignItems={"flex-end"} style={{marginRight: "4em"}} >
+                    {appState.userInfo.position === 'Staff' ? appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+
+                        <Grid container>
+                            <Grid item container direction={"column"} xs alignItems={"flex-end"}
+                                  style={{marginRight: "4em"}}>
+                                <Typography style={{fontSize: "3em", color: "black"}}>
+                                    {appState.completedTask}
+                                </Typography>
+                                <Typography style={{fontSize: "1em", color: "black"}}>
+                                    Completed Tasks
+                                </Typography>
+                            </Grid>
+                            <Grid item container direction={"column"} xs style={{marginLeft: "4em"}}>
+                                <Typography style={{fontSize: "3em", color: "black"}}>
+                                    {appState.activeTask}
+                                </Typography>
+                                <Typography style={{fontSize: "1em", color: "black"}}>
+                                    Active Tasks
+                                </Typography>
+                            </Grid>
+                        </Grid> : undefined : <Grid container>
+                        <Grid item container direction={"column"} xs alignItems={"flex-end"}
+                              style={{marginRight: "4em"}}>
                             <Typography style={{fontSize: "3em", color: "black"}}>
                                 {appState.completedTask}
                             </Typography>
@@ -192,11 +375,14 @@ function ProjectFile(props) {
                             <Typography style={{fontSize: "3em", color: "black"}}>
                                 {appState.activeTask}
                             </Typography>
-                            <Typography style={{fontSize: "1em",color: "black"}}>
+                            <Typography style={{fontSize: "1em", color: "black"}}>
                                 Active Tasks
                             </Typography>
                         </Grid>
                     </Grid>
+
+                    }
+
                 </Grid>
             </ListSubheader>
 
@@ -204,21 +390,25 @@ function ProjectFile(props) {
 
                 <Grid item>
                     <Grid container justify={"center"}>
-                        <Grid item container className={classes.projectInfoContainer} sm={7} style={{marginRight: "1em"}} direction={"column"}>
+                        <Grid item container className={classes.projectInfoContainer} sm={7}
+                              style={{marginRight: "1em"}} direction={"column"}>
                             <Grid item>
                                 <Grid container>
                                     <Grid item xs={6}>
-                                        <Typography  style={{fontWeight: "bold", marginLeft: "1em" , marginTop: "1em"}} >
-                                            Project Description
+                                        <Typography style={{fontWeight: "bold", marginLeft: "1em", marginTop: "1em"}}>
+                                            {appState.userInfo.position === 'Staff' ? appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+                                                <span>Project Description</span> : <span>Task Description</span> :
+                                                <span>Project Description</span>}
+
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <Grid item container >
+                                        <Grid item container>
                                             {/**ASSIGN BUTTON IS FOR IT & RI MANAGER**/}
-                                            {(props.assignButton && appState.userInfo.position === "Manager") ? props.assignButton: undefined}
+                                            {(props.assignButton && appState.userInfo.position === "Manager") ? props.assignButton : undefined}
 
                                             {/**SEND BUTTON IS FOR SM MANAGER**/}
-                                            {props.sendButton ? props.sendButton: undefined}
+                                            {props.sendButton ? props.sendButton : undefined}
 
                                         </Grid>
                                     </Grid>
@@ -227,24 +417,28 @@ function ProjectFile(props) {
                             </Grid>
                             <Grid item>
                                 <Grid container style={{marginTop: "1.5em"}}>
-                                    <Grid item container xs justify={"center"} >
+                                    <Grid item container xs justify={"center"}>
                                         <Typography style={{fontWeight: "bold"}}>
-                                            Sales Person
+                                            {appState.userInfo.position === 'Staff' ? appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+                                                <span>Sales Person</span> : <span>Assign To</span> :
+                                                <span>Sales Person</span>}
+
+
                                         </Typography>
 
                                     </Grid>
-                                    <Grid item container xs justify={"center"} >
+                                    <Grid item container xs justify={"center"}>
                                         <Typography style={{fontWeight: "bold"}}>
                                             Start Date
                                         </Typography>
                                     </Grid>
-                                    <Grid item container xs justify={"center"} >
+                                    <Grid item container xs justify={"center"}>
                                         <Typography style={{fontWeight: "bold"}}>
                                             End Date
                                         </Typography>
                                     </Grid>
                                     {(props.editProject && appState.userInfo.position === "Manager") ?
-                                        <Grid item container xs={1} justify={"center"} >
+                                        <Grid item container xs={1} justify={"center"}>
                                             <Typography style={{fontWeight: "bold"}}>
 
                                             </Typography>
@@ -254,17 +448,28 @@ function ProjectFile(props) {
                             </Grid>
                             <Grid item>
                                 <Grid container>
-                                    <Grid item container xs justify={"center"}  alignItems={"center"}>
-                                        <Typography >
-                                            {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                            { appState.selectedProject.lastname && appState.selectedProject.lastname.length < 20 ? appState.selectedProject.lastname : appState.selectedProject.lastname !== undefined ? <span>{appState.selectedProject.lastname.substring(0, 20)}...</span> : undefined}
-                                            {/**                                {value.name && value.name.length < 23 ? value.name : value.name !== null ? <span>{value.name.substring(0, 23)}...</span> : null}
-                                             **/}
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography>
+                                            {appState.userInfo.position === 'Staff' ?
+                                                appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+                                                    appState.selectedProject.lastname && appState.selectedProject.lastname.length < 20 ?
+                                                        appState.selectedProject.lastname : appState.selectedProject.lastname !== undefined ?
+                                                        <span>{appState.selectedProject.lastname.substring(0, 20)}...</span> : undefined
+                                                    : <span>You</span>
+                                                : appState.selectedProject.lastname && appState.selectedProject.lastname.length < 20 ?
+                                                    appState.selectedProject.lastname : appState.selectedProject.lastname !== undefined ?
+                                                        <span>{appState.selectedProject.lastname.substring(0, 20)}...</span> : undefined}
+
+
+                                            {/*{ appState.selectedProject.lastname && appState.selectedProject.lastname.length < 20 ?*/}
+                                            {/*    appState.selectedProject.lastname : appState.selectedProject.lastname !== undefined ?*/}
+                                            {/*        <span>{appState.selectedProject.lastname.substring(0, 20)}...</span> : undefined}*/}
+
                                         </Typography>
 
                                     </Grid>
                                     <Grid item container xs justify={"center"} alignItems={"center"}>
-                                        <Typography >
+                                        <Typography>
                                             {appState.selectedProject.formatstartdate}
                                         </Typography>
                                     </Grid>
@@ -279,8 +484,10 @@ function ProjectFile(props) {
 
                         </Grid>
 
-                        <Grid item container className={classes.remainingDaysContainer} sm={4} style={{marginLeft: "1em"}}>
-                            <Grid container direction={"column"} alignItems={"center"} style={{marginBottom: "1em", marginTop: "0.5em"}}>
+                        <Grid item container className={classes.remainingDaysContainer} sm={4}
+                              style={{marginLeft: "1em"}}>
+                            <Grid container direction={"column"} alignItems={"center"}
+                                  style={{marginBottom: "1em", marginTop: "0.5em"}}>
                                 <Grid item>
                                     <Typography variant={"h1"}>
                                         Remaining Days
@@ -288,116 +495,34 @@ function ProjectFile(props) {
                                 </Grid>
                                 {/**#6ed00c**/}
                                 <Grid item style={{marginTop: "1em"}}>
-                                    <Typography style={{ fontFamily: "Roboto", fontSize: "4em", color: appState.selectedProject.remainingdays >= 0 ? "#6ed00c" : "red"}}>
+                                    <Typography style={{
+                                        fontFamily: "Roboto",
+                                        fontSize: "4em",
+                                        color: appState.selectedProject.remainingdays >= 0 ? "#6ed00c" : "red"
+                                    }}>
                                         {appState.selectedProject.remainingdays}
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    {props.completedButton ? props.completedButton : undefined }
+                                    {props.completedButton ? props.completedButton : undefined}
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
+                {/********* PROJECT ACTIVITIES APPEAR WHEN YOU ARE DEALING WITH PROJECT.
+                 *IT DISAPPEARS WHEN DEALING WITH TASKS. WITH TASKS WE HAVE THE DESCRIPTION FROM THE MANAGER
+                 * WHO ASSIGNED THE TASK.
+                 *************/}
 
-                <Grid item style={{marginTop: "2em", marginBottom: "2em"}}>
-                    <Grid item container>
-                        <Typography variant={"h1"} style={{fontWeight: "bold" , marginTop: "1em",marginBottom: "1em"}} >
-                            Project Activities
-                        </Typography>
-                    </Grid>
-                    <Grid container  className={classes.projectActivities} sm={12} direction={"column"}>
-
-                        <ListSubheader disableGutters style={{zIndex: "0"}}>
-                            <Grid item container style={{marginTop: "1.5em"}}>
-
-                                <Grid item container xs justify={"center"} >
-                                    <Typography style={{fontWeight: "bold"}}>
-                                        Task Name
-                                    </Typography>
-
-                                </Grid>
-                                <Grid item container xs justify={"center"} >
-                                    <Typography style={{fontWeight: "bold"}}>
-                                        Assign To
-                                    </Typography>
-                                </Grid>
-                                {/*<Grid item container xs justify={"center"} >*/}
-                                {/*    <Typography style={{fontWeight: "bold"}}>*/}
-                                {/*        Deadline*/}
-                                {/*    </Typography>*/}
-                                {/*</Grid>*/}
-                                <Grid item container xs justify={"center"} >
-                                    <Typography style={{fontWeight: "bold"}}>
-                                        Status
-                                    </Typography>
-                                </Grid>
-                                <Grid item container xs justify={"center"} >
-                                    <Typography style={{fontWeight: "bold"}}>
-                                        Manager
-                                    </Typography>
-                                </Grid>
-                                {(props.editButton && appState.userInfo.position === "Manager") ?
-                                    <Grid item container xs={1} justify={"center"} >
-                                        <Typography style={{fontWeight: "bold"}}>
-
-                                        </Typography>
-                                    </Grid>
-                                    : undefined}
+                {appState.userInfo.position === 'Staff' ?
+                    appState.userInfo.departmentid !== '2000' && appState.userInfo.departmentid !== '2001' ?
+                        projectActivities
+                        : projectActivitiesForStaff : projectActivities}
 
 
-                            </Grid>
-                        </ListSubheader>
+                {/**************************************************************/}
 
-
-                        {appState.taskList.map((task, index) => (
-
-                            <Grid item container style={{marginBottom: "0.3em"}}>
-
-                                <Grid item container xs justify={"center"} alignItems={"center"}>
-                                    <Typography>
-                                        {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                        {task.name.length < 20 ? task.name : <span>{task.name.substring(0, 20)}...</span>}
-                                    </Typography>
-
-                                </Grid>
-                                <Grid item container xs justify={"center"} alignItems={"center"} >
-                                    <Typography >
-                                        {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
-                                        {task.lastname.length < 20 ? task.lastname : <span>{task.lastname.substring(0, 20)}...</span>}
-                                    </Typography>
-                                </Grid>
-                                {/*<Grid item container xs justify={"center"} alignItems={"center"} >*/}
-                                {/*    <Typography>*/}
-                                {/*        Deadline*/}
-                                {/*    </Typography>*/}
-                                {/*</Grid>*/}
-                                <Grid item container xs justify={"center"} alignItems={"center"}>
-                                    <Typography >
-                                        {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : task.status === '2' ? "Delayed" : undefined}
-                                    </Typography>
-                                </Grid>
-                                <Grid item container xs justify={"center"} alignItems={"center"}>
-                                    <Typography >
-                                        {task.departmentid}
-                                    </Typography>
-                                </Grid>
-                                {/*<Grid item container xs={1} justify={"center"} >*/}
-                                {/*    <IconButton*/}
-                                {/*        onClick={()=> props.openDialog ? props.openDialog(true) : undefined}*/}
-                                {/*    >*/}
-                                {/*        <EditIcon fontSize="small" htmlColor={"black"}/>*/}
-                                {/*    </IconButton>*/}
-
-                                {/*</Grid>*/}
-                                {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
-
-                            </Grid>
-                        ))}
-
-
-                    </Grid>
-                </Grid>
 
                 <Grid item>
                     <Grid container justify={"center"}>
@@ -407,9 +532,9 @@ function ProjectFile(props) {
                     </Grid>
                 </Grid>
                 <Grid item style={{marginTop: "2em"}}>
-                    <Grid container >
+                    <Grid container>
                         <Grid item xs={6}>
-                            <Grid container justify={"flex-start"} >
+                            <Grid container justify={"flex-start"}>
                                 <Typography variant={"h1"}>
                                     Sales & Marketing
                                 </Typography>
@@ -420,9 +545,9 @@ function ProjectFile(props) {
                                 <Grid container justify={"flex-end"}>
                                     <IconButton
                                         disabled={editSM}
-                                        onClick={()=> setEditSM(true)}
+                                        onClick={() => setEditSM(true)}
                                     >
-                                        <EditIcon fontSize="small" htmlColor={editSM ? "grey" : "black"} />
+                                        <EditIcon fontSize="small" htmlColor={editSM ? "grey" : "black"}/>
                                     </IconButton>
 
                                 </Grid> : undefined
@@ -452,7 +577,7 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {appState.SMProjectFile }
+                                   defaultValue={appState.SMProjectFile}
                                    onChange={(event) => setSMDescription(event.target.value)}
 
                         />
@@ -463,7 +588,10 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditSM(false); saveSMProjectfile()}}
+                                onClick={(e) => {
+                                    setEditSM(false);
+                                    saveSMProjectfile()
+                                }}
                             >
                                 Save
                             </Button>
@@ -472,9 +600,9 @@ function ProjectFile(props) {
                 </Grid> : undefined}
 
                 <Grid item style={{marginTop: "2em"}}>
-                    <Grid container >
+                    <Grid container>
                         <Grid item xs={6}>
-                            <Grid container justify={"flex-start"} >
+                            <Grid container justify={"flex-start"}>
                                 <Typography variant={"h1"}>
                                     Research & Innovation
                                 </Typography>
@@ -485,9 +613,9 @@ function ProjectFile(props) {
                                 <Grid container justify={"flex-end"}>
                                     <IconButton
                                         disabled={editRI}
-                                        onClick={()=> setEditRI(true)}
+                                        onClick={() => setEditRI(true)}
                                     >
-                                        <EditIcon fontSize="small" htmlColor={editRI ? "grey" : "black"} />
+                                        <EditIcon fontSize="small" htmlColor={editRI ? "grey" : "black"}/>
                                     </IconButton>
 
                                 </Grid> : undefined
@@ -499,7 +627,7 @@ function ProjectFile(props) {
                 </Grid>
 
                 <Grid item>
-                    <Grid item sm >
+                    <Grid item sm>
                         <TextField fullWidth
                                    id={"RIDescription"}
                                    variant={"filled"}
@@ -516,7 +644,7 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {appState.RIProjectFile }
+                                   defaultValue={appState.RIProjectFile}
                                    onChange={(event) => setRIDescription(event.target.value)}
                         />
                     </Grid>
@@ -526,7 +654,10 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditRI(false); saveRIProjectfile()}}
+                                onClick={(e) => {
+                                    setEditRI(false);
+                                    saveRIProjectfile()
+                                }}
                             >
                                 Save
                             </Button>
@@ -534,7 +665,7 @@ function ProjectFile(props) {
                     </Grid>
                 </Grid> : undefined}
                 <Grid item style={{marginTop: "2em"}}>
-                    <Grid container >
+                    <Grid container>
                         <Grid item xs={6}>
                             <Grid container justify={"flex-start"}>
                                 <Typography variant={"h1"}>
@@ -547,9 +678,9 @@ function ProjectFile(props) {
                                 <Grid container justify={"flex-end"}>
                                     <IconButton
                                         disabled={editIT}
-                                        onClick={()=> setEditIT(true)}
+                                        onClick={() => setEditIT(true)}
                                     >
-                                        <EditIcon fontSize="small" htmlColor={editIT ? "grey" : "black"} />
+                                        <EditIcon fontSize="small" htmlColor={editIT ? "grey" : "black"}/>
                                     </IconButton>
 
                                 </Grid> : undefined
@@ -559,8 +690,8 @@ function ProjectFile(props) {
 
                     </Grid>
                 </Grid>
-                <Grid item >
-                    <Grid item sm >
+                <Grid item>
+                    <Grid item sm>
                         <TextField fullWidth
                                    disabled={!editIT}
                                    id={"ITDescription"}
@@ -577,7 +708,7 @@ function ProjectFile(props) {
                                    className={classes.form}
                                    multiline
                                    rows={15}
-                                   defaultValue = {appState.ITProjectFile }
+                                   defaultValue={appState.ITProjectFile}
                                    onChange={(event) => setITDescription(event.target.value)}
                         />
                     </Grid>
@@ -587,7 +718,10 @@ function ProjectFile(props) {
                         <Grid item>
                             <Button
                                 className={classes.saveButton}
-                                onClick={(e)=> {setEditIT(false); saveITProjectfile()}}
+                                onClick={(e) => {
+                                    setEditIT(false);
+                                    saveITProjectfile()
+                                }}
                             >
                                 Save
                             </Button>
