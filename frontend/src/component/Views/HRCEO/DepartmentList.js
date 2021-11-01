@@ -1,4 +1,4 @@
-import React,{Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import ListLayout from "../../Layout/ListLayout"
 import Details from "../../Layout/Details"
 import Grid from "@material-ui/core/Grid";
@@ -10,6 +10,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import List from "../List";
 import UserOverview from "../UserOverview";
 import ObjectInformation from "../ObjectInformation";
+import {useAppState} from "../../WithStore";
 const useStyles = makeStyles(theme => ({
 
     searchContainer: {
@@ -72,6 +73,7 @@ const useStyles = makeStyles(theme => ({
 function DepartmentList(props) {
 
     const classes = useStyles()
+    const appState = useAppState()
 
     const OverviewHeaders = [
         "Name",
@@ -113,11 +115,18 @@ function DepartmentList(props) {
     )
     const list = (
         <Fragment>
-            <List search={"Search by name"}/>
+            <List search={"Search by name"} list={appState.departmentList}/>
 
         </Fragment>
     )
 
+    useEffect(()=>{
+            appState.setSelectedDepartment(appState.departmentList[0]);
+
+
+            console.log(appState.departmentList)
+            console.log(appState.departmentList[0])
+    }, [])
     const details = (
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>

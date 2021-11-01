@@ -68,7 +68,7 @@ function List(props) {
     const classes = useStyles()
     const appState = useAppState()
     const [reload, setReload] = useState(false)
-
+    const [wordToSearch, setWordToSearch] = useState('')
 
     // const filter = [
     //     "All",
@@ -199,6 +199,7 @@ function List(props) {
                                          variant={"filled"}
                                          className={classes.form}
                                          size={"small"}
+                                         onChange={(e)=> setWordToSearch(e.target.value)}
 
                             >
                                 <InputLabel id="search"  >{props.search ? props.search : undefined}</InputLabel>
@@ -209,6 +210,7 @@ function List(props) {
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="toggle password visibility"
+                                                onClick={() => props.wordToSearch(wordToSearch)}
                                             >
                                                 <SearchIcon/>
                                             </IconButton>
@@ -270,7 +272,8 @@ function List(props) {
                 props.list ? props.list.map((value, index)=>(
                     <Grid item key={index}
                           onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
-                              window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
+                              window.location.pathname === '/drawer/researchProject/projectlist'||
+                          window.location.pathname === '/drawer/admin/hrProject' ) ? props.handleClick(value.projectid)
                               : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
 
                         <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >

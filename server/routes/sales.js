@@ -13,6 +13,8 @@ router.get("/location/:projectid", sales.getLocation)
 router.get("/status/:projectid", sales.getStatus)
 router.get("/tasks/:projectid/:departmentid", sales.getAllTasks)
 router.get("/customerlist",salesmanagerValidation, sales.customerList);
+router.get("/customerlist/:wordToSearch", sales.customerListSearch);
+
 router.get("/defaultcustomer/", sales.defaultCustomer)
 router.get("/customerproject/:customerid", sales.getCustomerProject)
 router.get("/customer/:customerid", sales.getCustomer)

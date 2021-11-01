@@ -227,7 +227,7 @@ function RegisterEmployee(props) {
                             </MenuItem>
                             {appState.departmentList.map((department, index) => (
                                 <MenuItem key={index} value={department.departmentid}>
-                                    {department.departmentname}
+                                    {department.name}
                                 </MenuItem>
                             ))}
                         </TextField>

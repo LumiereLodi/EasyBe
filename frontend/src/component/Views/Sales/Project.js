@@ -134,7 +134,7 @@ function Project(props) {
             </Switch>
 
             <Switch>
-                <Route path={"/drawer/project/projectlist"} render={()=> <ProjectList setOpenDialog={setOpenDialog} setReload={setReload} reload={reload}/>}/>
+                <Route path={"/drawer/project/projectlist"} render={()=> <ProjectList setOpenDialog={setOpenDialog}  setReload={setReload} reload={reload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
                 <Route path={"/drawer/project/addproject"} render={()=> <AddProject reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
             </Switch>
         </div>

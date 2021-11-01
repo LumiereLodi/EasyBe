@@ -26,6 +26,14 @@ module.exports={
             res.status(400).json(err.message)
         }
     },
+    customerListSearch: async(req, res)=> {
+        try{
+            const result = await db.query("SELECT customerid, name FROM customer WHERE name like '%' || $1 || '%' ORDER BY createdat DESC",[req.params.wordToSearch])
+            res.status(200).json(result.rows)
+        }catch (err) {
+            res.status(400).json(err.message)
+        }
+    },
     addCustomer: async(req, res)=> {
         try{
             const client = await db.query ("INSERT INTO \n" +

@@ -12,6 +12,12 @@ import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
 import {useAppState} from "../../WithStore";
 import {useObserver} from "mobx-react"
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Typography from "@material-ui/core/Typography";
 
 
 const useStyles = makeStyles(theme => ({
@@ -107,6 +113,8 @@ function ProjectList(props) {
     const [enableCompletedButton, setEnableCompletedButton] = useState(false)
     const [reload, setReload] = useState(false)
     const appState = useAppState()
+    const [openSendDialog, setOpenSendDialog] = useState(false)
+    const [openCompleteDialog, setOpenCompleteDialog] = useState(false)
 
     //here we will pass list of project for manager, list of tasks for staff.
 
@@ -205,6 +213,7 @@ function ProjectList(props) {
                 setReload(!reload)
             }
 
+            setOpenSendDialog(false)
             setReload(!reload)
         }catch (error) {
             alert(error)
@@ -237,45 +246,86 @@ function ProjectList(props) {
                 setReload(!reload)
             }
 
+            setOpenCompleteDialog(false)
             setReload(!reload)
 
         }catch (error) {
             alert(error)
         }
     }
-    useEffect(()=>{
 
-        // async function fetchData(){
-        //
-        //     try{
-        //         const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
-        //         if(location.data.location === '1') {
-        //             appState.setEnableSendButton(true)
-        //             console.log(location.data.location)
-        //         }
-        //         else{
-        //             appState.setEnableSendButton(false)
-        //
-        //         }
-        //     const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
-        //         console.log(status.data.status)
-        //         if(status.data.status === '2'){
-        //             appState.setEnableCompletedButton(true)
-        //
-        //         }
-        //         else{
-        //             appState.setEnableCompletedButton(false)
-        //
-        //         }
-        //     }catch (error) {
-        //         alert(error)
-        //     }
-        // }
-        // fetchData()
-    },[])
+    const search = async (wordToSearch) => {
+
+
+
+        if(wordToSearch === ''){
+            props.setReloadDrawer(!props.reloadDrawer)
+
+        }else{
+            if(appState.userInfo.position === 'Manager'){
+
+                if(appState.userInfo.departmentid === '2002'){
+                    const projectlistAll = await axios.get(`/project/search/${wordToSearch}`);
+                    console.log(projectlistAll);
+                    appState.setProjectListAll(projectlistAll.data);
+                }
+                else if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
+                    const projectlistAll = await axios.get(`/project/sentProjectSearch/${wordToSearch}`);
+                    console.log(projectlistAll);
+                    appState.setProjectListAll(projectlistAll.data);
+                }
+                /********GET DEFAULT VALUES FOR PROJECT********/
+                if(appState.leftList[0]){
+                    console.log("inside if")
+                    const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                    console.log(defaultproject.data.project);
+
+                    appState.setSelectedProject(defaultproject.data.project[0]);
+                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                }else{
+                    appState.setSelectedProject({});
+                    appState.setCompletedTask('')
+                    appState.setActiveTask('')
+                }
+
+
+            }else if(appState.userInfo.position === 'Staff'){
+                if(appState.userInfo.departmentid === '2002'){
+                    const projectlistAll = await axios.get(`/project/projectstaff/search/${appState.userInfo.employeeid}/${wordToSearch}`);
+                    console.log(projectlistAll);
+                    appState.setProjectListAll(projectlistAll.data);
+
+                    /********GET DEFAULT VALUES FOR PROJECT********/
+
+                    const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                    console.log(defaultproject.data.project);
+                    appState.setSelectedProject(defaultproject.data.project[0]);
+
+                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                }
+                else  if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
+                    const projectlistAll = await axios.get(`/project/taskstafflist/search/${appState.userInfo.employeeid}/${wordToSearch}`);
+                    console.log(projectlistAll);
+                    appState.setProjectListAll(projectlistAll.data);
+
+                    /********GET DEFAULT VALUES FOR TASKS********/
+
+                    const defaultproject = await axios.get(`/project/taskDetails/${appState.leftList[0].taskid}`);
+                    console.log(defaultproject.data[0]);
+                    appState.setSelectedProject(defaultproject.data[0]);
+                }
+
+            }
+        }
+
+
+
+    }
 
     const list = (
-        <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList} setReload={props.setReload} reload={props.reload} handleClick={handleProjectCLick}/>
+        <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList} setReload={props.setReload} reload={props.reload} handleClick={handleProjectCLick} wordToSearch={search}/>
     )
     const sendButton= useObserver(()=> (
         <Fragment>
@@ -287,7 +337,7 @@ function ProjectList(props) {
                 disabled={appState.enableSendButton}
                 className={classes.sendButton}
                 classes={{disabled: classes.sendButtonDisabled}}
-                onClick={()=> handleSendButtonClick()}
+                onClick={()=> setOpenSendDialog(true)}
             >
                 Send
             </Button>
@@ -315,24 +365,82 @@ function ProjectList(props) {
                 className={classes.completedButton}
                 classes={{disabled: classes.completedButtonDisabled}}
                 disabled={appState.enableCompletedButton}
-                onClick={()=> handleCompleteClick()}
+                onClick={()=> setOpenCompleteDialog(true)}
 
             >
                 COMPLETE
             </Button>
         </Fragment>
     )
+
+    const alertSendProject = (
+        <Fragment>
+            <Dialog
+                open={openSendDialog}
+                onClose={()=> setOpenSendDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"YOU ARE ABOUT TO SEND THIS PROJECT TO OTHER DEPARTMENTS" +
+                "!"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                            This operation cannot be reversed. Are you sure you want to send this project to other departments?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={()=> handleSendButtonClick()} color="primary" variant={"contained"}>
+                        Continue
+                    </Button>
+                    <Button onClick={()=> setOpenSendDialog(false)} color="primary" autoFocus variant={"contained"}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Fragment>
+    )
+    const alertCompletedProject = (
+        <Fragment>
+            <Dialog
+                open={openCompleteDialog}
+                onClose={()=> setOpenCompleteDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"YOU ARE ABOUT TO COMPLETE THIS PROJECT!"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        This operation cannot be reversed. Are you sure you want to complete this project?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={()=> handleCompleteClick()} color="primary" variant={"contained"}>
+                        Continue
+                    </Button>
+                    <Button onClick={()=> setOpenCompleteDialog(false)} color="primary" autoFocus variant={"contained"}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Fragment>
+    )
     const detail= (
         <Fragment>
             <ProjectFile sendButton={sendButton} editProject={editProject} completedButton={completedButton}/>
-            {/*<Fab color={"primary"} size={"small"} disabled={false} className={classes.fab} >*/}
-            {/*   <SendIcon size={"small"}/>*/}
-            {/*</Fab>*/}
+
         </Fragment>
 
     )
+
+    useEffect(()=>{
+
+    },[])
+
+
     return (
         <div>
+            {alertSendProject}
+            {alertCompletedProject}
             <Grid container>
                <ListLayout list={list}/>
 

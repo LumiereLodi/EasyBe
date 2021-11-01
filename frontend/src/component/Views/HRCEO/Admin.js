@@ -133,10 +133,10 @@ function Admin(props) {
     )
     useEffect(async () => {
         try {
-            const response = await axios.get("/hr/admin/department/departmentlist");
-
-
-            appState.addDepartmentName(response.data.departmentList);
+            // const response = await axios.get("/hr/admin/department/departmentlist");
+            //
+            //
+            // appState.addDepartmentName(response.data.departmentList);
 
         } catch (error) {
             alert(error.response.message)

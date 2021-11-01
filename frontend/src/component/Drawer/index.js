@@ -262,7 +262,9 @@ function AppDrawer(props) {
 
                 if(appState.userInfo.position === 'Manager'){
 
-                    if(appState.userInfo.departmentid === '2002'){
+                    if(appState.userInfo.departmentid === '2002' ||
+                        appState.userInfo.departmentid === '2003' ||
+                        appState.userInfo.departmentid === '2004') {
                         const projectlistAll = await axios.get(`/project/projectlist`);
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
@@ -272,14 +274,10 @@ function AppDrawer(props) {
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
                     }
-
-
                     /********GET DEFAULT VALUES FOR PROJECT********/
-
                     const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
                     console.log(defaultproject.data.project);
                     appState.setSelectedProject(defaultproject.data.project[0]);
-
                     appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
                     appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
 
@@ -288,7 +286,6 @@ function AppDrawer(props) {
                         const projectlistAll = await axios.get(`/project/projectstafflist/staff/${appState.userInfo.employeeid}`);
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
-
 
                         /********GET DEFAULT VALUES FOR PROJECT********/
 
@@ -312,7 +309,6 @@ function AppDrawer(props) {
                     }
 
                 }
-
 
                 /*** CUSTOMER LIST ***/
 
@@ -394,9 +390,12 @@ function AppDrawer(props) {
                 appState.setDepartmentStaffList(departmentStaff.data)
 
                 /******* DEFAULT CUSTOMER VALUES ********/
-                const defaultcustomer = await axios.get(`/sales/defaultcustomer`);
-                appState.setSelectedCustomer(defaultcustomer.data);
-                console.log(defaultcustomer.data);
+                if(appState.customerList[0]){
+                    const defaultcustomer = await axios.get(`/sales/customer/${appState.customerList[0].customerid}`);
+                    appState.setSelectedCustomer(defaultcustomer.data);
+                    console.log(defaultcustomer.data);
+                }
+
 
                 const defaultCustomerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`);
 
@@ -404,6 +403,19 @@ function AppDrawer(props) {
                 appState.setSelectedCustomerProjects(defaultCustomerProject.data);
 
                 console.log(appState.selectedCustomerProjects.length);
+
+
+                if(appState.userInfo.departmentid === '2003' ||
+                    appState.userInfo.departmentid === '2004'){
+
+                    const response = await axios.get("/hr/admin/department/departmentlist");
+                    appState.addDepartmentName(response.data.departmentList);
+                    //appState.setProjectListAll(response.data.departmentList);
+
+                    console.log(response.data.departmentList)
+
+                }
+
             } catch (error) {
                 console.log(error)
             }
@@ -465,7 +477,7 @@ function AppDrawer(props) {
                                     <span>{initial.split(" ", 1)[0].substring(0, 8)}...</span>}
                             </Typography>
                             <Typography style={{fontSize: "0.7em", color: "#878787"}}>
-                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : appState.userInfo.departmentname} {appState.userInfo.position}
+                                {appState.userInfo.departmentid === '2001' ? "RI" : appState.userInfo.departmentid === '2002' ? 'SM' : appState.userInfo.departmentid === '2004' ? 'HR' : appState.userInfo.name} {appState.userInfo.position}
                             </Typography>
                         </Grid>
 

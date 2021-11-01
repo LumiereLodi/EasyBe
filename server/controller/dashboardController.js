@@ -40,7 +40,7 @@ module.exports = {
                 "         project.projectid = task.projectid and\n" +
                 "         task.departmentid = $1\n" +
                 "\t\tand project.location = $2\n" +
-                "         and task.status = '2'  group by project.projectid\n" +
+                "           group by project.projectid\n" +
                 "\n" +
                 "         ) as completedTasks\n" +
                 "         on projects.projectid = completedTasks.projectid\n" +
@@ -73,7 +73,7 @@ module.exports = {
                 "         where " +
                 "         project.projectid = task.projectid\n" +
                 "\t\t     and project.location = '1'\n" +
-                "         and task.status = '2'  group by project.projectid\n" +
+                "          group by project.projectid\n" +
                 "         ) as completedTasks\n" +
                 "         on projects.projectid = completedTasks.projectid\n" +
                 "\n" +

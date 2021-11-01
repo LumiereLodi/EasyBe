@@ -24,6 +24,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import AddProject from "../Sales/AddProject"
 import Snackbar from "@material-ui/core/Snackbar";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const formValidation = yup.object({
     staff: yup.string().required('Select a Sale Person'),
@@ -97,6 +100,7 @@ function ProjectList(props) {
     const [reload, setReload] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false)
     const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
+    const [openCompleteDialog, setOpenCompleteDialog] = useState(false)
 
     const [taskName, setTaskName] = useState('')
 
@@ -174,6 +178,9 @@ function ProjectList(props) {
 
                 appState.setCompletedTask(result.data.completedTask[0].taskcompleted)
                 appState.setActiveTask(result.data.activeTask[0].taskactive)
+
+
+
             }else if(appState.userInfo.position === 'Staff'){
                 if(appState.userInfo.departmentid === '2002'){
                     result = await axios.get(`/project/projectlist/${id}`)
@@ -181,6 +188,8 @@ function ProjectList(props) {
 
                     appState.setCompletedTask(result.data.completedTask[0].taskcompleted)
                     appState.setActiveTask(result.data.activeTask[0].taskactive)
+
+
                 }
                 else if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
 
@@ -188,33 +197,29 @@ function ProjectList(props) {
                     const defaultproject = await axios.get(`/project/taskDetails/${id}`);
                     console.log(defaultproject.data[0]);
                     appState.setSelectedProject(defaultproject.data[0]);
+
+                    const status = await axios.get(`/project/task/status/${id}`)
+
+                    console.log(status.data.status)
+
+                    console.log("status task: " + status.data.status)
+
+                    if (status.data.status === '1') {
+                        appState.setEnableCompletedButton(true)
+                        //props.setReloadDrawer(!props.reloadDrawer)
+
+                    } else {
+                        appState.setEnableCompletedButton(false)
+                        //props.setReloadDrawer(!props.reloadDrawer)
+                    }
+
                 }
+
 
             }
 
             const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
             appState.setTaskList(activities.data)
-
-            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
-            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
-
-            //enable or disable send button
-            if (location.data.location === '1') {
-                appState.setEnableSendButton(true)
-
-            } else {
-                appState.setEnableSendButton(false)
-            }
-
-            //enable or disable complete button
-
-            if (status.data.status === '2') {
-                appState.setEnableCompletedButton(true)
-                //setReload(!reload)
-            } else {
-                appState.setEnableCompletedButton(false)
-                //setReload(!reload)
-            }
 
             //GET PROJECT FILE
 
@@ -249,29 +254,17 @@ function ProjectList(props) {
 
 
 
-            await axios.put(`/sales/completeproject/${appState.selectedProject.projectid}`)
-            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+            await axios.put(`/project/completetask/${appState.selectedProject.taskid}`)
+            const status = await axios.get(`/project/task/status/${appState.selectedProject.taskid}`)
 
-            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
-
-            if (status.data.status === '2') {
+            if (status.data.status === '1') {
                 appState.setEnableCompletedButton(true)
             } else {
                 appState.setEnableCompletedButton(false)
-
             }
 
-
-            if (location.data.location === '1') {
-                appState.setEnableSendButton(true)
-                setReload(!reload)
-                //console.log(location.data.location)
-            } else {
-                appState.setEnableSendButton(false)
-                setReload(!reload)
-            }
-
-            setReload(!reload)
+            setOpenCompleteDialog(false)
+            props.setReload(!props.reload)
 
         } catch (error) {
             alert(error)
@@ -476,7 +469,7 @@ function ProjectList(props) {
                 className={classes.completedButton}
                 classes={{disabled: classes.completedButtonDisabled}}
                 disabled={appState.enableCompletedButton}
-                onClick={() => handleCompleteClick()}
+                onClick={()=> setOpenCompleteDialog(true)}
 
             >
                 COMPLETE
@@ -499,17 +492,45 @@ function ProjectList(props) {
         <Fragment>
             <ProjectFile assignButton={appState.userInfo.position === "Manager" ? assignButton : undefined}
                          editButton={appState.userInfo.position === "Manager" ? editButton : undefined}
-                         completedButton={completedButton}/>
+                         completedButton={appState.userInfo.position === "Staff" ? completedButton : undefined}
+                         />
         </Fragment>
 
     )
 
+
+    const alertCompletedProject = (
+        <Fragment>
+            <Dialog
+                open={openCompleteDialog}
+                onClose={()=> setOpenCompleteDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"YOU ARE ABOUT TO COMPLETE THIS TASK!"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        This operation cannot be reversed. Are you sure you want to complete this task?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={()=> handleCompleteClick()} color="primary" variant={"contained"}>
+                        Continue
+                    </Button>
+                    <Button onClick={()=> setOpenCompleteDialog(false)} color="primary" autoFocus variant={"contained"}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Fragment>
+    )
 
     return (
         <div>
             {errorSnackBarComponent}
             {snackBarComponent}
 
+            {alertCompletedProject}
             <Grid container>
                 <ListLayout list={list}/>
 

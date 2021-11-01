@@ -8,7 +8,7 @@ module.exports = {
         try{
             const user = await db.query("SELECT employeeid, " +
                 "givennames, lastname, dateofbirth, email,address," +
-                "contract, position, employee.departmentid, department.departmentname  " +
+                "contract, position, employee.departmentid, department.name  " +
                 "from employee " +
                 "join department\n" +
                 "on employee.departmentid = department.departmentid where employeeid = $1", [req.params.userid]);

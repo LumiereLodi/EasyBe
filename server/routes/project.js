@@ -13,11 +13,17 @@ router.get("/projectlist/:projectid", projectController.projectDetails, projectC
 router.get("/tasklist/:status",projectController.projectList)
 router.get("/projectfile/:projectid/:departmentid",projectController.getProjectfileDescription)
 router.get("/projectstafflist/staff/:staffid",projectController.projectListStaff)
+router.get("/projectstaff/search/:staffid/:wordToSearch",projectController.projectListStaffSearch)
 router.get("/sentProject/",projectController.sentProjectList)
+router.get("/sentProjectSearch/:wordToSearch",projectController.sentProjectListSearch)
 router.get("/stafflist/:departmentid",projectController.stafflist)
 router.get("/taskstafflist/:staffid",projectController.taskListStaff)
+router.get("/taskstafflist/search/:staffid/:wordToSearch",projectController.taskListStaffSearch)
 router.get("/taskDetails/:taskid", projectController.taskDetails)
+router.get("/search/:wordToSearch",projectController.projectListSearch)
+router.get("/task/status/:taskid",projectController.getTaskStatus)
 
+router.put("/completetask/:taskid", projectController.setCompleteTask)
 
 router.post("/addTask/:managerid/:projectid/:departmentid",projectController.addTask)
 router.post("/projectfile/description/:projectid/:employeeid/:departmentid",projectController.setProjectFile)

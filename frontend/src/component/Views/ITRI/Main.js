@@ -21,7 +21,7 @@ function Main(props) {
             </Switch>
 
             <Switch>
-                <Route path={"/drawer/researchProject/projectlist"} render={()=> <ProjectList reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
+                <Route path={"/drawer/researchProject/projectlist"} render={()=> <ProjectList reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
             </Switch>
         </div>
     );

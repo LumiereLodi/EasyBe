@@ -26,6 +26,16 @@ module.exports = {
             console.error(err.message)
         }
     },
+    projectListSearch: async (req, res)=> {
+        try {
+            const results = await db.query("SELECT * from project where name like '%' || $1 || '%' ORDER BY createdat DESC, name DESC", [req.params.wordToSearch])
+
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
     projectListStaff: async (req, res)=> {
 
         try {
@@ -36,10 +46,30 @@ module.exports = {
             console.error(err.message)
         }
     },
+    projectListStaffSearch: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from project WHERE staff = $1 AND name like '%' || $2 || '%' ORDER BY createdat DESC, name DESC", [req.params.staffid, req.params.wordToSearch])
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
     sentProjectList: async (req, res)=> {
 
         try {
             const results = await db.query("SELECT * from project WHERE location = '1' ORDER BY createdat DESC, name ASC")
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
+    sentProjectListSearch: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from project WHERE location = '1' AND name like '%' || $1 || '%' ORDER BY createdat DESC, name ASC",[req.params.wordToSearch])
             res.json(results.rows);
 
         } catch (err) {
@@ -205,6 +235,16 @@ module.exports = {
             console.error(err.message)
         }
     },
+    taskListStaffSearch: async (req, res)=> {
+
+        try {
+            const results = await db.query("SELECT * from task WHERE staff = $1 AND name like '%' || $1 || '%' ORDER BY createdat DESC, name ASC", [req.params.staffid, req.params.wordToSearch])
+            res.json(results.rows);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
     taskDetails: async (req, res, next)=> {
         try {
             const results = await db.query("select task.*,to_char(startdate, $2) as formatStartdate, to_char(enddate, $2) as formatEnddate, to_char((enddate - Now()), 'dd') as remainingDays from task\n" +
@@ -214,6 +254,24 @@ module.exports = {
 
         } catch (err) {
             console.error(err.message)
+        }
+    },
+    setCompleteTask: async (req, res) => {
+        try{
+            const result = await db.query("UPDATE task SET status = '1' where taskid = $1 RETURNING *", [req.params.taskid])
+            res.status(200).json({editedProject : result.rows[0]})
+
+        }catch (error){
+            res.status(400).json(error.message)
+        }
+    },
+    getTaskStatus : async(req, res) => {
+        try{
+            const result = await db.query("SELECT status from task where taskid = $1", [req.params.taskid])
+            res.status(200).json(result.rows[0])
+
+        }catch (error){
+            res.status(400).json(error.message)
         }
     },
 }

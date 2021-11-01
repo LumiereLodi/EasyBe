@@ -113,7 +113,7 @@ function Index(props) {
                 setBacklogProject(backlogProject.data.count);
                 appState.setBacklogProject(backlogProject.data.count);
                 let overview;
-                if(appState.userInfo.departmentid === '2003' || appState.userInfo.departmentid === '2004'){
+                if(appState.userInfo.departmentid === '2002' || appState.userInfo.departmentid === '2003' || appState.userInfo.departmentid === '2004'){
                     overview = await axios.get(`/dashboard/overview/admin/general`)
                 }
                 else{
@@ -196,9 +196,9 @@ function Index(props) {
                                 </Hidden>
                                 
 
-                                <Grid item container xs  justify={matches ? "flex-end" : "center"} alignItems={"center"} className={classes.overviewText}>
-                                    Progress
-                                </Grid>
+                                {/*<Grid item container xs  justify={matches ? "flex-end" : "center"} alignItems={"center"} className={classes.overviewText}>*/}
+                                {/*    Progress*/}
+                                {/*</Grid>*/}
                             </Grid>
                         </Grid>
                         <Grid item className={classes.overviewDataContainer}>
@@ -218,9 +218,9 @@ function Index(props) {
                                     </Grid>
                                     </Hidden>
                                     
-                                    <Grid item container xs style={{color: "black", fontFamily: "Roboto"}} justify={matches ? "flex-end" : "center"} >
-                                        {project.progress}
-                                    </Grid>
+                                    {/*<Grid item container xs style={{color: "black", fontFamily: "Roboto"}} justify={matches ? "flex-end" : "center"} >*/}
+                                    {/*    {project.progress}*/}
+                                    {/*</Grid>*/}
                                 </Grid>
                             ))}
 

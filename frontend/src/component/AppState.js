@@ -170,6 +170,10 @@ export function createAppStore(){
             this.departmentStaffList.push(
                 ...staffList
             )
+        },
+        selectedDepartment: {},
+        setSelectedDepartment(department){
+                this.selectedDepartment = department
         }
 
 
