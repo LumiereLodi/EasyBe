@@ -122,10 +122,9 @@ function DepartmentList(props) {
 
     useEffect(()=>{
             appState.setSelectedDepartment(appState.departmentList[0]);
+            //console.log(appState.departmentList)
+            console.log(appState.selectedDepartment.departmentid)
 
-
-            console.log(appState.departmentList)
-            console.log(appState.departmentList[0])
     }, [])
     const details = (
         <Fragment>
