@@ -78,10 +78,9 @@ app.use("/project", project)
 
 console.log("inside backend")
 
-try{
-    router.get("*", (req, res)=> {
+    app.get("*", (req, res)=> {
 
-        try{
+
             console.log("inside unknown")
 
             const path = __dirname.split("\server")
@@ -89,14 +88,8 @@ try{
             //console.log(path.join(__dirname, "frontend/build/index.html"))
             res.sendFile(path[0] +  "frontend/build/index.html")
             //console.log(path.join(__dirname, "client-side/build/index.html"))
-        }catch (error) {
-            console.log(error)
-        }
 
     })
-}catch (error) {
-    console.log(error)
-}
 
 
 const port = process.env.PORT || 5000;
