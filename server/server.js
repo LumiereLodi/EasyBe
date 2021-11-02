@@ -9,6 +9,7 @@ const db = require("./models/db");
 
 const express = require("express");
 const app = express();
+const router = express.Router()
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -77,7 +78,7 @@ app.use("/project", project)
 
 console.log("inside backend")
 
-app.get("*", (req, res)=> {
+router.get("*", (req, res)=> {
 
     console.log("inside unknown")
     
