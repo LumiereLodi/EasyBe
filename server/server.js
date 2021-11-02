@@ -78,16 +78,26 @@ app.use("/project", project)
 
 console.log("inside backend")
 
-router.get("*", (req, res)=> {
+try{
+    router.get("*", (req, res)=> {
 
-    console.log("inside unknown")
-    
-    const path = __dirname.split("\server")
-    console.log(path[0] + "\n")
-    //console.log(path.join(__dirname, "frontend/build/index.html"))
-    res.sendFile(path[0] +  "frontend/build/index.html")
-    //console.log(path.join(__dirname, "client-side/build/index.html"))
-})
+        try{
+            console.log("inside unknown")
+
+            const path = __dirname.split("\server")
+            console.log(path[0] + "\n")
+            //console.log(path.join(__dirname, "frontend/build/index.html"))
+            res.sendFile(path[0] +  "frontend/build/index.html")
+            //console.log(path.join(__dirname, "client-side/build/index.html"))
+        }catch (error) {
+            console.log(error)
+        }
+
+    })
+}catch (error) {
+    console.log(error)
+}
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
