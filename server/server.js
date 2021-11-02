@@ -61,19 +61,21 @@ app.use("/analytics", manager);
 app.use("/project", project)
 
 
-app.get("/test", async (req, res)=> {
+// app.get("/test", async (req, res)=> {
+//
+//     try{
+//         console.log("inside the test")
+//         console.log("the JWT_SECRET: " + process.env.REACT_APP_JWT_SECRET)
+//         const result = await db.query("SELECT * FROM employee")
+//         console.log(result)
+//         res.json(result)
+//     }catch(e){
+//         res.status(400).json(e.message)
+//     }
+//
+// })
 
-    try{
-        console.log("inside the test")
-        console.log("the JWT_SECRET: " + process.env.REACT_APP_JWT_SECRET)
-        const result = await db.query("SELECT * FROM employee")
-        console.log(result)
-        res.json(result)
-    }catch(e){
-        res.status(400).json(e.message)
-    }
-    
-})
+console.log("inside backend")
 
 app.get("*", (req, res)=> {
 
