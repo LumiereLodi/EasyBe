@@ -275,11 +275,19 @@ function AppDrawer(props) {
                         appState.setProjectListAll(projectlistAll.data);
                     }
                     /********GET DEFAULT VALUES FOR PROJECT********/
-                    const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                    console.log(defaultproject.data.project);
-                    appState.setSelectedProject(defaultproject.data.project[0]);
-                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                    if(appState.leftList[0]){
+                        const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                        console.log(defaultproject.data.project);
+                        if(defaultproject.data)
+                            appState.setSelectedProject(defaultproject.data.project[0]);
+                            appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                            appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                    }else{
+                        appState.setSelectedProject({});
+                        appState.setCompletedTask('')
+                        appState.setActiveTask('')
+                    }
+
 
                 }else if(appState.userInfo.position === 'Staff'){
                     if(appState.userInfo.departmentid === '2002'){

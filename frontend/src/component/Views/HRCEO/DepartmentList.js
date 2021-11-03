@@ -123,7 +123,7 @@ function DepartmentList(props) {
     useEffect(()=>{
             appState.setSelectedDepartment(appState.departmentList[0]);
             //console.log(appState.departmentList)
-            console.log(appState.selectedDepartment.departmentid)
+            console.log(appState.selectedDepartment ? appState.selectedDepartment.name : undefined)
 
     }, [])
     const details = (
