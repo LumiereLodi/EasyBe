@@ -82,7 +82,6 @@ function RegisterEmployee(props) {
     const [openSnackbar, setOpenSnackbar] = useState(false)
 
     const positions = [
-        "Admin",
         "Manager",
         "Staff"
     ]
@@ -121,7 +120,7 @@ function RegisterEmployee(props) {
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
-            const formatedDate = values.dateOfBirth.getFullYear() + "/" + parseInt(values.dateOfBirth.getMonth() + 1) + "/" + values.dateOfBirth.getDate();
+            const formatedDate = values.dateOfBirth.getFullYear() + "-" + parseInt(values.dateOfBirth.getMonth() + 1) + "-" + values.dateOfBirth.getDate();
             const updatedValues = {...values, dateOfBirth: formatedDate}
             try {
                 const result = await axios.get("/authenticate/email/" + formik.values.email);
@@ -133,17 +132,20 @@ function RegisterEmployee(props) {
 
                     const data = JSON.stringify(updatedValues)
                     console.log(data);
-                    // const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
-                    //     headers: {
-                    //         'Content-Type': "application/json"
-                    //     }
-                    // });
+                    const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
+                        headers: {
+                            'Content-Type': "application/json"
+                        }
+                    });
+
+                    console.log(response.data)
                     // use a snackbar to show the admin that the empoyee has been added.
                     //alert("The employee " + response.data.data[0].givennames + " " + response.data.data[0].lastname + " has been added")
                     props.setOpenEmployeeDialog(false)
                     props.setOpenSnackbar(true)
+                    props.setReloadDrawer(!props.reloadDrawer)
 
-                    resetForm()
+                    //resetForm()
 
                 }
 

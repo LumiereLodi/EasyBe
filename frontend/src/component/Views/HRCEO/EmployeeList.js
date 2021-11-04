@@ -11,6 +11,8 @@ import List from "../List";
 
 import ObjectInformation from "../ObjectInformation";
 import UserOverview from "../UserOverview";
+import {useAppState} from "../../WithStore";
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
 
@@ -74,6 +76,9 @@ const useStyles = makeStyles(theme => ({
 function EmployeeList(props) {
 
     const classes = useStyles()
+    const appState = useAppState()
+
+
     const OverviewHeaders = [
         "Task Name",
         "Start Date",
@@ -100,15 +105,15 @@ function EmployeeList(props) {
         "Created By"
     ];
     const InformationData = [
-        "IT",
-        "Staff",
-        "0820435516",
-        "Email",
-        "Data Of Birth",
-        "Address",
-        "Contract",
-        "Created At",
-        "Created By"
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.name ? appState.selectedEasbeEmployee.name : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.position ? appState.selectedEasbeEmployee.position : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.phonenumber ? appState.selectedEasbeEmployee.phonenumber : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.email ? appState.selectedEasbeEmployee.email : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.dateofbirth ? appState.selectedEasbeEmployee.dateofbirth : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.address ? appState.selectedEasbeEmployee.address : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.contract ? appState.selectedEasbeEmployee.contract : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.createdat ? appState.selectedEasbeEmployee.createdat : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.createdby ? appState.selectedEasbeEmployee.createdby : '...' : '...',
     ];
 
     const editButton = (
@@ -122,9 +127,29 @@ function EmployeeList(props) {
             </Grid>
         </Fragment>
     )
+
+    const handleEmployeeClick = async (employeeid) => {
+
+        console.log("inside handleDepartmentClick")
+        try{
+
+                const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${employeeid}`)
+
+                appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
+                console.log(selectedEasybeEmployee.data)
+
+
+            props.setReload(!props.reload);
+
+        }catch (error) {
+            console.log(error)
+        }
+
+    }
+
     const list = (
         <Fragment>
-            <List search={"Search by name"}/>
+            <List search={"Search by name"} list={appState.allEasybeEmployeeList} handleClick={handleEmployeeClick}/>
 
         </Fragment>
     )
@@ -135,39 +160,39 @@ function EmployeeList(props) {
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
                     <Grid item>
                         <Typography variant={"h1"} style={{fontSize: "2em"}}>
-                            Employee Name
+                            {appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.lastname ? appState.selectedEasbeEmployee.lastname : <span>...</span> : <span>...</span>}
                         </Typography>
                     </Grid>
                 </Grid>
 
-                <Grid item style={{marginBottom: "1.5em", marginTop: "2em"}}>
-                    <Grid container>
-                        <Grid item container direction={"column"} xs alignItems={"flex-end"} >
-                            <Typography style={{fontSize: "3em", color: "black"}}>
-                                739
-                            </Typography>
-                            <Typography style={{fontSize: "1em", color: "black"}}>
-                                Completed On Time
-                            </Typography>
-                        </Grid>
-                        <Grid item container direction={"column"} alignItems={"center"} xs >
-                            <Typography style={{fontSize: "3em", color: "black"}}>
-                                132
-                            </Typography>
-                            <Typography style={{fontSize: "1em",color: "black"}}>
-                                Completed After Deadline
-                            </Typography>
-                        </Grid>
-                        <Grid item container direction={"column"} xs >
-                            <Typography style={{fontSize: "3em", color: "black"}}>
-                                165
-                            </Typography>
-                            <Typography style={{fontSize: "1em",color: "black"}}>
-                                Tasks In Progress
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                {/*<Grid item style={{marginBottom: "1.5em", marginTop: "2em"}}>*/}
+                {/*    <Grid container>*/}
+                {/*        <Grid item container direction={"column"} xs alignItems={"flex-end"} >*/}
+                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
+                {/*                739*/}
+                {/*            </Typography>*/}
+                {/*            <Typography style={{fontSize: "1em", color: "black"}}>*/}
+                {/*                Completed On Time*/}
+                {/*            </Typography>*/}
+                {/*        </Grid>*/}
+                {/*        <Grid item container direction={"column"} alignItems={"center"} xs >*/}
+                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
+                {/*                132*/}
+                {/*            </Typography>*/}
+                {/*            <Typography style={{fontSize: "1em",color: "black"}}>*/}
+                {/*                Completed After Deadline*/}
+                {/*            </Typography>*/}
+                {/*        </Grid>*/}
+                {/*        <Grid item container direction={"column"} xs >*/}
+                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
+                {/*                165*/}
+                {/*            </Typography>*/}
+                {/*            <Typography style={{fontSize: "1em",color: "black"}}>*/}
+                {/*                Tasks In Progress*/}
+                {/*            </Typography>*/}
+                {/*        </Grid>*/}
+                {/*    </Grid>*/}
+                {/*</Grid>*/}
             </ListSubheader>
 
             <ObjectInformation InformationHeader={InformationHeader} InformationData={InformationData} title={"Employee Information"} editButton={editButton}/>

@@ -189,9 +189,20 @@ export function createAppStore(){
             this.selectedDepartmentStaffList.push(
                 ...staffList
             )
+        },
+
+        allEasybeEmployeeList: [],
+        setAllEasybeEmployeeList(easybeEmployeeList){
+            this.allEasybeEmployeeList.splice(0,this.allEasybeEmployeeList.length)
+            this.allEasybeEmployeeList.push(
+                ...easybeEmployeeList
+            )
+        },
+
+        selectedEasbeEmployee: {},
+        setSelectedEasbeEmployee(employee){
+                this.selectedEasbeEmployee = employee
         }
-
-
 
 
     }

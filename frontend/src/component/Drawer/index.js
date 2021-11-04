@@ -430,7 +430,19 @@ function AppDrawer(props) {
                         const departmentStaffList = await axios.get(`/hr/alldepartmentemployeelist/${appState.departmentList[0].departmentid}`)
                         appState.setSelectedDepartmentStaffList(departmentStaffList.data)
                     }
+
+
+                    const employeeList = await axios.get(`/hr/alleasybeemployeelist`)
+                    appState.setAllEasybeEmployeeList(employeeList.data)
+                    console.log(employeeList.data)
                     console.log(response.data.departmentList)
+
+                    if(appState.allEasybeEmployeeList[0]){
+                        const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
+
+                        appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
+                        console.log(selectedEasybeEmployee.data)
+                    }
 
                 }
 

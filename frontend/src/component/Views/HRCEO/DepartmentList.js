@@ -95,8 +95,8 @@ function DepartmentList(props) {
     ];
 
     const InformationData = [
-        appState.selectedDepartment ? appState.selectedDepartment.numberofstaff : '...',
-        appState.selectedDepartment ? appState.selectedDepartment.createdat : '...',
+        appState.selectedDepartment ? appState.selectedDepartment.numberofstaff ? appState.selectedDepartment.numberofstaff : '...' : '...',
+        appState.selectedDepartment ? appState.selectedDepartment.createdat ? appState.selectedDepartment.createdat : '...': '...',
     ];
 
     const handleDepartmentClick = async (departmentid) => {
@@ -149,7 +149,7 @@ function DepartmentList(props) {
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
                     <Grid item>
                         <Typography variant={"h1"} style={{fontSize: "2em"}}>
-                            {appState.selectedDepartment ? appState.selectedDepartment.name : <span>...</span>}
+                            {appState.selectedDepartment ? appState.selectedDepartment.name ? appState.selectedDepartment.name : <span>...</span> : <span>...</span>}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -185,7 +185,7 @@ function DepartmentList(props) {
 
 
 
-                            {appState.selectedDepartmentStaffList.map((staff, index) => (
+                            {appState.selectedDepartmentStaffList ? appState.selectedDepartmentStaffList.map((staff, index) => (
                                 <Grid item container style={{marginBottom: "1em"}}>
                                 <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
                                     <Typography >
@@ -212,7 +212,7 @@ function DepartmentList(props) {
 
                                 </Grid>
                                 </Grid>
-                            ))}
+                            )) : undefined}
 
 
 

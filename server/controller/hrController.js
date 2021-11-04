@@ -78,6 +78,32 @@ module.exports = {
             })
         }
     },
+
+    getEasybeStaffDetails: async (req, res) => {
+        try{
+            const result = await db.query("select department.name, employee.lastname, employee.employeeid, employee.position, employee.phonenumber, employee.email, employee.dateofbirth, employee.address,contract, employee.createdat, employee.createdby from employee \n" +
+                "join department\n" +
+                "on department.departmentid = employee.departmentid\n" +
+                "where employee.employeeid = $1", [req.params.employeeid])
+            res.json(result.rows[0])
+        }catch (error) {
+
+            res.status(400).json({
+                error: error.message
+            })
+        }
+    },
+    getEasybeStaffList: async (req, res) => {
+        try{
+            const result = await db.query("SELECT employeeid, lastname as name FROM employee order by createdat ASC, lastname ASC")
+            res.json(result.rows)
+        }catch (error) {
+
+            res.status(400).json({
+                error: error.message
+            })
+        }
+    },
     getDepartmentStaffList: async (req, res) => {
         try{
             const result = await db.query("SELECT lastname, contract, position, email FROM employee WHERE departmentid = $1", [req.params.departmentid])

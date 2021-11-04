@@ -277,7 +277,8 @@ function List(props) {
                               window.location.pathname === '/drawer/researchProject/projectlist'||
                           window.location.pathname === '/drawer/admin/hrProject' ) ? props.handleClick(value.projectid)
                               : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid)
-                                  : window.location.pathname === '/drawer/admin/departmentList' ? props.handleClick(value.departmentid) :  undefined}>
+                                  : window.location.pathname === '/drawer/admin/departmentList' ? props.handleClick(value.departmentid)
+                                      : window.location.pathname === '/drawer/admin/employeeList' ? props.handleClick(value.employeeid): undefined}>
 
                         <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
                             <Grid container alignItems={"center"} style={{height: "100%"}}>

@@ -54,6 +54,32 @@ const useStyles = makeStyles(theme => ({
         },
 
     },
+    dialogContainerEmployee:{
+        "& .MuiDialog-paper": {
+            width: "70em",
+            backgroundColor: theme.palette.secondary.main,
+            padding: "1em",
+            height: "40em",
+            marginLeft: "1em",
+            marginRight: "0.3em",
+            // border: "2px solid",
+            // borderColor: "rgba(35,37,38,0.25)",
+            [theme.breakpoints.down("sm")]: {
+                marginTop: "2em",
+                marginLeft: 0
+            },
+            [theme.breakpoints.down("xs")]: {
+                marginTop: "0.5em",
+                marginLeft: 0,
+                marginBottom: "1em"
+            },
+            overflow: "auto",
+            paddingLeft: "1em",
+            paddingRight: "1em",
+            borderRadius: "0.5em",
+        },
+
+    },
     snackbar:{
 
         //backgroundColor: "red",
@@ -124,11 +150,11 @@ function Admin(props) {
             <Dialog
                 open={openEmployeeDialog}
                 onClose={()=> setOpenEmployeeDialog(false)}
-                className={classes.dialogContainer}
+                className={classes.dialogContainerEmployee}
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-            <RegisterEmployee setOpenEmployeeDialog={setOpenEmployeeDialog} setOpenSnackbar={setOpenSnackbar}/>
+            <RegisterEmployee setOpenEmployeeDialog={setOpenEmployeeDialog} setOpenSnackbar={setOpenSnackbar} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
 
             </Dialog>
         </Fragment>
@@ -187,7 +213,7 @@ function Admin(props) {
                 <Route path={"/drawer/admin/registerEmployee"} component={RegisterEmployee}/>
                 <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload}/>}/>
 
-                <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog}/>}/>
+                <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog} reload={reload} setReload={setReload}/>}/>
                 {/*<Route path={"/drawer/admin/add"} component={() =>*/}
                 {/*    <div>*/}
                 {/*        {value === 0 ? <AddDepartment/> : <RegisterEmployee/>}*/}

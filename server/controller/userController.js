@@ -67,13 +67,14 @@ module.exports = {
         //WE HASH THE PASSWORD BEFORE SAVING THE USER.
         //WE DO NOT SAVE A PLAIN PASSWORD IN OUR DATABASE.
 
+        console.log("inside register route")
         const hash = await bcrypt.hash(req.body.password, 10)
 
         try {
             const result = await db.query("INSERT INTO " +
                 "employee( givenNames, lastName, dateOfBirth, email, " +
-                "address, contract, position, password, createdby, departmentid) " +
-                "VALUES($1, $2, $3,$4, $5,$6, $7,$8,$9,$10) RETURNING *",
+                "address, contract, position, password, createdby, departmentid, phonenumber) " +
+                "VALUES($1, $2, $3,$4, $5,$6, $7,$8,$9,$10,$11) RETURNING *",
                 [
                     req.body.givenNames,
                     req.body.lastName,
@@ -84,7 +85,8 @@ module.exports = {
                     req.body.position,
                     hash,
                     req.params.id,
-                    req.body.departmentId
+                    req.body.departmentId,
+                    req.body.phone
                 ]
             )
 
