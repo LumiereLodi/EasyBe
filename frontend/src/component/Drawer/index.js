@@ -420,9 +420,24 @@ function AppDrawer(props) {
                     appState.addDepartmentName(response.data.departmentList);
                     //appState.setProjectListAll(response.data.departmentList);
 
+                    //appState.departmentList[0]
+                    if(appState.departmentList[0]){
+                        const departmentSelected = await axios.get(`/hr/departmentdetails/${appState.departmentList[0].departmentid}`)
+
+                        console.log(departmentSelected.data)
+                        appState.setSelectedDepartment(departmentSelected.data)
+
+                        const departmentStaffList = await axios.get(`/hr/alldepartmentemployeelist/${appState.departmentList[0].departmentid}`)
+                        appState.setSelectedDepartmentStaffList(departmentStaffList.data)
+                    }
                     console.log(response.data.departmentList)
 
                 }
+
+
+                const employeeList = await axios.get("/hr/allemployeelist");
+                console.log(employeeList.data)
+                appState.setEmployeeStaffList(employeeList.data)
 
             } catch (error) {
                 console.log(error)
@@ -683,7 +698,7 @@ function AppDrawer(props) {
                         <Route path={"/drawer/dashboard"} component={Dashboard}/>
                         {/**we dont need to pass the prop to the Admin component. this is for learning purpose***/}
                         <Route path={"/drawer/admin"}
-                               render={() => <Admin setSelectedMenuItem={setSelectedMenuItem}/>}/>
+                               render={() => <Admin setSelectedMenuItem={setSelectedMenuItem} reloadDrawer={reloadDrawer} setReloadDrawer={setReloadDrawer}/>}/>
                         <Route path={"/drawer/team"} component={() => <div>Team</div>}/>
 
                         {/**

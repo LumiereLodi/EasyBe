@@ -11,6 +11,7 @@ import List from "../List";
 import UserOverview from "../UserOverview";
 import ObjectInformation from "../ObjectInformation";
 import {useAppState} from "../../WithStore";
+import axios from "axios";
 const useStyles = makeStyles(theme => ({
 
     searchContainer: {
@@ -79,28 +80,44 @@ function DepartmentList(props) {
         "Name",
         "Position",
         "Email",
-        "Contract ",
-        "Status"
+        "Contract "
     ];
     const OverviewData = [
         "Lumiere",
         "Staff",
         "lumiere@gmail.com",
-        "Full-time",
-        "Active"
+        "Full-time"
     ]
 
     const InformationHeader = [
-        "Manager",
         "Num Staff",
         "Created At",
     ];
 
     const InformationData = [
-        "Lumiere Mondo",
-        "7",
-        "19/09/2021"
+        appState.selectedDepartment ? appState.selectedDepartment.numberofstaff : '...',
+        appState.selectedDepartment ? appState.selectedDepartment.createdat : '...',
     ];
+
+    const handleDepartmentClick = async (departmentid) => {
+
+        console.log("inside handleDepartmentClick")
+        try{
+            const departmentSelected = await axios.get(`/hr/departmentdetails/${departmentid}`)
+
+            console.log(departmentSelected.data)
+            appState.setSelectedDepartment(departmentSelected.data)
+
+            const departmentStaffList = await axios.get(`/hr/alldepartmentemployeelist/${departmentid}`)
+            appState.setSelectedDepartmentStaffList(departmentStaffList.data)
+
+            props.setReload(!props.reload);
+
+        }catch (error) {
+            console.log(error)
+        }
+
+    }
 
     const editButton = (
         <Fragment>
@@ -115,7 +132,7 @@ function DepartmentList(props) {
     )
     const list = (
         <Fragment>
-            <List search={"Search by name"} list={appState.departmentList}/>
+            <List search={"Search by name"} list={appState.departmentList} handleClick={handleDepartmentClick}/>
 
         </Fragment>
     )
@@ -132,7 +149,7 @@ function DepartmentList(props) {
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
                     <Grid item>
                         <Typography variant={"h1"} style={{fontSize: "2em"}}>
-                            Department Name
+                            {appState.selectedDepartment ? appState.selectedDepartment.name : <span>...</span>}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -140,8 +157,68 @@ function DepartmentList(props) {
 
             <ObjectInformation InformationHeader={InformationHeader} InformationData={InformationData} title={"Department Information"} editButton={editButton}/>
 
-            <UserOverview OverviewHeaders={OverviewHeaders} title={"Staff Members"} OverviewData={OverviewData}/>
+            {/*<UserOverview OverviewHeaders={OverviewHeaders} title={"Staff Members"} OverviewData={OverviewData}/>*/}
 
+            <div>
+                <Grid item container>
+                    <Typography variant={"h1"} style={{fontWeight: "bold" , marginTop: "2em"}} >
+                        {props.title}
+                    </Typography>
+                </Grid>
+                <Grid container className={classes.customerProjectContainer} style={{marginTop: "2em", marginBottom: "1em"}}>
+                    <Grid container  sm={12} direction={"column"}>
+                        <ListSubheader disableGutters>
+                            <Grid item container style={{marginTop: "1.5em", marginBottom: "1em"}}>
+
+                                {OverviewHeaders.map((headers, index) => (
+                                    <Grid item container xs justify={"center"} >
+                                        <Typography style={{fontWeight: "bold", color: "black"}} key={index}>
+                                            {headers}
+                                        </Typography>
+
+                                    </Grid>
+                                ))}
+
+
+                            </Grid>
+                        </ListSubheader>
+
+
+
+                            {appState.selectedDepartmentStaffList.map((staff, index) => (
+                                <Grid item container style={{marginBottom: "1em"}}>
+                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                    <Typography >
+                                        {staff.lastname}
+                                    </Typography>
+
+                                </Grid>
+                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                    <Typography >
+                                    {staff.position}
+                                    </Typography>
+
+                                </Grid>
+                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                    <Typography >
+                                    {staff.email}
+                                    </Typography>
+
+                                </Grid>
+                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                    <Typography >
+                                    {staff.contract}
+                                    </Typography>
+
+                                </Grid>
+                                </Grid>
+                            ))}
+
+
+
+                    </Grid>
+                </Grid>
+            </div>
 
         </Fragment>
     )

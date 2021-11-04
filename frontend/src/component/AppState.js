@@ -171,10 +171,27 @@ export function createAppStore(){
                 ...staffList
             )
         },
+        employeeStaffList:[],
+        setEmployeeStaffList(staffList){
+            this.employeeStaffList.splice(0,this.employeeStaffList.length)
+            this.employeeStaffList.push(
+                ...staffList
+            )
+        },
         selectedDepartment: {},
         setSelectedDepartment(department){
                 this.selectedDepartment = department
+        },
+
+        selectedDepartmentStaffList: [],
+        setSelectedDepartmentStaffList(staffList){
+            this.selectedDepartmentStaffList.splice(0,this.selectedDepartmentStaffList.length)
+            this.selectedDepartmentStaffList.push(
+                ...staffList
+            )
         }
+
+
 
 
     }

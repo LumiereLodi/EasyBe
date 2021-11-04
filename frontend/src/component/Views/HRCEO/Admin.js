@@ -14,6 +14,7 @@ import axios from "axios";
 import {useAppState} from "../../WithStore"
 import hrProject from "./Project";
 import Snackbar from "@material-ui/core/Snackbar";
+import Customer from "../Sales/Customer";
 
 const useStyles = makeStyles(theme => ({
 
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
             width: "70em",
             backgroundColor: theme.palette.secondary.main,
             padding: "1em",
-            height: "39em",
+            height: "18em",
             marginLeft: "1em",
             marginRight: "0.3em",
             // border: "2px solid",
@@ -75,6 +76,8 @@ function Admin(props) {
     const [openEmployeeDialog, setOpenEmployeeDialog] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false)
 
+    const [reload, setReload] = useState(false);
+
     const handlePlusButton = ()=> {
         if(window.location.pathname === "/drawer/admin/departmentList"){
             setOpenDepartmentDialog(true)
@@ -112,7 +115,7 @@ function Admin(props) {
                      style={{height: "30em"}}
                      >
 
-                    <AddDepartment/>
+                    <AddDepartment reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
                 </Dialog>
              </Fragment>
     )
@@ -148,7 +151,7 @@ function Admin(props) {
         }
 
 
-    }, [])
+    }, [reload])
 
     const snackBarComponent = (
         <Fragment>
@@ -182,7 +185,7 @@ function Admin(props) {
             <Switch>
 
                 <Route path={"/drawer/admin/registerEmployee"} component={RegisterEmployee}/>
-                <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog}/>}/>
+                <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload}/>}/>
 
                 <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog}/>}/>
                 {/*<Route path={"/drawer/admin/add"} component={() =>*/}

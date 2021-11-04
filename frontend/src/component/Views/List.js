@@ -189,7 +189,8 @@ function List(props) {
 
 
         <Fragment>
-            <ListSubheader disableGutters>
+
+            {appState.userInfo.departmentid === '2002' ? <ListSubheader disableGutters>
                 <Grid item className={classes.searchContainer}>
 
                     <Grid container justifyContent={"space-between"}>
@@ -229,7 +230,8 @@ function List(props) {
 
                 </Grid>
 
-            </ListSubheader>
+            </ListSubheader> : undefined
+            }
 
             {/*{props.list ? props.list : undefined}*/}
 
@@ -238,7 +240,7 @@ function List(props) {
                         <Grid item key={index}
                               onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
                                   window.location.pathname === '/drawer/researchProject/projectlist') ? props.handleClick(value.projectid)
-                                  : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
+                                  : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) : undefined}>
 
                             <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
                                 <Grid container alignItems={"center"} style={{height: "100%"}}>
@@ -274,7 +276,8 @@ function List(props) {
                           onClick={()=> (window.location.pathname === '/drawer/project/projectlist' ||
                               window.location.pathname === '/drawer/researchProject/projectlist'||
                           window.location.pathname === '/drawer/admin/hrProject' ) ? props.handleClick(value.projectid)
-                              : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid) :  undefined}>
+                              : window.location.pathname === '/drawer/client/clientlist' ? props.handleClick(value.customerid)
+                                  : window.location.pathname === '/drawer/admin/departmentList' ? props.handleClick(value.departmentid) :  undefined}>
 
                         <ListItem className={classes.ListContainer} value={value.projectid} button disableGutters >
                             <Grid container alignItems={"center"} style={{height: "100%"}}>

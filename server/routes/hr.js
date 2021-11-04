@@ -12,7 +12,15 @@ router.get("/admin",hr.admin);
 
 router.get("/admin/department/departmentlist", hr.departmentList);
 
-router.post("/addDepartment/:id", hr.addDepartment, hr.assignManager)
+router.get("/allemployeelist/", hr.getStaffList)
+router.get("/alldepartmentemployeelist/:departmentid", hr.getDepartmentStaffList)
+
+
+//departmentDetails
+
+router.get("/departmentdetails/:departmentid", hr.departmentDetails)
+
+router.post("/addDepartment/:createdby", hr.addDepartment, hr.assignManager)
 
 
 module.exports = router

@@ -5,23 +5,18 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import {Button} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
-
-
 /**APP STATE**/
 import {useObserver} from "mobx-react"
 import {useAppState} from "../../WithStore"
-
-
-import {
-    MuiPickersUtilsProvider,
-    // KeyboardTimePicker,
-    // KeyboardDatePicker,
-    DatePicker
-} from '@material-ui/pickers';
-
 import {useFormik} from "formik";
 import * as yup from 'yup';
 import axios from "axios";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Snackbar from "@material-ui/core/Snackbar";
+import Customer from "../Sales/Customer";
 
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 //const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
@@ -29,7 +24,6 @@ const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 const formValidation = yup.object({
     departmentName: yup.string().required('Department Name is required.'),
     managerName: yup.string().required('Manager Name is required.'),
-    staffList: yup.string().required('Please Add Staff.'),
 
 })
 const useStyles = makeStyles(theme => ({
@@ -57,11 +51,18 @@ const useStyles = makeStyles(theme => ({
         height: 32,
         width: 250,
         borderRadius: "10px",
+        marginTop: "1em",
         color: "white",
         "&:hover": {
             backgroundColor: theme.palette.secondary.light,
             color: "black"
         }
+    },
+    snackbar: {
+        ...theme.snackbar
+    },
+    errorSnackbar: {
+        ...theme.errorSnackbar
     }
 }))
 
@@ -72,26 +73,77 @@ function AddDepartment(props) {
     const classes = useStyles()
     const appState = useAppState()
 
-    const [emailExist, setEmailExist] = useState('')
+    const [departmentExist, setDepartmentExist] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
 
-    const positions = [
-        "Admin",
-        "Manager",
-        "Staff"
-    ]
+    const [departmentName, setDepartmentName] = useState('')
 
+
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: 300,
+                width: 250,
+            },
+        },
+    };
     const formik = useFormik({
         initialValues: {
             departmentName: '',
             managerName: '',
-            staffList: [],
-
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
+                console.log(values)
+
+            const response = await axios.post(`/hr/addDepartment/${appState.userInfo.employeeid}`, values)
+
+            console.log(response.data)
+
+            if(response.data.status){
+                setDepartmentExist("Department name already exists.")
+            }
+            else{
+                setDepartmentExist('')
+                setDepartmentName(response.data.departmentname)
+                setOpenSnackbar(true)
+
+                props.setReloadDrawer(!props.reloadDrawer)
+                resetForm({})
+            }
+
 
         }
     });
+
+    const errorSnackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openErrorSnackbar}
+                onClose={() => setOpenErrorSnackbar(false)}
+                message={`Department ${departmentName} could not be added`}
+                autoHideDuration={6000}
+                classes={{root: classes.errorSnackbar}}
+
+            />
+        </Fragment>
+    )
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                message={`Department ${departmentName} has been added`}
+                autoHideDuration={6000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
 
     const details = (
         <Fragment>
@@ -121,65 +173,75 @@ function AddDepartment(props) {
                                    label={"Department Name"}
                                    className={classes.form}
                                    onChange={formik.handleChange}
-                                   value={formik.values.givenNames}
-                                   error={Boolean(formik.errors.givenNames)}
-                                   helperText={formik.errors.givenNames}
+                                   value={formik.values.departmentName}
+                                   error={departmentExist.length === 0 ? Boolean(formik.errors.departmentName) : true}
+                                   helperText={departmentExist.length === 0 ? formik.errors.departmentName : departmentExist}
                         />
                     </Grid>
 
                 </Grid>
                 <Grid container style={{marginBottom: "0.5em"}}>
                     <Grid item sm className={classes.textFieldContainer} >
-                        <TextField fullWidth
-                                   id={"managerName"}
-                                   variant={"filled"}
-                                   InputProps={{disableUnderline: true}}
-                                   label={"Manager"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange("departmentId")}
-                                   value={formik.values.departmentId}
-                                   error={Boolean(formik.errors.departmentId)}
-                                   helperText={formik.errors.departmentId}
-                                   select
+                        <FormControl fullWidth
+                                     id={"managerName"}
+                                     variant={"filled"}
+                                     className={classes.form}
+                                     onChange={formik.handleChange("managerName")}
+                                     error={Boolean(formik.errors.managerName)}
+
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {appState.departmentList.map((department, index) => (
-                                <MenuItem key={index} value={department.departmentid}>
-                                    {department.name}
+                            <InputLabel id="managerName"  >Manager Name</InputLabel>
+                            <Select
+                                labelId="managerName"
+                                MenuProps={MenuProps}
+                                className={classes.selectInput}
+                                onChange={formik.handleChange("managerName")}
+                                value={formik.values.managerName}
+                                disableUnderline
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
                                 </MenuItem>
-                            ))}
-                        </TextField>
+                                {appState.employeeStaffList.map((customer, index) => (
+                                    <MenuItem key={index} value={customer.employeeid}>
+                                        {customer.lastname}
+                                    </MenuItem>
+                                ))}
+
+                            </Select>
+                            {Boolean(formik.errors.managerName) ? <FormHelperText id="managerName">Manager Name is required</FormHelperText> : undefined }
+
+
+                        </FormControl>
                     </Grid>
 
                 </Grid>
 
-                <Grid container style={{marginBottom: "2em"}}>
-                    <Grid item sm className={classes.textFieldContainer}>
-                        <TextField fullWidth
-                                   id={"staffList"}
-                                   variant={"filled"}
-                                   label={"Staff Members"}
-                                   InputProps={{disableUnderline: true}}
-                                   className={classes.form}
-                                   select
-                                   onChange={formik.handleChange("position")}
-                                   value={formik.values.position}
-                                   error={Boolean(formik.errors.position)}
-                                   helperText={formik.errors.position}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {positions.map((position, index) => (
-                                <MenuItem key={index} value={position}>
-                                    {position}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
-                </Grid>
+                {/*<Grid container style={{marginBottom: "2em"}}>*/}
+                {/*    <Grid item sm className={classes.textFieldContainer}>*/}
+                {/*        <TextField fullWidth*/}
+                {/*                   id={"staffList"}*/}
+                {/*                   variant={"filled"}*/}
+                {/*                   label={"Staff Members"}*/}
+                {/*                   InputProps={{disableUnderline: true}}*/}
+                {/*                   className={classes.form}*/}
+                {/*                   select*/}
+                {/*                   onChange={formik.handleChange("position")}*/}
+                {/*                   value={formik.values.position}*/}
+                {/*                   error={Boolean(formik.errors.position)}*/}
+                {/*                   helperText={formik.errors.position}*/}
+                {/*        >*/}
+                {/*            <MenuItem value="">*/}
+                {/*                <em>None</em>*/}
+                {/*            </MenuItem>*/}
+                {/*            {positions.map((position, index) => (*/}
+                {/*                <MenuItem key={index} value={position}>*/}
+                {/*                    {position}*/}
+                {/*                </MenuItem>*/}
+                {/*            ))}*/}
+                {/*        </TextField>*/}
+                {/*    </Grid>*/}
+                {/*</Grid>*/}
 
                 <Grid container justify={"center"}>
                     <Grid item>
@@ -196,6 +258,8 @@ function AddDepartment(props) {
 
     return useObserver(() => (
         <div>
+            {errorSnackBarComponent}
+            {snackBarComponent}
             {details}
         </div>
 
