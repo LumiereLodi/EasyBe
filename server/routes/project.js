@@ -17,6 +17,8 @@ router.get("/projectstaff/search/:staffid/:wordToSearch",projectController.proje
 router.get("/sentProject/",projectController.sentProjectList)
 router.get("/sentProjectSearch/:wordToSearch",projectController.sentProjectListSearch)
 router.get("/stafflist/:departmentid",projectController.stafflist)
+router.get("/staffonlylist/:departmentid",projectController.staffonlylist)
+
 router.get("/taskstafflist/:staffid",projectController.taskListStaff)
 router.get("/taskstafflist/search/:staffid/:wordToSearch",projectController.taskListStaffSearch)
 router.get("/taskDetails/:taskid", projectController.taskDetails)

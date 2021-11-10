@@ -21,8 +21,11 @@ import Customer from "../Sales/Customer";
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 //const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
 const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+
+const nameCheck = /^[A-Z][A-Za-z]/
+
 const formValidation = yup.object({
-    departmentName: yup.string().required('Department Name is required.'),
+    departmentName: yup.string().required('Department Name is required.').min(2, 'Name too short').matches(nameCheck, "First Character must be upper case"),
     managerName: yup.string().required('Manager Name is required.'),
 
 })

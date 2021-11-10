@@ -178,7 +178,7 @@ function Index(props) {
                             fontWeight: "bold",
                             fontFamily: "sans-serif"
                         }}>
-                            Projects Overview
+                            Projects Activities (Before it was Overview)
                         </Grid>
                         <Grid item style={{marginBottom: "1em"}}>
                             <Grid container justify={"center"} className={classes.overviewTitleContainer}

@@ -13,6 +13,7 @@ import ObjectInformation from "../ObjectInformation";
 import UserOverview from "../UserOverview";
 import {useAppState} from "../../WithStore";
 import axios from "axios";
+import {useObserver} from "mobx-react"
 
 const useStyles = makeStyles(theme => ({
 
@@ -147,14 +148,41 @@ function EmployeeList(props) {
 
     }
 
+    const search = async (wordToSearch) => {
+
+        try{
+            if(wordToSearch === ''){
+                props.setReloadDrawer(!props.reloadDrawer)
+
+            }else{
+                const employeeList = await axios.get(`/hr/alleasybeemployeelist/${wordToSearch}`)
+                appState.setAllEasybeEmployeeList(employeeList.data)
+
+                if(appState.allEasybeEmployeeList[0]){
+                    const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
+
+                    appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
+                }else{
+                    appState.setSelectedEasbeEmployee({})
+                }
+            }
+
+            //props.setReload(!props.reload)
+
+        }catch(e){
+            alert(e)
+        }
+
+    }
     const list = (
         <Fragment>
-            <List search={"Search by name"} list={appState.allEasybeEmployeeList} handleClick={handleEmployeeClick}/>
+            <List search={"Search by name"} list={appState.allEasybeEmployeeList} setReload={props.setReload} reload={props.reload}
+                  handleClick={handleEmployeeClick} wordToSearch={search}/>
 
         </Fragment>
     )
 
-    const details = (
+    const details = useObserver(()=> (
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
@@ -165,34 +193,7 @@ function EmployeeList(props) {
                     </Grid>
                 </Grid>
 
-                {/*<Grid item style={{marginBottom: "1.5em", marginTop: "2em"}}>*/}
-                {/*    <Grid container>*/}
-                {/*        <Grid item container direction={"column"} xs alignItems={"flex-end"} >*/}
-                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
-                {/*                739*/}
-                {/*            </Typography>*/}
-                {/*            <Typography style={{fontSize: "1em", color: "black"}}>*/}
-                {/*                Completed On Time*/}
-                {/*            </Typography>*/}
-                {/*        </Grid>*/}
-                {/*        <Grid item container direction={"column"} alignItems={"center"} xs >*/}
-                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
-                {/*                132*/}
-                {/*            </Typography>*/}
-                {/*            <Typography style={{fontSize: "1em",color: "black"}}>*/}
-                {/*                Completed After Deadline*/}
-                {/*            </Typography>*/}
-                {/*        </Grid>*/}
-                {/*        <Grid item container direction={"column"} xs >*/}
-                {/*            <Typography style={{fontSize: "3em", color: "black"}}>*/}
-                {/*                165*/}
-                {/*            </Typography>*/}
-                {/*            <Typography style={{fontSize: "1em",color: "black"}}>*/}
-                {/*                Tasks In Progress*/}
-                {/*            </Typography>*/}
-                {/*        </Grid>*/}
-                {/*    </Grid>*/}
-                {/*</Grid>*/}
+
             </ListSubheader>
 
             <ObjectInformation InformationHeader={InformationHeader} InformationData={InformationData} title={"Employee Information"} editButton={editButton}/>
@@ -200,7 +201,7 @@ function EmployeeList(props) {
             <UserOverview OverviewHeaders={OverviewHeaders} title={"Employee Tasks"} OverviewData={OverviewData}/>
 
         </Fragment>
-    )
+    ))
     return (
         <div>
             <Grid container>

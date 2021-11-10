@@ -397,6 +397,10 @@ function AppDrawer(props) {
                 console.log(departmentStaff.data)
                 appState.setDepartmentStaffList(departmentStaff.data)
 
+                const staffonlylist = await axios.get(`/project/staffonlylist/${appState.userInfo.departmentid}`)
+                appState.setDepartmentStaffonlyList(staffonlylist.data)
+
+                console.log(staffonlylist.data)
                 /******* DEFAULT CUSTOMER VALUES ********/
                 if(appState.customerList[0]){
                     const defaultcustomer = await axios.get(`/sales/customer/${appState.customerList[0].customerid}`);

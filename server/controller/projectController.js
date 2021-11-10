@@ -28,7 +28,7 @@ module.exports = {
     },
     projectListSearch: async (req, res)=> {
         try {
-            const results = await db.query("SELECT * from project where name like '%' || $1 || '%' ORDER BY createdat DESC, name DESC", [req.params.wordToSearch])
+            const results = await db.query("SELECT * from project where LOWER(name) LIKE LOWER('%' || $1 || '%') ORDER BY createdat DESC, name DESC", [req.params.wordToSearch])
 
             res.json(results.rows);
 
@@ -49,7 +49,7 @@ module.exports = {
     projectListStaffSearch: async (req, res)=> {
 
         try {
-            const results = await db.query("SELECT * from project WHERE staff = $1 AND name like '%' || $2 || '%' ORDER BY createdat DESC, name DESC", [req.params.staffid, req.params.wordToSearch])
+            const results = await db.query("SELECT * from project WHERE staff = $1 AND LOWER(name) LIKE LOWER('%' || $2 || '%') ORDER BY createdat DESC, name DESC", [req.params.staffid, req.params.wordToSearch])
             res.json(results.rows);
 
         } catch (err) {
@@ -69,7 +69,7 @@ module.exports = {
     sentProjectListSearch: async (req, res)=> {
 
         try {
-            const results = await db.query("SELECT * from project WHERE location = '1' AND name like '%' || $1 || '%' ORDER BY createdat DESC, name ASC",[req.params.wordToSearch])
+            const results = await db.query("SELECT * from project WHERE location = '1' AND LOWER(name) LIKE LOWER('%' || $1 || '%') ORDER BY createdat DESC, name ASC",[req.params.wordToSearch])
             res.json(results.rows);
 
         } catch (err) {
@@ -205,6 +205,14 @@ module.exports = {
             res.json(err)
         }
     },
+    staffonlylist: async (req, res)=> {
+        try{
+            const activeTask = await db.query("SELECT * FROM employee WHERE departmentid = $1 AND position = $2", [req.params.departmentid, 'Staff'])
+            res.json(activeTask.rows);
+        }catch (err) {
+            res.json(err)
+        }
+    },
     addTask: async (req, res)=> {
 
         try {
@@ -238,7 +246,7 @@ module.exports = {
     taskListStaffSearch: async (req, res)=> {
 
         try {
-            const results = await db.query("SELECT * from task WHERE staff = $1 AND name like '%' || $1 || '%' ORDER BY createdat DESC, name ASC", [req.params.staffid, req.params.wordToSearch])
+            const results = await db.query("SELECT * from task WHERE staff = $1 AND LOWER(name) LIKE LOWER('%' || $2 || '%') ORDER BY createdat DESC, name ASC", [req.params.staffid, req.params.wordToSearch])
             res.json(results.rows);
 
         } catch (err) {

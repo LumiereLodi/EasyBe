@@ -12,7 +12,7 @@ import Dialog from "@material-ui/core/Dialog";
 import AddDepartment from "./AddDepartment";
 import axios from "axios";
 import {useAppState} from "../../WithStore"
-import hrProject from "./Project";
+import HrProject from "./Project";
 import Snackbar from "@material-ui/core/Snackbar";
 import Customer from "../Sales/Customer";
 
@@ -211,9 +211,9 @@ function Admin(props) {
             <Switch>
 
                 <Route path={"/drawer/admin/registerEmployee"} component={RegisterEmployee}/>
-                <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload}/>}/>
+                <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
 
-                <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog} reload={reload} setReload={setReload}/>}/>
+                <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
                 {/*<Route path={"/drawer/admin/add"} component={() =>*/}
                 {/*    <div>*/}
                 {/*        {value === 0 ? <AddDepartment/> : <RegisterEmployee/>}*/}
@@ -226,9 +226,9 @@ function Admin(props) {
                 {/*    </div>*/}
 
                 {/*}/>*/}
+                <Route path={"/drawer/admin/hrProject"} render={()=><HrProject setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
                 <Route path={"/drawer/admin/addDepartment"} component={AddDepartment}/>
                 <Route path={"/drawer/admin/addEmployee"} component={RegisterEmployee}/>
-                <Route path={"/drawer/admin/hrProject"} component={hrProject}/>
 
             </Switch>
 

@@ -27,6 +27,18 @@ module.exports = {
             })
         }
     },
+    departmentListSearch: async (req, res)=> {
+        try {
+            const result = await db.query("select * from department WHERE LOWER(name) LIKE LOWER('%' || $1 || '%') order by createdat DESC, name ASC",[req.params.wordToSearch]);
+            await res.status(200).json({
+                departmentList: result.rows
+            })
+        } catch (error) {
+            res.status(400).json({
+                error: "failed"
+            })
+        }
+    },
 
     assignManager: async(req, res) => {
         try{
@@ -96,6 +108,18 @@ module.exports = {
     getEasybeStaffList: async (req, res) => {
         try{
             const result = await db.query("SELECT employeeid, lastname as name FROM employee order by createdat ASC, lastname ASC")
+            res.json(result.rows)
+        }catch (error) {
+
+            res.status(400).json({
+                error: error.message
+            })
+        }
+    },
+    getEasybeStaffListSearch: async (req, res) => {
+        try{
+            const result = await db.query("SELECT employeeid, lastname as name FROM employee WHERE LOWER(lastname) LIKE LOWER('%' || $1 || '%') order by createdat ASC, lastname ASC",
+                [req.params.wordToSearch])
             res.json(result.rows)
         }catch (error) {
 

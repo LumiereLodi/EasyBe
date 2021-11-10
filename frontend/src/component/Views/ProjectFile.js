@@ -405,7 +405,7 @@ function ProjectFile(props) {
                                     <Grid item xs={6}>
                                         <Grid item container>
                                             {/**ASSIGN BUTTON IS FOR IT & RI MANAGER**/}
-                                            {(props.assignButton && appState.userInfo.position === "Manager") ? props.assignButton : undefined}
+                                            {(props.assignButton && appState.userInfo.position.toLowerCase() === "manager") ? props.assignButton : undefined}
 
                                             {/**SEND BUTTON IS FOR SM MANAGER**/}
                                             {props.sendButton ? props.sendButton : undefined}

@@ -270,10 +270,66 @@ function ProjectList(props) {
             alert(error)
         }
     }
+
+    const search = async (wordToSearch) => {
+
+        try{
+            if(wordToSearch === ''){
+                props.setReloadDrawer(!props.reloadDrawer)
+
+            }else{
+                if(appState.userInfo.position.toLowerCase() === 'manager'){
+                    const projectlistAll = await axios.get(`/project/sentProjectSearch/${wordToSearch}`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+
+                    /********GET DEFAULT VALUES FOR PROJECT********/
+                    if(appState.leftList[0]){
+                        console.log("inside if")
+                        const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                        console.log(defaultproject.data.project);
+
+                        appState.setSelectedProject(defaultproject.data.project[0]);
+                        appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                        appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                    }else{
+                        appState.setSelectedProject({});
+                        appState.setCompletedTask('')
+                        appState.setActiveTask('')
+                    }
+
+
+                }else if(appState.userInfo.position.toLowerCase() === 'staff'){
+
+                    console.log("landed inside staff yall")
+
+                     const projectlistAll = await axios.get(`/project/taskstafflist/search/${appState.userInfo.employeeid}/${wordToSearch}`);
+                        console.log(projectlistAll);
+                        appState.setProjectListAll(projectlistAll.data);
+                        /********GET DEFAULT VALUES FOR TASKS********/
+                        if(appState.leftList[0]){
+                            const defaultproject = await axios.get(`/project/taskDetails/${appState.leftList[0].taskid}`);
+                            console.log(defaultproject.data[0]);
+                            appState.setSelectedProject(defaultproject.data[0]);
+                        }else{
+                            appState.setSelectedProject({});
+
+                        }
+
+
+                }
+            }
+        }catch (e) {
+            alert(e)
+        }
+
+
+    }
+
     //here we will pass list of project for manager, list of tasks for staff.
     const list = (
         <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList}
-                              handleClick={handleProjectCLick}/>
+                              handleClick={handleProjectCLick} wordToSearch={search}/>
     )
     const MenuProps = {
         PaperProps: {
@@ -387,7 +443,7 @@ function ProjectList(props) {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                {appState.departmentStaffList.map((staff, index) => (
+                                {appState.departmentStaffonlyList.map((staff, index) => (
                                     <MenuItem key={index} value={staff.employeeid}>
                                         {staff.lastname}
                                     </MenuItem>

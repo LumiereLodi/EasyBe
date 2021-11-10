@@ -11,9 +11,13 @@ const hr = require('../controller/hrController');
 router.get("/admin",hr.admin);
 
 router.get("/admin/department/departmentlist", hr.departmentList);
+router.get("/admin/department/departmentlist/:wordToSearch", hr.departmentListSearch);
+
 
 router.get("/allemployeelist/", hr.getStaffList)
 router.get("/alleasybeemployeelist/", hr.getEasybeStaffList)
+router.get("/alleasybeemployeelist/:wordToSearch", hr.getEasybeStaffListSearch)
+
 router.get("/alleasybeemployeelistdetails/:employeeid", hr.getEasybeStaffDetails)
 
 

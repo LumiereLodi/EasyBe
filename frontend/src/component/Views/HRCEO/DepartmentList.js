@@ -12,6 +12,9 @@ import UserOverview from "../UserOverview";
 import ObjectInformation from "../ObjectInformation";
 import {useAppState} from "../../WithStore";
 import axios from "axios";
+import ProjectListComponent from "../List";
+import {useObserver} from "mobx-react"
+
 const useStyles = makeStyles(theme => ({
 
     searchContainer: {
@@ -130,9 +133,41 @@ function DepartmentList(props) {
             </Grid>
         </Fragment>
     )
+
+    const search = async (wordToSearch) => {
+
+
+        try{
+            if(wordToSearch === ''){
+                props.setReloadDrawer(!props.reloadDrawer)
+
+            }else{
+                const response = await axios.get(`/hr/admin/department/departmentlist/${wordToSearch}`);
+                appState.addDepartmentName(response.data.departmentList);
+
+                if(appState.departmentList[0]){
+                    const departmentSelected = await axios.get(`/hr/departmentdetails/${appState.departmentList[0].departmentid}`)
+                    appState.setSelectedDepartment(departmentSelected.data)
+
+                    const departmentStaffList = await axios.get(`/hr/alldepartmentemployeelist/${appState.departmentList[0].departmentid}`)
+                    appState.setSelectedDepartmentStaffList(departmentStaffList.data)
+                }else{
+                    appState.setSelectedDepartment({})
+                    appState.setSelectedDepartmentStaffList([])
+                }
+            }
+
+            //props.setReload(!props.reload)
+
+        }catch(e){
+            alert(e)
+        }
+
+    }
+
     const list = (
         <Fragment>
-            <List search={"Search by name"} list={appState.departmentList} handleClick={handleDepartmentClick}/>
+            <List search={"Search by name"} list={appState.departmentList} setReload={props.setReload} reload={props.reload} handleClick={handleDepartmentClick} wordToSearch={search}/>
 
         </Fragment>
     )
@@ -143,7 +178,7 @@ function DepartmentList(props) {
             console.log(appState.selectedDepartment ? appState.selectedDepartment.name : undefined)
 
     }, [])
-    const details = (
+    const details = useObserver(()=>(
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
                 <Grid container justify={"center"} style={{marginBottom: "2em", marginTop: "1em"}}>
@@ -189,25 +224,25 @@ function DepartmentList(props) {
                                 <Grid item container style={{marginBottom: "1em"}}>
                                 <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
                                     <Typography >
-                                        {staff.lastname}
+                                        {staff.lastname ? staff.lastname : <span>...</span>}
                                     </Typography>
 
                                 </Grid>
                                 <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
                                     <Typography >
-                                    {staff.position}
+                                    {staff.position ? staff.position : <span>...</span>}
                                     </Typography>
 
                                 </Grid>
                                 <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
                                     <Typography >
-                                    {staff.email}
+                                    {staff.email ? staff.email : <span>...</span>}
                                     </Typography>
 
                                 </Grid>
                                 <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
                                     <Typography >
-                                    {staff.contract}
+                                    {staff.contract ? staff.contract : <span>...</span>}
                                     </Typography>
 
                                 </Grid>
@@ -221,7 +256,7 @@ function DepartmentList(props) {
             </div>
 
         </Fragment>
-    )
+    ))
     return (
         <div>
             <Grid container>

@@ -190,7 +190,7 @@ function List(props) {
 
         <Fragment>
 
-            {appState.userInfo.departmentid === '2002' ? <ListSubheader disableGutters>
+             <ListSubheader disableGutters>
                 <Grid item className={classes.searchContainer}>
 
                     <Grid container justifyContent={"space-between"}>
@@ -230,8 +230,7 @@ function List(props) {
 
                 </Grid>
 
-            </ListSubheader> : undefined
-            }
+            </ListSubheader>
 
             {/*{props.list ? props.list : undefined}*/}
 
