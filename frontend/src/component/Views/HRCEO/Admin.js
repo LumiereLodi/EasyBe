@@ -123,7 +123,10 @@ function Admin(props) {
             {/*    <AddIcon className={classes.tab}/>*/}
             {/*</IconButton>*/}
             <IconButton
-                        onClick={()=> handlePlusButton()}
+                        onClick={()=> {
+                            handlePlusButton();
+                            appState.setEditSelectedEasbeEmployee({})
+                        }}
             >
                 <AddIcon className={classes.tab}/>
             </IconButton>

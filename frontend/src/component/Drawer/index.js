@@ -445,7 +445,11 @@ function AppDrawer(props) {
                         const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
 
                         appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
-                        console.log(selectedEasybeEmployee.data)
+
+
+                        const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${appState.allEasybeEmployeeList[0].employeeid}`)
+                        appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
+
                     }
 
                 }

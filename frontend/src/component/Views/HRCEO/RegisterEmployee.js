@@ -107,15 +107,15 @@ function RegisterEmployee(props) {
 
     const formik = useFormik({
         initialValues: {
-            givenNames: '',
-            lastName: '',
-            departmentId: '',
-            position: '',
-            contract: '',
-            dateOfBirth: '',
-            phone: '',
-            address: '',
-            email: '',
+            givenNames: appState.editSelectedEasbeEmployee.givennames || '',
+            lastName: appState.editSelectedEasbeEmployee.lastname || '',
+            departmentId: appState.editSelectedEasbeEmployee.departmentid || '',
+            position: appState.editSelectedEasbeEmployee.position || '',
+            contract:appState.editSelectedEasbeEmployee.contract || '',
+            dateOfBirth: new Date (appState.editSelectedEasbeEmployee.dateofbirth) || '',
+            phone:appState.editSelectedEasbeEmployee.phonenumber || '',
+            address:appState.editSelectedEasbeEmployee.address || '',
+            email:appState.editSelectedEasbeEmployee.email || '',
             password: ''
         },
         validationSchema: formValidation,
@@ -188,6 +188,7 @@ function RegisterEmployee(props) {
                                    value={formik.values.givenNames}
                                    error={Boolean(formik.errors.givenNames)}
                                    helperText={formik.errors.givenNames}
+                                   defaultValue={"yesyes"}
                         />
                     </Grid>
                     <Grid item sm className={classes.textFieldContainer}>
@@ -223,6 +224,7 @@ function RegisterEmployee(props) {
                                    error={Boolean(formik.errors.departmentId)}
                                    helperText={formik.errors.departmentId}
                                    select
+                                   defaultValue={"Finance"}
                         >
                             <MenuItem value="">
                                 <em>None</em>

@@ -19,6 +19,7 @@ router.get("/alleasybeemployeelist/", hr.getEasybeStaffList)
 router.get("/alleasybeemployeelist/:wordToSearch", hr.getEasybeStaffListSearch)
 
 router.get("/alleasybeemployeelistdetails/:employeeid", hr.getEasybeStaffDetails)
+router.get("/alleasybeemployeelistdetails/tasks/:employeeid", hr.getEasybeStaffTasks)
 
 
 router.get("/alldepartmentemployeelist/:departmentid", hr.getDepartmentStaffList)

@@ -110,18 +110,26 @@ function EmployeeList(props) {
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.position ? appState.selectedEasbeEmployee.position : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.phonenumber ? appState.selectedEasbeEmployee.phonenumber : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.email ? appState.selectedEasbeEmployee.email : '...' : '...',
-        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.dateofbirth ? appState.selectedEasbeEmployee.dateofbirth : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.formateddateofbirth ? appState.selectedEasbeEmployee.formateddateofbirth : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.address ? appState.selectedEasbeEmployee.address : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.contract ? appState.selectedEasbeEmployee.contract : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.createdat ? appState.selectedEasbeEmployee.createdat : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.createdby ? appState.selectedEasbeEmployee.createdby : '...' : '...',
     ];
 
+
+    const handleClickEdit = () => {
+        appState.setEditSelectedEasbeEmployee(appState.selectedEasbeEmployee)
+
+    }
     const editButton = (
         <Fragment>
             <Grid item>
                 <IconButton
-                    onClick={()=> props.setOpenEmployeeDialog(true)}
+                    onClick={()=> {
+                        props.setOpenEmployeeDialog(true);
+                        handleClickEdit()
+                    }}
                 >
                     <EditIcon fontSize="small" htmlColor={"black"}/>
                 </IconButton>
@@ -138,6 +146,11 @@ function EmployeeList(props) {
 
                 appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
                 console.log(selectedEasybeEmployee.data)
+
+                const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${employeeid}`)
+                console.log(selectedEmployeeTasks.data)
+                appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
+
 
 
             props.setReload(!props.reload);
@@ -162,6 +175,9 @@ function EmployeeList(props) {
                     const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
 
                     appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
+
+                    const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${appState.allEasybeEmployeeList[0].employeeid}`)
+                    appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
                 }else{
                     appState.setSelectedEasbeEmployee({})
                 }
@@ -198,7 +214,72 @@ function EmployeeList(props) {
 
             <ObjectInformation InformationHeader={InformationHeader} InformationData={InformationData} title={"Employee Information"} editButton={editButton}/>
 
-            <UserOverview OverviewHeaders={OverviewHeaders} title={"Employee Tasks"} OverviewData={OverviewData}/>
+            <div>
+                <Grid item container>
+                    <Typography variant={"h1"} style={{fontWeight: "bold" , marginTop: "2em"}} >
+                        Employee Tasks
+                    </Typography>
+                </Grid>
+                <Grid container className={classes.customerProjectContainer} style={{marginTop: "2em", marginBottom: "1em"}}>
+                    <Grid container  sm={12} direction={"column"}>
+                        <ListSubheader disableGutters>
+                            <Grid item container style={{marginTop: "1.5em", marginBottom: "1em"}}>
+
+                                {OverviewHeaders ? OverviewHeaders.map((headers, index) => (
+                                    <Grid item container xs justify={"center"} >
+                                        <Typography style={{fontWeight: "bold", color: "black"}} key={index}>
+                                            {headers}
+                                        </Typography>
+
+                                    </Grid>
+                                )) : undefined}
+
+
+                            </Grid>
+                        </ListSubheader>
+
+
+
+                            {appState.selectedEmployeeTasks ? appState.selectedEmployeeTasks.map((data, index) => (
+                                <Grid item container style={{marginBottom: "1em"}}>
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography >
+                                            {data.name && data.name.length < 23 ? data.name : data.name !== null ? <span>{data.name.substring(0, 23)}...</span> : null}
+                                        </Typography>
+
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography >
+                                            {data.formatedstartdate ? data.formatedstartdate : <span>...</span>}
+                                        </Typography>
+
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography >
+                                            {data.formatedenddate ? data.formatedenddate : <span>...</span>}
+                                        </Typography>
+
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography >
+                                            {data.taskstatus ? data.taskstatus : <span>...</span>}
+                                        </Typography>
+
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"}>
+                                        <Typography >
+                                            {data.createdby ? data.createdby : <span>...</span>}
+                                        </Typography>
+
+                                    </Grid>
+                                </Grid>
+                            )) : undefined}
+
+
+
+                    </Grid>
+                </Grid>
+            </div>
 
         </Fragment>
     ))

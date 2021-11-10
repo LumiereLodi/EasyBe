@@ -222,30 +222,30 @@ function DepartmentList(props) {
 
                             {appState.selectedDepartmentStaffList ? appState.selectedDepartmentStaffList.map((staff, index) => (
                                 <Grid item container style={{marginBottom: "1em"}}>
-                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
-                                    <Typography >
-                                        {staff.lastname ? staff.lastname : <span>...</span>}
-                                    </Typography>
+                                    <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                        <Typography >
+                                            {staff.lastname ? staff.lastname : <span>...</span>}
+                                        </Typography>
 
-                                </Grid>
-                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
-                                    <Typography >
-                                    {staff.position ? staff.position : <span>...</span>}
-                                    </Typography>
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                        <Typography >
+                                        {staff.position ? staff.position : <span>...</span>}
+                                        </Typography>
 
-                                </Grid>
-                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
-                                    <Typography >
-                                    {staff.email ? staff.email : <span>...</span>}
-                                    </Typography>
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                        <Typography >
+                                        {staff.email ? staff.email : <span>...</span>}
+                                        </Typography>
 
-                                </Grid>
-                                <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
-                                    <Typography >
-                                    {staff.contract ? staff.contract : <span>...</span>}
-                                    </Typography>
+                                    </Grid>
+                                    <Grid item container xs justify={"center"} alignItems={"center"} key={index}>
+                                        <Typography >
+                                        {staff.contract ? staff.contract : <span>...</span>}
+                                        </Typography>
 
-                                </Grid>
+                                    </Grid>
                                 </Grid>
                             )) : undefined}
 

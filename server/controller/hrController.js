@@ -93,11 +93,24 @@ module.exports = {
 
     getEasybeStaffDetails: async (req, res) => {
         try{
-            const result = await db.query("select department.name, employee.lastname, employee.employeeid, employee.position, employee.phonenumber, employee.email, employee.dateofbirth, employee.address,contract, employee.createdat, employee.createdby from employee \n" +
+            const result = await db.query("select department.name,employee.departmentid, employee.lastname, employee.givennames, " +
+                "employee.employeeid, employee.position, employee.phonenumber, employee.email, " +
+                "employee.dateofbirth, to_char(employee.dateofbirth, $2) as formatedDateofbirth, employee.address,contract, employee.createdat, employee.createdby from employee \n" +
                 "join department\n" +
                 "on department.departmentid = employee.departmentid\n" +
-                "where employee.employeeid = $1", [req.params.employeeid])
+                "where employee.employeeid = $1", [req.params.employeeid, 'DD/MM/YYYY'])
             res.json(result.rows[0])
+        }catch (error) {
+
+            res.status(400).json({
+                error: error.message
+            })
+        }
+    },
+    getEasybeStaffTasks: async (req, res) => {
+        try{
+            const result = await db.query("SELECT *, to_char(startdate, $1) as formatedStartdate, to_char(enddate, $1) as formatedEnddate, (Case when task.status = $2 then 'In Progress' else 'Completed' end) as TaskStatus FROM task WHERE staff = $3", ['DD/MM/YYYY','0',req.params.employeeid])
+            res.json(result.rows)
         }catch (error) {
 
             res.status(400).json({

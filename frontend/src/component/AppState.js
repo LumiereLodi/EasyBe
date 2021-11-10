@@ -209,8 +209,20 @@ export function createAppStore(){
         selectedEasbeEmployee: {},
         setSelectedEasbeEmployee(employee){
                 this.selectedEasbeEmployee = employee
-        }
+        },
 
+        selectedEmployeeTasks: [],
+        setSelecteEmployeeTasks(employeeTasks){
+            this.selectedEmployeeTasks.splice(0,this.selectedEmployeeTasks.length)
+            this.selectedEmployeeTasks.push(
+                ...employeeTasks
+            )
+        },
+
+        editSelectedEasbeEmployee: {},
+        setEditSelectedEasbeEmployee(employee){
+            this.editSelectedEasbeEmployee = employee
+        },
 
     }
 }
