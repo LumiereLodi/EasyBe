@@ -105,6 +105,7 @@ function RegisterEmployee(props) {
 
     )
 
+
     const formik = useFormik({
         initialValues: {
             givenNames: appState.editSelectedEasbeEmployee.givennames || '',
@@ -123,31 +124,37 @@ function RegisterEmployee(props) {
             const formatedDate = values.dateOfBirth.getFullYear() + "-" + parseInt(values.dateOfBirth.getMonth() + 1) + "-" + values.dateOfBirth.getDate();
             const updatedValues = {...values, dateOfBirth: formatedDate}
             try {
-                const result = await axios.get("/authenticate/email/" + formik.values.email);
-                if (result.data.exist) {
-                    setEmailExist("Email already exists")
-                } else {
-                    console.log("email does not exists")
-                    setEmailExist('')
 
-                    const data = JSON.stringify(updatedValues)
-                    console.log(data);
-                    const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
-                        headers: {
-                            'Content-Type': "application/json"
-                        }
-                    });
+                if(JSON.stringify(appState.editSelectedEasbeEmployee) !== '{}'){
+                    console.log(JSON.stringify(values))
+                    alert(JSON.stringify(values))
 
-                    console.log(response.data)
-                    // use a snackbar to show the admin that the empoyee has been added.
-                    //alert("The employee " + response.data.data[0].givennames + " " + response.data.data[0].lastname + " has been added")
-                    props.setOpenEmployeeDialog(false)
-                    props.setOpenSnackbar(true)
-                    props.setReloadDrawer(!props.reloadDrawer)
+                }else{
 
-                    //resetForm()
+                    const result = await axios.get("/authenticate/email/" + formik.values.email);
+                    if (result.data.exist) {
+                        setEmailExist("Email already exists")
+                    } else {
+                        console.log("email does not exists")
+                        setEmailExist('')
 
+                        const data = JSON.stringify(updatedValues)
+                        console.log(data);
+                        const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
+                            headers: {
+                                'Content-Type': "application/json"
+                            }
+                        });
+
+                        props.setOpenEmployeeDialog(false)
+                        props.setOpenSnackbar(true)
+                        props.setReloadDrawer(!props.reloadDrawer)
+
+                        resetForm()
+
+                    }
                 }
+
 
 
             } catch (error) {

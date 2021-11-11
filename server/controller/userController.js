@@ -84,7 +84,7 @@ module.exports = {
                     req.body.contract,
                     req.body.position,
                     hash,
-                    req.params.id,
+                    req.params.managerid,
                     req.body.departmentId,
                     req.body.phone
                 ]
@@ -95,6 +95,44 @@ module.exports = {
                 data: result.rows
             })
         } catch (error) {
+            res.status(400).json(error.message)
+        }
+
+    },
+    update: async (req, res)=>{
+
+        //WE HASH THE PASSWORD BEFORE SAVING THE USER.
+        //WE DO NOT SAVE A PLAIN PASSWORD IN OUR DATABASE.
+
+        console.log("inside register route")
+        const hash = await bcrypt.hash(req.body.password, 10)
+        try {
+            const result = await db.query("UPDATE employee SET givenNames = $1 , lastName = $2, dateOfBirth = $3, email = $4, " +
+                "address = $5, contract = $6, position $7, password = $8, createdby = $9, departmentid = $10, phonenumber = $11 " +
+                "WHERE employeeid = $12) " +
+                " RETURNING *",
+                [
+                    req.body.givenNames,
+                    req.body.lastName,
+                    req.body.dateOfBirth,
+                    req.body.email,
+                    req.body.address,
+                    req.body.contract,
+                    req.body.position,
+                    hash,
+                    req.params.managerid,
+                    req.body.departmentId,
+                    req.body.phone,
+                    req.params.employeeid
+
+                ]
+            )
+
+            res.status(200).json({
+                message: "USER ADDED",
+                data: result.rows
+            })
+        }catch (error) {
             res.status(400).json(error.message)
         }
 

@@ -7,9 +7,12 @@ const userController = require("../controller/userController")
 
 
 router.get("/userinformation/:userid",userController.userInfo);
-router.post("/login",  userController.login);
-router.post("/register/:id",userController.register);
 router.get("/logout",userController.logout);
+
+router.post("/login",  userController.login);
+router.post("/register/:managerid",userController.register);
+
+router.put("/editemployeeinfo/managerid/:employeeid", userController.update)
 
 
 
