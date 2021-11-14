@@ -12,7 +12,7 @@ router.get("/logout",userController.logout);
 router.post("/login",  userController.login);
 router.post("/register/:managerid",userController.register);
 
-router.put("/editemployeeinfo/managerid/:employeeid", userController.update)
+router.put("/editemployeeinfo/:managerid/:employeeid", userController.update)
 
 
 

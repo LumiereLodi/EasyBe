@@ -75,7 +75,10 @@ function Customer(props) {
             {/*    <AddIcon className={classes.tab} />*/}
             {/*</IconButton>*/}
 
-            <IconButton onClick={()=> setOpenDialog(true)}>
+            <IconButton onClick={()=> {
+                setOpenDialog(true);
+                appState.setEditSelectedCustomer({});
+            }}>
                 <AddIcon className={classes.tab}/>
             </IconButton>
         </div>
@@ -91,7 +94,7 @@ function Customer(props) {
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-                <AddCustomer reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
+                <AddCustomer reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer} setOpenDialog={setOpenDialog}/>
 
             </Dialog>
         </Fragment>

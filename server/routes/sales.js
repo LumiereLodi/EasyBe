@@ -14,7 +14,6 @@ router.get("/status/:projectid", sales.getStatus)
 router.get("/tasks/:projectid/:departmentid", sales.getAllTasks)
 router.get("/customerlist",salesmanagerValidation, sales.customerList);
 router.get("/customerlist/:wordToSearch", sales.customerListSearch);
-
 router.get("/defaultcustomer/", sales.defaultCustomer)
 router.get("/customerproject/:customerid", sales.getCustomerProject)
 router.get("/customer/:customerid", sales.getCustomer)
@@ -25,7 +24,7 @@ router.post("/adddescription/:projectid/:departmentid/:employeeid", sales.projec
 
 router.put("/sendproject/:projectid", sales.sendProject)
 router.put("/completeproject/:projectid", sales.completeProject)
-
-
+router.put("/updateproject/:managerid/:projectid",sales.updateProject);
+router.put("/updatecustomer/:managerid/:customerid", sales.updateCustomer);
 
 module.exports = router

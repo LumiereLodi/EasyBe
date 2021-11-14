@@ -98,6 +98,7 @@ function Project(props) {
         <div style={{marginLeft: "auto"}}>
             <IconButton onClick={()=> {
                 setOpenDialog(true);
+                appState.setEditSelectedProject({});
                 setReload(!reload)
             }}>
                 <AddIcon className={classes.tab}/>
@@ -114,7 +115,7 @@ function Project(props) {
                 fullWidth={true}
                 maxWidth={"sm"}
             >
-                <AddProject reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
+                <AddProject reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer} setOpenDialog={setOpenDialog}/>
 
             </Dialog>
         </Fragment>

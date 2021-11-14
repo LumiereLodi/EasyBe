@@ -69,6 +69,10 @@ export function createAppStore(){
         setSelectedProject (project){
             this.selectedProject = project
         },
+        editSelectedProject : {},
+        setEditSelectedProject (project){
+            this.editSelectedProject = project
+        },
         startDate: '',
         setStartDate(date){
                 this.startDate = date
@@ -103,6 +107,10 @@ export function createAppStore(){
         reload: false,
         setReload(status){
                 this.reload = status;
+        },
+        employeeRegistrationReload: false,
+        setEmployeeRegistrationReload(status){
+            this.employeeRegistrationReload = status;
         },
         ITProjectFile: '',
         RIProjectFile: '',
@@ -147,6 +155,11 @@ export function createAppStore(){
         selectedCustomer: {},
         setSelectedCustomer(customer){
                 this.selectedCustomer = customer
+        },
+
+        editSelectedCustomer: {},
+        setEditSelectedCustomer(customer){
+            this.editSelectedCustomer = customer
         },
         selectedCustomerProjects : [],
         setSelectedCustomerProjects(projects){
@@ -223,6 +236,7 @@ export function createAppStore(){
         setEditSelectedEasbeEmployee(employee){
             this.editSelectedEasbeEmployee = employee
         },
+
 
     }
 }

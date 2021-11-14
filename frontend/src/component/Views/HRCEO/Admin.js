@@ -125,7 +125,8 @@ function Admin(props) {
             <IconButton
                         onClick={()=> {
                             handlePlusButton();
-                            appState.setEditSelectedEasbeEmployee({})
+                            appState.setEditSelectedEasbeEmployee({});
+                            appState.setEmployeeRegistrationReload(true)
                         }}
             >
                 <AddIcon className={classes.tab}/>
@@ -188,7 +189,7 @@ function Admin(props) {
                 anchorOrigin={{vertical: "bottom", horizontal: "right"}}
                 open={openSnackbar}
                 onClose={()=> setOpenSnackbar(false) }
-                message={"Employee successfully added"}
+                message={"Employee information has been updated"}
                 autoHideDuration={3000}
                 classes={{root: classes.snackbar}}
 

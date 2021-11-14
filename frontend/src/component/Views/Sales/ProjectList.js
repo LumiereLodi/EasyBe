@@ -344,11 +344,19 @@ function ProjectList(props) {
         </Fragment>
     ))
 
+    const handleEditProject = ()=> {
+
+        console.log("inside handleeditproject");
+        appState.setEditSelectedProject(appState.selectedProject)
+    }
     const editProject=(
         <Fragment>
             <Grid item container xs={1} justify={"center"}>
                 <IconButton
-                    onClick={()=> props.setOpenDialog(true)}
+                    onClick={()=> {
+                        props.setOpenDialog(true);
+                        handleEditProject()
+                    }}
                 >
                     <EditIcon fontSize="small" htmlColor={"black"}/>
                 </IconButton>

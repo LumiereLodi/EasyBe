@@ -57,7 +57,34 @@ module.exports={
             res.status(400).json(error.message)
         }
     },
+    updateCustomer: async(req, res)=> {
+        try{
+            const client = await db.query ("UPDATE customer SET \n" +
+                "name = $1,\n" +
+                "\t\t email = $2, phone = $3 ,contactpersonname = $4,\n" +
+                "\t\t postalcode = $5, address = $6, createdby = $7\n" +
+                "WHERE customerid = $8 RETURNING * ", [
+                req.body.name,
+                req.body.email,
+                req.body.phone,
+                req.body.contactPerson,
+                req.body.postalCode,
+                req.body.address,
+                req.params.managerid,
+                req.params.customerid
+            ]);
+
+
+            res.json(client.rows);
+
+        }catch(error){
+            console.log(error)
+            res.status(400).json(error.message)
+        }
+    },
     addProject: async (req, res, next)=> {
+
+        console.log("WE ALSO CAME HERE")
         try {
             const outcome = await db.query("INSERT INTO \n" +
                 "project( name, customerid,\n" +
@@ -77,12 +104,44 @@ module.exports={
             next()
             //res.json(outcome.rows[0]);
 
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
+            res.status(400).json(error)
+        }
+    },
+    updateProject: async (req, res)=> {
+
+        console.log("INSIDE THE UPDATE")
+        console.log(req.body)
+        console.log(req.params.projectid)
+        try {
+            const response = await db.query("UPDATE project SET \n" +
+                " name = $1, customerid = $2,\n" +
+                "\t\t startdate = $3,\n" +
+                "\t\t enddate = $4, staff = $5,createdby = $6\n" +
+                " WHERE projectid = $7 RETURNING *", [
+                req.body.name,
+                req.body.customer,
+                req.body.startDate,
+                req.body.endDate,
+                req.body.staff,
+                req.params.managerid,
+                req.params.projectid
+            ]);
+
+
+            res.json(response.rows)
+
+            //res.json("inside")
+            //res.json(outcome.rows[0]);
+
+        } catch (error) {
+            res.status(400).json(error)
         }
     },
 
     projectFile: async(req, res) => {
+
+        console.log("DONE DONE DONE MR. BOB")
         let result;
         try{
             if(req.body.description){
@@ -113,7 +172,7 @@ module.exports={
                     ])
             }
 
-            console.log("DONE DONE DONE MR. BOB")
+
             res.status(200).json({newProject : req.newProject, projectFile:  result.rows[0]})
 
 

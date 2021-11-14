@@ -111,6 +111,12 @@ function CustomerList(props) {
         <ListComponent search={"Search by name"} filter={"Filter"} list={appState.customerList} setReload={setReload}
                        reload={reload} handleClick={handleCustomerClick} wordToSearch={search}/>
     )
+
+    const handleEditButton = ()=> {
+        appState.setEditSelectedCustomer(appState.selectedCustomer);
+
+        console.log(appState.editSelectedCustomer)
+    }
     const details = useObserver(() => (
         <Fragment>
             <ListSubheader disableGutters style={{paddingBottom: "0.5em"}}>
@@ -137,7 +143,11 @@ function CustomerList(props) {
                             <Grid container justifyContent={"flex-end"}>
                                 <Grid item>
                                     <IconButton
-                                        onClick={() => props.setOpenDialog(true)}
+                                        onClick={() => {
+                                            props.setOpenDialog(true);
+                                            handleEditButton()
+                                        }}
+
                                     >
                                         <EditIcon fontSize="small" htmlColor={"black"}/>
                                     </IconButton>

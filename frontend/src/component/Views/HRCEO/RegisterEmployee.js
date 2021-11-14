@@ -71,6 +71,13 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.secondary.light,
             color: "black"
         }
+    },
+
+    snackbar: {
+        ...theme.snackbar
+    },
+    errorSnackbar: {
+        ...theme.errorSnackbar
     }
 }))
 
@@ -80,6 +87,9 @@ function RegisterEmployee(props) {
 
     const [emailExist, setEmailExist] = useState('')
     const [openSnackbar, setOpenSnackbar] = useState(false)
+    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false)
+
+    const [employeeName, setEmployeeName] = useState('')
 
     const positions = [
         "Manager",
@@ -90,20 +100,21 @@ function RegisterEmployee(props) {
         "Part-Time"
     ]
 
-    const snackBarComponent = (
-        <Fragment>
-            <Snackbar
-                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
-                open={openSnackbar}
-                onClose={()=> setOpenSnackbar(false) }
-                message={"Successful login"}
-                autoHideDuration={3000}
-                classes={{root: classes.snackbar}}
+    // const snackBarComponent = (
+    //     <Fragment>
+    //         <Snackbar
+    //             anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+    //             open={openSnackbar}
+    //             onClose={()=> setOpenSnackbar(false) }
+    //             message={"Successful login"}
+    //             autoHideDuration={3000}
+    //             classes={{root: classes.snackbar}}
+    //
+    //         />
+    //     </Fragment>
+    //
+    // )
 
-            />
-        </Fragment>
-
-    )
 
 
     const formik = useFormik({
@@ -113,7 +124,7 @@ function RegisterEmployee(props) {
             departmentId: appState.editSelectedEasbeEmployee.departmentid || '',
             position: appState.editSelectedEasbeEmployee.position || '',
             contract:appState.editSelectedEasbeEmployee.contract || '',
-            dateOfBirth: new Date (appState.editSelectedEasbeEmployee.dateofbirth) || '',
+            dateOfBirth: appState.editSelectedEasbeEmployee.dateofbirth || '',
             phone:appState.editSelectedEasbeEmployee.phonenumber || '',
             address:appState.editSelectedEasbeEmployee.address || '',
             email:appState.editSelectedEasbeEmployee.email || '',
@@ -121,14 +132,26 @@ function RegisterEmployee(props) {
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
-            const formatedDate = values.dateOfBirth.getFullYear() + "-" + parseInt(values.dateOfBirth.getMonth() + 1) + "-" + values.dateOfBirth.getDate();
-            const updatedValues = {...values, dateOfBirth: formatedDate}
+
             try {
+                let givenDate = new Date (values.dateOfBirth)
+                const formatedDate = givenDate.getFullYear() + "-" + parseInt(givenDate.getMonth() + 1) + "-" + givenDate.getDate();
+                const updatedValues = {...values, dateOfBirth: formatedDate}
 
                 if(JSON.stringify(appState.editSelectedEasbeEmployee) !== '{}'){
+
+                    alert("in here")
                     console.log(JSON.stringify(values))
                     alert(JSON.stringify(values))
 
+                    const response = await axios.put(`/user/editemployeeinfo/${appState.userInfo.employeeid}/${appState.editSelectedEasbeEmployee.employeeid}`,
+                        updatedValues )
+
+
+                    props.setReloadDrawer(!props.reloadDrawer)
+                    props.setOpenSnackbar(true)
+                    props.setOpenEmployeeDialog(false)
+                    resetForm({})
                 }else{
 
                     const result = await axios.get("/authenticate/email/" + formik.values.email);
@@ -139,18 +162,22 @@ function RegisterEmployee(props) {
                         setEmailExist('')
 
                         const data = JSON.stringify(updatedValues)
-                        console.log(data);
+                        //alert(data);
                         const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
                             headers: {
                                 'Content-Type': "application/json"
                             }
                         });
 
-                        props.setOpenEmployeeDialog(false)
-                        props.setOpenSnackbar(true)
-                        props.setReloadDrawer(!props.reloadDrawer)
+                        //props.setOpenEmployeeDialog(false)
 
-                        resetForm()
+                        alert(response.data.data[0].lastname)
+                        setEmployeeName(response.data.data[0].lastname)
+
+                        setOpenSnackbar(true)
+                        //props.setOpenSnackbar(true)
+                        props.setReloadDrawer(!props.reloadDrawer)
+                        resetForm({})
 
                     }
                 }
@@ -159,10 +186,40 @@ function RegisterEmployee(props) {
 
             } catch (error) {
                 console.log("there was an error")
-                alert(error)
+                //alert(error)
+                setEmployeeName(formik.values.lastName)
+                setOpenErrorSnackbar(true)
             }
         }
     });
+
+    const errorSnackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openErrorSnackbar}
+                onClose={() => setOpenErrorSnackbar(false)}
+                message={`Employee ${employeeName} could not be added`}
+                autoHideDuration={6000}
+                classes={{root: classes.errorSnackbar}}
+
+            />
+        </Fragment>
+    )
+    const snackBarComponent = (
+        <Fragment>
+            <Snackbar
+                anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                message={`Employee ${employeeName} has been added`}
+                autoHideDuration={6000}
+                classes={{root: classes.snackbar}}
+
+            />
+        </Fragment>
+
+    )
 
     const details = (
         <Fragment>
@@ -419,6 +476,7 @@ function RegisterEmployee(props) {
     )
     return useObserver(() => (
         <div>
+            {errorSnackBarComponent}
             {snackBarComponent}
             {details}
         </div>

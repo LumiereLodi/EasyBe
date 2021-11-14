@@ -95,6 +95,7 @@ module.exports = {
                 data: result.rows
             })
         } catch (error) {
+            console.log(error)
             res.status(400).json(error.message)
         }
 
@@ -104,13 +105,12 @@ module.exports = {
         //WE HASH THE PASSWORD BEFORE SAVING THE USER.
         //WE DO NOT SAVE A PLAIN PASSWORD IN OUR DATABASE.
 
-        console.log("inside register route")
+        console.log("inside Update route")
         const hash = await bcrypt.hash(req.body.password, 10)
         try {
             const result = await db.query("UPDATE employee SET givenNames = $1 , lastName = $2, dateOfBirth = $3, email = $4, " +
-                "address = $5, contract = $6, position $7, password = $8, createdby = $9, departmentid = $10, phonenumber = $11 " +
-                "WHERE employeeid = $12) " +
-                " RETURNING *",
+                "address = $5, contract = $6, position = $7, password = $8, createdby = $9, departmentid = $10, phonenumber = $11 " +
+                "WHERE employeeid = $12 RETURNING *",
                 [
                     req.body.givenNames,
                     req.body.lastName,

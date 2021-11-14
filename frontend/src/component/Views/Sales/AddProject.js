@@ -21,7 +21,6 @@ import {useObserver} from "mobx-react"
 import Snackbar from "@material-ui/core/Snackbar";
 
 
-
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 //const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
 const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
@@ -87,7 +86,7 @@ const useStyles = makeStyles(theme => ({
         ...theme.errorSnackbar
     }
 
-    }))
+}))
 
 function AddProject(props) {
 
@@ -101,41 +100,55 @@ function AddProject(props) {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
-            customer: '',
-            staff: '',
-            startDate: '',
-            endDate: '',
+            name: appState.editSelectedProject.name || '',
+            customer: appState.editSelectedProject.customerid || '',
+            staff: appState.editSelectedProject.staff || '',
+            startDate: appState.editSelectedProject.startdate || '',
+            endDate: appState.editSelectedProject.enddate || '',
             description: ''
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
-            const startDateFormat = values.startDate.getFullYear() + "/" + parseInt(values.startDate.getMonth() + 1) + "/" + values.startDate.getDate();
-            const endtDateFormat = values.endDate.getFullYear() + "/" + parseInt(values.endDate.getMonth() + 1) + "/" + values.endDate.getDate();
 
-            const updatedValue = {...values, startDate: startDateFormat,endDate: endtDateFormat}
-            try{
-                console.log("inside submit")
+            try {
+
+                const givenStartDate = new Date(values.startDate);
+                const givenEndDate = new Date(values.endDate);
+                const startDateFormat = givenStartDate.getFullYear() + "/" + parseInt(givenStartDate.getMonth() + 1) + "/" + givenStartDate.getDate();
+                const endtDateFormat = givenEndDate.getFullYear() + "/" + parseInt(givenEndDate.getMonth() + 1) + "/" + givenEndDate.getDate();
+
+                const updatedValue = {...values, startDate: startDateFormat, endDate: endtDateFormat}
+
                 const data = JSON.stringify(updatedValue)
 
-                const response = await axios.post(`/Sales/addproject/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`, data, {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': "application/json"
-                    }
-                });
-                //use a snackbar to show the admin that the empoyee has been added.
-               //alert("Project " +  response.data.newProject.name +  " has been added ")
 
-                console.log(response.data.newProject)
-                setProjectName(response.data.newProject.name)
-                //console.log(response)
-              //alert(data)
-                setOpenSnackbar(true)
-                resetForm({})
+                if(JSON.stringify(appState.editSelectedProject) !== '{}'){
+                    const response = await axios.put(`/Sales/updateproject/${appState.userInfo.employeeid}/${appState.editSelectedProject.projectid}`, updatedValue);
+                    props.setOpenDialog(false)
+
+                }else{
+                    console.log("inside add")
+
+                    const response = await axios.post(`/Sales/addproject/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`, data, {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': "application/json"
+                        }
+                    });
+                    //use a snackbar to show the admin that the empoyee has been added.
+                    //alert("Project " +  response.data.newProject.name +  " has been added ")
+
+                    console.log(response.data.newProject)
+                    setProjectName(response.data.newProject.name)
+                    //console.log(response)
+                    //alert(data)
+                    setOpenSnackbar(true)
+                    resetForm({})
+                }
 
 
-            }catch (error) {
+
+            } catch (error) {
                 setProjectName(formik.values.name)
                 setOpenErrorSnackbar(true)
             }
@@ -181,7 +194,7 @@ function AddProject(props) {
 
     )
 
-    const details = useObserver (()=>(
+    const details = useObserver(() => (
         <Fragment>
 
             <Grid container justify={"center"} style={{marginBottom: "1em", marginTop: "1em"}}>
@@ -219,14 +232,14 @@ function AddProject(props) {
                 <Grid container style={{marginBottom: "0.5em"}}>
                     <Grid item xs className={classes.textFieldContainer}>
                         <FormControl fullWidth
-                                   id={"customer"}
-                                   variant={"filled"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange("customer")}
-                                   error={Boolean(formik.errors.customer)}
+                                     id={"customer"}
+                                     variant={"filled"}
+                                     className={classes.form}
+                                     onChange={formik.handleChange("customer")}
+                                     error={Boolean(formik.errors.customer)}
 
                         >
-                            <InputLabel id="customer"  >Customer</InputLabel>
+                            <InputLabel id="customer">Customer</InputLabel>
                             <Select
                                 labelId="customer"
                                 MenuProps={MenuProps}
@@ -245,10 +258,8 @@ function AddProject(props) {
                                 ))}
 
                             </Select>
-                            {Boolean(formik.errors.customer) ? <FormHelperText id="customer">Customer is required</FormHelperText> : undefined }
-
-
-
+                            {Boolean(formik.errors.customer) ?
+                                <FormHelperText id="customer">Customer is required</FormHelperText> : undefined}
 
 
                         </FormControl>
@@ -258,16 +269,16 @@ function AddProject(props) {
                 <Grid container style={{marginBottom: "0.5em"}}>
                     <Grid item xs className={classes.textFieldContainer}>
                         <FormControl fullWidth
-                                   id={"staff"}
-                                   variant={"filled"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange}
-                                   value={formik.values.staff}
-                                   error={Boolean(formik.errors.staff)}
-                                   helperText={formik.errors.staff}
+                                     id={"staff"}
+                                     variant={"filled"}
+                                     className={classes.form}
+                                     onChange={formik.handleChange}
+                                     value={formik.values.staff}
+                                     error={Boolean(formik.errors.staff)}
+                                     helperText={formik.errors.staff}
                         >
 
-                            <InputLabel id="salePerson"  >Sale Person</InputLabel>
+                            <InputLabel id="salePerson">Sale Person</InputLabel>
                             <Select
                                 labelId="staff"
                                 MenuProps={MenuProps}
@@ -279,13 +290,14 @@ function AddProject(props) {
                                     <em>None</em>
                                 </MenuItem>
                                 {appState.staffList.map((staff, index) => (
-                                    <MenuItem key={index} value={staff.employeeid} >
+                                    <MenuItem key={index} value={staff.employeeid}>
                                         {staff.givennames.split(" ", 1)[0]} {staff.lastname}
                                     </MenuItem>
                                 ))}
 
                             </Select>
-                            {Boolean(formik.errors.staff) ? <FormHelperText id="customer">Sale Person is required</FormHelperText> : undefined }
+                            {Boolean(formik.errors.staff) ?
+                                <FormHelperText id="customer">Sale Person is required</FormHelperText> : undefined}
                         </FormControl>
                     </Grid>
 
@@ -337,7 +349,7 @@ function AddProject(props) {
                                 value={formik.values.endDate}
                                 error={Boolean(formik.errors.endDate)}
                                 helperText={formik.errors.endDate}
-                                minDate={formik.values.startDate }
+                                minDate={formik.values.startDate}
                                 autoOk
 
                             />
@@ -345,30 +357,33 @@ function AddProject(props) {
                     </Grid>
 
                 </Grid>
-                <Grid container style={{marginBottom: "0.5em"}}>
 
-                    <Grid item sm className={classes.textFieldContainer}>
-                        <TextField fullWidth
-                                   id={"description"}
-                                   variant={"filled"}
-                                   InputProps={{
-                                       disableUnderline: true,
-                                       autoComplete: 'new-password',
-                                       form: {
-                                           autoComplete: 'off'
-                                       }
-                                   }}
-                                   label={"Description"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange}
-                                   value={formik.values.description}
-                                   multiline
-                                   rows={5}
+                {JSON.stringify(appState.editSelectedProject) === '{}' ?
+                    <Grid container style={{marginBottom: "0.5em"}}>
 
-                        />
-                    </Grid>
+                        <Grid item sm className={classes.textFieldContainer}>
+                            <TextField fullWidth
+                                       id={"description"}
+                                       variant={"filled"}
+                                       InputProps={{
+                                           disableUnderline: true,
+                                           autoComplete: 'new-password',
+                                           form: {
+                                               autoComplete: 'off'
+                                           }
+                                       }}
+                                       label={"Description"}
+                                       className={classes.form}
+                                       onChange={formik.handleChange}
+                                       value={formik.values.description}
+                                       multiline
+                                       rows={5}
 
-                </Grid>
+                            />
+                        </Grid>
+
+                    </Grid> : undefined}
+
                 <Grid container justify={"center"}>
                     <Grid item>
                         <Button className={classes.addButton} type={"submit"}>
@@ -381,7 +396,7 @@ function AddProject(props) {
         </Fragment>
 
     ))
-    return useObserver (()=> (
+    return useObserver(() => (
         <div>
             {snackBarComponent}
             {errorSnackBarComponent}

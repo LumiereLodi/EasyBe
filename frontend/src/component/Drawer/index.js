@@ -276,12 +276,23 @@ function AppDrawer(props) {
                     }
                     /********GET DEFAULT VALUES FOR PROJECT********/
                     if(appState.leftList[0]){
-                        const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                        console.log(defaultproject.data.project);
-                        if(defaultproject.data)
+
+                        if(JSON.stringify(appState.editSelectedProject) === '{}'){
+                            const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                            console.log(defaultproject.data.project);
+
                             appState.setSelectedProject(defaultproject.data.project[0]);
                             appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
                             appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                        }else{
+                            const defaultproject = await axios.get(`/project/projectlist/${appState.editSelectedProject.projectid}`);
+                            console.log(defaultproject.data.project);
+
+                            appState.setSelectedProject(defaultproject.data.project[0]);
+                            appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                            appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                        }
+
                     }else{
                         appState.setSelectedProject({});
                         appState.setCompletedTask('')
@@ -297,12 +308,28 @@ function AppDrawer(props) {
 
                         /********GET DEFAULT VALUES FOR PROJECT********/
 
-                        const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                        console.log(defaultproject.data.project);
-                        appState.setSelectedProject(defaultproject.data.project[0]);
+                        if(appState.leftList[0]){
+                            if(JSON.stringify(appState.editSelectedProject) === '{}'){
+                                const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                                console.log(defaultproject.data.project);
 
-                        appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                        appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                                appState.setSelectedProject(defaultproject.data.project[0]);
+                                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                            }else{
+                                const defaultproject = await axios.get(`/project/projectlist/${appState.editSelectedProject.projectid}`);
+                                console.log(defaultproject.data.project);
+
+                                appState.setSelectedProject(defaultproject.data.project[0]);
+                                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                            }
+                        }else{
+                            appState.setSelectedProject({});
+                            appState.setCompletedTask('')
+                            appState.setActiveTask('')
+                        }
+
                     }
                     else  if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
                         const projectlistAll = await axios.get(`/project/taskstafflist/${appState.userInfo.employeeid}`);
@@ -403,9 +430,17 @@ function AppDrawer(props) {
                 console.log(staffonlylist.data)
                 /******* DEFAULT CUSTOMER VALUES ********/
                 if(appState.customerList[0]){
-                    const defaultcustomer = await axios.get(`/sales/customer/${appState.customerList[0].customerid}`);
-                    appState.setSelectedCustomer(defaultcustomer.data);
-                    console.log(defaultcustomer.data);
+
+                    if(JSON.stringify(appState.editSelectedCustomer) === '{}'){
+                        const defaultcustomer = await axios.get(`/sales/customer/${appState.customerList[0].customerid}`);
+                        appState.setSelectedCustomer(defaultcustomer.data);
+                        console.log(defaultcustomer.data);
+                    }else{
+                        const defaultcustomer = await axios.get(`/sales/customer/${appState.editSelectedCustomer.customerid}`);
+                        appState.setSelectedCustomer(defaultcustomer.data);
+                        console.log(defaultcustomer.data);
+                    }
+
                 }
 
 
@@ -442,13 +477,21 @@ function AppDrawer(props) {
                     console.log(response.data.departmentList)
 
                     if(appState.allEasybeEmployeeList[0]){
-                        const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
 
-                        appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
+                        if(JSON.stringify(appState.editSelectedEasbeEmployee) === '{}'){
+                            const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.allEasybeEmployeeList[0].employeeid}`)
+                            appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
 
+                            const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${appState.allEasybeEmployeeList[0].employeeid}`)
+                            appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
+                        }else{
+                            const selectedEasybeEmployee = await axios.get(`/hr/alleasybeemployeelistdetails/${appState.selectedEasbeEmployee.employeeid}`)
+                            appState.setSelectedEasbeEmployee(selectedEasybeEmployee.data)
 
-                        const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${appState.allEasybeEmployeeList[0].employeeid}`)
-                        appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
+                            const selectedEmployeeTasks = await axios.get(`/hr/alleasybeemployeelistdetails/tasks/${appState.selectedEasbeEmployee.employeeid}`)
+                            appState.setSelecteEmployeeTasks(selectedEmployeeTasks.data)
+                        }
+
 
                     }
 

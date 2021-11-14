@@ -95,6 +95,8 @@ function EmployeeList(props) {
         "Lumiere"
     ];
     const InformationHeader = [
+        "Last Name",
+        "First Name",
         "Department",
         "Position",
         "Phone Number",
@@ -106,6 +108,9 @@ function EmployeeList(props) {
         "Created By"
     ];
     const InformationData = [
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.lastname ? appState.selectedEasbeEmployee.lastname : '...' : '...',
+        appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.givennames ? appState.selectedEasbeEmployee.givennames : '...' : '...',
+
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.name ? appState.selectedEasbeEmployee.name : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.position ? appState.selectedEasbeEmployee.position : '...' : '...',
         appState.selectedEasbeEmployee ? appState.selectedEasbeEmployee.phonenumber ? appState.selectedEasbeEmployee.phonenumber : '...' : '...',
@@ -119,7 +124,8 @@ function EmployeeList(props) {
 
 
     const handleClickEdit = () => {
-        appState.setEditSelectedEasbeEmployee(appState.selectedEasbeEmployee)
+        appState.setEditSelectedEasbeEmployee(appState.selectedEasbeEmployee);
+        appState.setEmployeeRegistrationReload(true)
 
     }
     const editButton = (

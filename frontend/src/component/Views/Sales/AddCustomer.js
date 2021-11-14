@@ -90,42 +90,54 @@ function AddCustomer(props) {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
-            contactPerson: '',
-            postalCode: '',
-            phone: '',
-            address: '',
-            email: ''
+            name: appState.editSelectedCustomer.name || '',
+            contactPerson: appState.editSelectedCustomer.contactpersonname || '',
+            postalCode: appState.editSelectedCustomer.postalcode || '',
+            phone: appState.editSelectedCustomer.phone || '',
+            address: appState.editSelectedCustomer.address || '',
+            email: appState.editSelectedCustomer.email || ''
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
 
             try {
-                const result = await axios.get("/Sales/customer/email/" + formik.values.email);
-                if (result.data.exist) {
-                    setEmailExist("Email already exists")
-                } else {
-                    console.log("email does not exists")
-                    setEmailExist('')
 
-                    const data = JSON.stringify(values)
+                if(JSON.stringify(appState.editSelectedCustomer) !== '{}'){
+                    const response = await axios.put(`/Sales/updatecustomer/${appState.userInfo.employeeid}/${appState.editSelectedCustomer.customerid}`,
+                        values )
 
-                    const response = await axios.post("/Sales/addcustomer/" + appState.userInfo.employeeid, data, {
-                        withCredentials: true,
-                        headers: {
-                            'Content-Type': "application/json"
-                        }
-                    });
-                    //use a snackbar to show the admin that the empoyee has been added.
-                    //alert("Customer " + response.data.name + " has been added")
-                    console.log(response)
-                    setProjectName(response.data.name)
-
-                    setOpenSnackbar(true)
-                    resetForm({})
                     props.setReloadDrawer(!props.reloadDrawer)
+                    props.setOpenDialog(false)
+                    resetForm({})
+                }else{
+                    const result = await axios.get("/Sales/customer/email/" + formik.values.email);
+                    if (result.data.exist) {
+                        setEmailExist("Email already exists")
+                    } else {
+                        console.log("email does not exists")
+                        setEmailExist('')
 
+                        const data = JSON.stringify(values)
+
+                        const response = await axios.post("/Sales/addcustomer/" + appState.userInfo.employeeid, data, {
+                            withCredentials: true,
+                            headers: {
+                                'Content-Type': "application/json"
+                            }
+                        });
+                        //use a snackbar to show the admin that the empoyee has been added.
+                        //alert("Customer " + response.data.name + " has been added")
+                        console.log(response)
+                        setProjectName(response.data.name)
+
+                        setOpenSnackbar(true)
+                        resetForm({})
+                        props.setReloadDrawer(!props.reloadDrawer)
+
+                    }
                 }
+
+
 
 
             } catch (error) {
@@ -145,7 +157,7 @@ function AddCustomer(props) {
                 anchorOrigin={{vertical: "bottom", horizontal: "right"}}
                 open={openErrorSnackbar}
                 onClose={() => setOpenErrorSnackbar(false)}
-                message={`Project ${projectName} could not be added`}
+                message={`Customer ${projectName} could not be added`}
                 autoHideDuration={6000}
                 classes={{root: classes.errorSnackbar}}
 
