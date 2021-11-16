@@ -16,6 +16,7 @@ import {useFormik} from "formik";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import {useObserver} from "mobx-react"
 import {useAppState} from "../../WithStore";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -95,7 +96,7 @@ const useStyles = makeStyles(theme => ({
 
 function ProjectList(props) {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    const [openTaskDialog, setOpenTaskDialog] = useState(false);
     const appState = useAppState();
     const [reload, setReload] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false)
@@ -104,14 +105,20 @@ function ProjectList(props) {
 
     const [taskName, setTaskName] = useState('')
 
+    const handleEditButton = (index)=> {
+        appState.setEditSelectedTask(appState.taskList[index])
 
+        // console.log(formik.values.name)
+        // console.log(appState.editSelectedTask.name)
+
+    }
     const formik = useFormik({
         initialValues: {
-            name: '',
-            staff: '',
-            startDate: '',
-            endDate: '',
-            description: ''
+            name:appState.test || '',
+            staff:appState.editSelectedTask.staff ||  '',
+            startDate:appState.editSelectedTask.startdate ||  '',
+            endDate:appState.editSelectedTask.enddate ||  '',
+            description:appState.editSelectedTask.description ||  ''
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
@@ -134,9 +141,7 @@ function ProjectList(props) {
         }catch (error) {
             setTaskName(formik.values.name)
             setOpenErrorSnackbar(true)
-        }
-
-
+            }
 
         }
     });
@@ -240,6 +245,28 @@ function ProjectList(props) {
             appState.setRIProjectFile(RIProjectFile);
             appState.setITProjectFile(ITProjectFile);
 
+            const status = await axios.get(`/sales/status/${appState.selectedProject.projectid}`)
+            const location = await axios.get(`/sales/location/${appState.selectedProject.projectid}`)
+
+            //enable or disable send button
+            if (location.data.location === '1') {
+                appState.setEnableSendButton(true)
+                console.log(location.data.location)
+            }else {
+                appState.setEnableSendButton(false)
+
+            }
+
+            //enable or disable complete button
+
+            if (status.data.status === '2') {
+
+                console.log("project: " + appState.selectedProject.projectid + ", is completed with status: " + status.data.status)
+                appState.setEnableCompletedButton(true)
+            } else {
+                console.log("project is NOT completed with status: " + status.data.status)
+                appState.setEnableCompletedButton(false)
+            }
 
             props.setReload(!props.reload)
 
@@ -315,8 +342,6 @@ function ProjectList(props) {
                             appState.setSelectedProject({});
 
                         }
-
-
                 }
             }
         }catch (e) {
@@ -363,6 +388,7 @@ function ProjectList(props) {
                                    value={formik.values.name}
                                    error={Boolean(formik.errors.name)}
                                    helperText={formik.errors.name}
+                                   // defaultValue={appState.editSelectedTask.name}
                         />
                     </Grid>
 
@@ -388,7 +414,6 @@ function ProjectList(props) {
                                 minDate={new Date(appState.selectedProject.startdate)}
                                 maxDate={formik.values.endDate}
                                 autoOk
-
 
                             />
                         </MuiPickersUtilsProvider>
@@ -499,18 +524,19 @@ function ProjectList(props) {
         <Fragment>
             <Button
                 className={classes.assignButton}
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setOpenTaskDialog(true);
+                    appState.setEditSelectedTask({})
+                }}
                 classes={{disabled: classes.completedButtonDisabled}}
                 disabled={appState.enableCompletedButton}
             >
                 Assign Task
             </Button>
 
-            <Dialog open={open} onClose={() => setOpen(false)} className={classes.dialogContainer}>
+            <Dialog open={openTaskDialog} onClose={() => setOpenTaskDialog(false)} className={classes.dialogContainer}>
                 <DialogTitle id="form-dialog-title">Assign Task</DialogTitle>
                 {form}
-                {/*<AddProject/>*/}
-
             </Dialog>
 
         </Fragment>
@@ -532,24 +558,29 @@ function ProjectList(props) {
             </Button>
         </Fragment>
     )
-    const editButton = (
-        <Fragment>
-            <Grid item container xs={1} justify={"center"}>
-                <IconButton
-                    onClick={() => setOpen(true)}
-                >
-                    <EditIcon fontSize="small" htmlColor={"black"}/>
-                </IconButton>
 
-            </Grid>
-        </Fragment>
-    )
+
+    // const editButton = (
+    //     <Fragment>
+    //         <Grid item container xs={1} justify={"center"}>
+    //             <IconButton
+    //                 onClick={() => {
+    //                     setOpenTaskDialog(true);
+    //                     handleEditButton();
+    //                 }}
+    //             >
+    //                 <EditIcon fontSize="small" htmlColor={"black"}/>
+    //             </IconButton>
+    //
+    //         </Grid>
+    //     </Fragment>
+    // )
     const detail = (
         <Fragment>
             <ProjectFile assignButton={appState.userInfo.position === "Manager" ? assignButton : undefined}
-                         editButton={appState.userInfo.position === "Manager" ? editButton : undefined}
+                         // editButton={appState.userInfo.position === "Manager" ? editButton : undefined}
                          completedButton={appState.userInfo.position === "Staff" ? completedButton : undefined}
-                         />
+                         setOpenTaskDialog={setOpenTaskDialog} handleEditButton={handleEditButton}/>
         </Fragment>
 
     )
@@ -581,7 +612,7 @@ function ProjectList(props) {
         </Fragment>
     )
 
-    return (
+    return useObserver(()=>(
         <div>
             {errorSnackBarComponent}
             {snackBarComponent}
@@ -593,7 +624,7 @@ function ProjectList(props) {
                 <Details details={detail}/>
             </Grid>
         </div>
-    );
+    ));
 }
 
 export default ProjectList;

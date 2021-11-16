@@ -306,7 +306,7 @@ function AppDrawer(props) {
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
 
-                        /********GET DEFAULT VALUES FOR PROJECT********/
+                        /********GET DEFAULT VALUES FOR PROJECTass********/
 
                         if(appState.leftList[0]){
                             if(JSON.stringify(appState.editSelectedProject) === '{}'){
@@ -366,21 +366,6 @@ function AppDrawer(props) {
 
                 /********GET DEFAULT VALUES FOR PROJECT********/
 
-                // const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                // console.log(defaultproject.data.project);
-                // appState.setSelectedProject(defaultproject.data.project[0]);
-
-                // const startDate = new Date(defaultproject.data.project[0].startdate);
-                // const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
-                // appState.setStartDate(startDateFormat)
-                //
-                // const endDate = new Date(defaultproject.data.project[0].enddate)
-                // const endDateFormat = endDate.getDate() + "/" + endDate.getMonth() + "/" + endDate.getFullYear();
-                // appState.setEndDate(endDateFormat)
-
-                // appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                // appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
-
 
                 const activities = await axios.get(`/sales/tasks/${appState.selectedProject.projectid}/${appState.userInfo.departmentid}`)
                 appState.setTaskList(activities.data)
@@ -401,8 +386,11 @@ function AppDrawer(props) {
                 //enable or disable complete button
 
                 if (status.data.status === '2') {
+
+                    console.log("project: " + appState.selectedProject.projectid + ", is completed with status: " + status.data.status)
                     appState.setEnableCompletedButton(true)
                 } else {
+                    console.log("project is NOT completed with status: " + status.data.status)
                     appState.setEnableCompletedButton(false)
                 }
 

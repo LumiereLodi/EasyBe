@@ -175,7 +175,6 @@ function ProjectFile(props) {
         }
     }
     const saveSMProjectfile = async () => {
-        //console.log(SMDescription)
         try {
             const result = await axios.post(`/project/projectfile/description/${appState.selectedProject.projectid}/${appState.userInfo.employeeid}/${appState.userInfo.departmentid}`,
                 {description: SMDescription});
@@ -187,6 +186,21 @@ function ProjectFile(props) {
 
     }
 
+    // const editTaskButton = (
+    //     <Fragment>
+    //         <Grid item container xs={1} justify={"center"}>
+    //             <IconButton
+    //                 onClick={() => {
+    //                     props.setOpenTaskDialog(true);
+    //                     // handleEditButton();
+    //                 }}
+    //             >
+    //                 <EditIcon fontSize="small" htmlColor={"black"}/>
+    //             </IconButton>
+    //
+    //         </Grid>
+    //     </Fragment>
+    // )
     const projectActivities = (
         <Fragment>
             <Grid item style={{marginTop: "2em", marginBottom: "2em"}}>
@@ -211,11 +225,6 @@ function ProjectFile(props) {
                                     Assign To
                                 </Typography>
                             </Grid>
-                            {/*<Grid item container xs justify={"center"} >*/}
-                            {/*    <Typography style={{fontWeight: "bold"}}>*/}
-                            {/*        Deadline*/}
-                            {/*    </Typography>*/}
-                            {/*</Grid>*/}
                             <Grid item container xs justify={"center"}>
                                 <Typography style={{fontWeight: "bold"}}>
                                     Status
@@ -226,29 +235,22 @@ function ProjectFile(props) {
                                     Manager
                                 </Typography>
                             </Grid>
-                            {(props.editButton && appState.userInfo.position === "Manager") ?
+                            {(appState.userInfo.departmentid === '2001' || appState.userInfo.departmentid === '2000') ?
                                 <Grid item container xs={1} justify={"center"}>
                                     <Typography style={{fontWeight: "bold"}}>
 
                                     </Typography>
                                 </Grid>
                                 : undefined}
-
-
                         </Grid>
                     </ListSubheader>
-
-
                     {appState.taskList.map((task, index) => (
-
                         <Grid item container style={{marginBottom: "0.3em"}}>
-
                             <Grid item container xs justify={"center"} alignItems={"center"}>
                                 <Typography>
                                     {/***project.name.length < 20 ? project.name : <span>{project.name.substring(0, 20)}...</span> **/}
                                     {task.name.length < 20 ? task.name : <span>{task.name.substring(0, 20)}...</span>}
                                 </Typography>
-
                             </Grid>
                             <Grid item container xs justify={"center"} alignItems={"center"}>
                                 <Typography>
@@ -257,11 +259,6 @@ function ProjectFile(props) {
                                         <span>{task.lastname.substring(0, 20)}...</span>}
                                 </Typography>
                             </Grid>
-                            {/*<Grid item container xs justify={"center"} alignItems={"center"} >*/}
-                            {/*    <Typography>*/}
-                            {/*        Deadline*/}
-                            {/*    </Typography>*/}
-                            {/*</Grid>*/}
                             <Grid item container xs justify={"center"} alignItems={"center"}>
                                 <Typography>
                                     {task.status === '0' ? "In Progress" : task.status === '1' ? "Completed" : task.status === '2' ? "Delayed" : undefined}
@@ -272,15 +269,20 @@ function ProjectFile(props) {
                                     {task.departmentid}
                                 </Typography>
                             </Grid>
-                            {/*<Grid item container xs={1} justify={"center"} >*/}
-                            {/*    <IconButton*/}
-                            {/*        onClick={()=> props.openDialog ? props.openDialog(true) : undefined}*/}
-                            {/*    >*/}
-                            {/*        <EditIcon fontSize="small" htmlColor={"black"}/>*/}
-                            {/*    </IconButton>*/}
+                            {/*{(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}*/}
+                            {(appState.userInfo.departmentid === '2001' || appState.userInfo.departmentid === '2000') ?
+                                <Grid item container xs={1} justify={"center"}>
+                                    <IconButton
+                                        onClick={() => {
+                                            props.setOpenTaskDialog(true);
+                                            //props.handleEditButton(index);
+                                            appState.setTest(task.name)
+                                        }}
+                                    >
+                                        <EditIcon fontSize="small" htmlColor={"black"}/>
+                                    </IconButton>
 
-                            {/*</Grid>*/}
-                            {(props.editButton && appState.userInfo.position === "Manager") ? props.editButton : undefined}
+                                </Grid> : undefined}
 
                         </Grid>
                     ))}

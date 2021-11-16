@@ -237,6 +237,15 @@ export function createAppStore(){
             this.editSelectedEasbeEmployee = employee
         },
 
+        editSelectedTask: {},
+        setEditSelectedTask(task){
+            this.editSelectedTask = task
+        },
+        test: '',
+        setTest(word){
+                this.test = word
+        }
+
 
     }
 }
