@@ -277,13 +277,36 @@ function AppDrawer(props) {
                     /********GET DEFAULT VALUES FOR PROJECT********/
                     if(appState.leftList[0]){
 
-                        if(JSON.stringify(appState.editSelectedProject) === '{}'){
-                            const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
-                            console.log(defaultproject.data.project);
 
-                            appState.setSelectedProject(defaultproject.data.project[0]);
-                            appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
-                            appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                        if(JSON.stringify(appState.editSelectedProject) === '{}'){
+                            if(JSON.stringify(appState.editSelectedTask) !== '{}'){
+                                const defaultproject = await axios.get(`/project/projectlist/${appState.selectedProject.projectid}`);
+                                console.log(defaultproject.data.project);
+
+                                appState.setSelectedProject(defaultproject.data.project[0]);
+                                appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                                appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                            }
+                            else{
+
+                                if(appState.assignTask){
+                                    const defaultproject = await axios.get(`/project/projectlist/${appState.selectedProject.projectid}`);
+                                    console.log(defaultproject.data.project);
+
+                                    appState.setSelectedProject(defaultproject.data.project[0]);
+                                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                                }else{
+                                    const defaultproject = await axios.get(`/project/projectlist/${appState.leftList[0].projectid}`);
+                                    console.log(defaultproject.data.project);
+                                    appState.setSelectedProject(defaultproject.data.project[0]);
+                                    appState.setCompletedTask(defaultproject.data.completedTask[0].taskcompleted)
+                                    appState.setActiveTask(defaultproject.data.activeTask[0].taskactive)
+                                }
+
+                            }
+
+
                         }else{
                             const defaultproject = await axios.get(`/project/projectlist/${appState.editSelectedProject.projectid}`);
                             console.log(defaultproject.data.project);

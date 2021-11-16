@@ -275,8 +275,8 @@ function ProjectFile(props) {
                                     <IconButton
                                         onClick={() => {
                                             props.setOpenTaskDialog(true);
-                                            //props.handleEditButton(index);
-                                            appState.setTest(task.name)
+                                            props.handleEditButton(index);
+                                            //appState.setTest(task.name)
                                         }}
                                     >
                                         <EditIcon fontSize="small" htmlColor={"black"}/>

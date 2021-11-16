@@ -233,6 +233,26 @@ module.exports = {
             console.error(err.message)
         }
     },
+    updateTask: async (req, res)=> {
+
+        try {
+            const results = await db.query("UPDATE task SET " +
+                "name = $1, startdate = $2, enddate = $3, description = $4, staff = $5 " +
+                "WHERE taskid = $6 returning name ",
+                [
+                    req.body.name,
+                    req.body.startDate,
+                    req.body.endDate,
+                    req.body.description,
+                    req.body.staff,
+                    req.params.taskid
+                ])
+            res.json(results.rows[0]);
+
+        } catch (err) {
+            console.error(err.message)
+        }
+    },
     taskListStaff: async (req, res)=> {
 
         try {

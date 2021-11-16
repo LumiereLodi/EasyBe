@@ -18,17 +18,11 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import {useObserver} from "mobx-react"
 import {useAppState} from "../../WithStore";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import AddProject from "../Sales/AddProject"
 import Snackbar from "@material-ui/core/Snackbar";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-
+import AssignTask from "../Sales/AssignTask";
 const formValidation = yup.object({
     staff: yup.string().required('Select a Sale Person'),
     startDate: yup.string().required('Start Date is required').typeError('Enter a valid Date'),
@@ -108,17 +102,14 @@ function ProjectList(props) {
     const handleEditButton = (index)=> {
         appState.setEditSelectedTask(appState.taskList[index])
 
-        // console.log(formik.values.name)
-        // console.log(appState.editSelectedTask.name)
-
     }
     const formik = useFormik({
         initialValues: {
-            name:appState.test || '',
-            staff:appState.editSelectedTask.staff ||  '',
-            startDate:appState.editSelectedTask.startdate ||  '',
-            endDate:appState.editSelectedTask.enddate ||  '',
-            description:appState.editSelectedTask.description ||  ''
+            name: appState.editSelectedTask.name || null,
+            staff: '',
+            startDate: '',
+            endDate:'',
+            description: ''
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
@@ -356,177 +347,15 @@ function ProjectList(props) {
         <ProjectListComponent search={"Search by name"} filter={"Filter"} list={appState.leftList}
                               handleClick={handleProjectCLick} wordToSearch={search}/>
     )
-    const MenuProps = {
-        PaperProps: {
-            style: {
-                maxHeight: 225,
-                width: 250,
-            },
-        },
-    };
 
-    const form = (
-        <Fragment>
-            <form onSubmit={formik.handleSubmit}>
-
-
-                <Grid container style={{marginBottom: "0.5em", marginTop: "1em"}}>
-                    <Grid item xs className={classes.textFieldContainer}>
-                        <TextField fullWidth
-                                   id={"name"}
-                                   variant={"filled"}
-                                   InputProps={{
-                                       disableUnderline: true,
-                                       autoComplete: 'new-password',
-                                       form: {
-                                           autoComplete: 'off'
-                                       }
-                                   }}
-                                   label={"Task Name"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange}
-                                   value={formik.values.name}
-                                   error={Boolean(formik.errors.name)}
-                                   helperText={formik.errors.name}
-                                   // defaultValue={appState.editSelectedTask.name}
-                        />
-                    </Grid>
-
-                </Grid>
-                <Grid container style={{marginBottom: "0.5em", marginTop: "2em"}}>
-
-                    <Grid item sm className={classes.textFieldContainer} style={{marginRight: "1em"}}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <DatePicker
-                                fullWidth
-                                name={"startDate"}
-                                id={"startDate"}
-                                clearable
-                                format="dd/MM/yyyy"
-                                label="Start Date"
-                                inputVariant="filled"
-                                InputProps={{disableUnderline: true}}
-                                className={classes.form}
-                                onChange={option => formik.setFieldValue("startDate", option)}
-                                value={formik.values.startDate}
-                                error={Boolean(formik.errors.startDate)}
-                                helperText={formik.errors.startDate}
-                                minDate={new Date(appState.selectedProject.startdate)}
-                                maxDate={formik.values.endDate}
-                                autoOk
-
-                            />
-                        </MuiPickersUtilsProvider>
-
-                    </Grid>
-
-
-                    <Grid item sm className={classes.textFieldContainer}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <DatePicker
-                                fullWidth
-                                name={"endDate"}
-                                id={"endDate"}
-                                clearable
-                                format="dd/MM/yyyy"
-                                label="End Date"
-                                inputVariant="filled"
-                                InputProps={{disableUnderline: true}}
-                                className={classes.form}
-                                onChange={option => formik.setFieldValue("endDate", option)}
-                                value={formik.values.endDate}
-                                error={Boolean(formik.errors.endDate)}
-                                helperText={formik.errors.endDate}
-                                minDate={formik.values.startDate}
-                                maxDate={new Date(appState.selectedProject.enddate)}
-                                autoOk
-
-                            />
-                        </MuiPickersUtilsProvider>
-                    </Grid>
-
-                </Grid>
-                <Grid container style={{marginBottom: "0.5em", marginTop: "1em"}}>
-                    <Grid item xs className={classes.textFieldContainer}>
-                        <FormControl fullWidth
-                                     id={"staff"}
-                                     variant={"filled"}
-                                     className={classes.form}
-                                     onChange={formik.handleChange("staff")}
-                                     error={Boolean(formik.errors.staff)}
-
-                        >
-                            <InputLabel id="staff">Staff</InputLabel>
-                            <Select
-                                labelId="staff"
-                                MenuProps={MenuProps}
-                                className={classes.selectInput}
-                                onChange={formik.handleChange("staff")}
-                                value={formik.values.staff}
-                                disableUnderline
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                {appState.departmentStaffonlyList.map((staff, index) => (
-                                    <MenuItem key={index} value={staff.employeeid}>
-                                        {staff.lastname}
-                                    </MenuItem>
-                                ))}
-
-                            </Select>
-                            {Boolean(formik.errors.staff) ?
-                                <FormHelperText id="staff">Staff is required</FormHelperText> : undefined}
-
-
-                        </FormControl>
-                    </Grid>
-
-                </Grid>
-
-                <Grid container style={{marginTop: "2em"}}>
-
-                    <Grid item sm className={classes.textFieldContainer}>
-                        <TextField fullWidth
-                                   id={"description"}
-                                   variant={"filled"}
-                                   InputProps={{
-                                       disableUnderline: true,
-                                       autoComplete: 'new-password',
-                                       form: {
-                                           autoComplete: 'off'
-                                       }
-                                   }}
-                                   label={"Description"}
-                                   className={classes.form}
-                                   onChange={formik.handleChange}
-                                   value={formik.values.description}
-                                   multiline
-                                   rows={10}
-
-                        />
-                    </Grid>
-
-                </Grid>
-
-                <Grid container justify={"center"} style={{marginTop: "1em"}}>
-                    <Grid item>
-                        <Button className={classes.assignButton} type={"submit"}>
-                            Assign
-                        </Button>
-                    </Grid>
-                </Grid>
-            </form>
-
-        </Fragment>
-    )
     const assignButton = (
         <Fragment>
             <Button
                 className={classes.assignButton}
                 onClick={() => {
                     setOpenTaskDialog(true);
-                    appState.setEditSelectedTask({})
+                    appState.setEditSelectedTask({});
+                    appState.setAssignTask(true)
                 }}
                 classes={{disabled: classes.completedButtonDisabled}}
                 disabled={appState.enableCompletedButton}
@@ -534,9 +363,14 @@ function ProjectList(props) {
                 Assign Task
             </Button>
 
-            <Dialog open={openTaskDialog} onClose={() => setOpenTaskDialog(false)} className={classes.dialogContainer}>
+            <Dialog open={openTaskDialog} onClose={() => {
+                setOpenTaskDialog(false);
+                appState.setAssignTask(false)
+            }} className={classes.dialogContainer}>
                 <DialogTitle id="form-dialog-title">Assign Task</DialogTitle>
-                {form}
+                {/*{form}*/}
+
+                <AssignTask setOpenTaskDialog={setOpenTaskDialog} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>
             </Dialog>
 
         </Fragment>
@@ -560,21 +394,7 @@ function ProjectList(props) {
     )
 
 
-    // const editButton = (
-    //     <Fragment>
-    //         <Grid item container xs={1} justify={"center"}>
-    //             <IconButton
-    //                 onClick={() => {
-    //                     setOpenTaskDialog(true);
-    //                     handleEditButton();
-    //                 }}
-    //             >
-    //                 <EditIcon fontSize="small" htmlColor={"black"}/>
-    //             </IconButton>
-    //
-    //         </Grid>
-    //     </Fragment>
-    // )
+
     const detail = (
         <Fragment>
             <ProjectFile assignButton={appState.userInfo.position === "Manager" ? assignButton : undefined}

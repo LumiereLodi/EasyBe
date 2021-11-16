@@ -241,9 +241,9 @@ export function createAppStore(){
         setEditSelectedTask(task){
             this.editSelectedTask = task
         },
-        test: '',
-        setTest(word){
-                this.test = word
+        assignTask: false,
+        setAssignTask(status){
+                this.assignTask = status
         }
 
 
