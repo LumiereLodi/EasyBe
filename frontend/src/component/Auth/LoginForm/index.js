@@ -1,4 +1,4 @@
-import React, {Fragment,useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {
     Grid,
     Paper,
@@ -10,9 +10,7 @@ import {useAppState} from "../../WithStore"
 import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
 import Snackbar from '@material-ui/core/Snackbar';
-
 import easybeLogo from "../../../assets/EasyBe.png";
-
 import * as yup from 'yup';
 import {useFormik} from 'formik';
 import axios from "axios";
@@ -24,22 +22,16 @@ const loginForm = yup.object({
 })
 const useStyles = makeStyles(theme => ({
     mainContainer: {
-        
         marginTop: "5em",
-
         [theme.breakpoints.down("xs")]: {
-
             marginTop: 0,
             width: "100%",
             height: "100%"
         }
-
     },
     paperContainer: {
         backgroundColor: theme.palette.primary.main,
         width: "25em",
-       
-        
         [theme.breakpoints.down("xs")]: {
             width: "100%",
             height: "46em"
@@ -55,7 +47,6 @@ const useStyles = makeStyles(theme => ({
         color: "black",
         textDecoration: "none",
         fontSize: 14
-
     },
     textContainer: {
         backgroundColor: theme.palette.secondary.main,
@@ -69,8 +60,6 @@ const useStyles = makeStyles(theme => ({
     dividerContainer: {
         marginTop: "1.5em",
         marginBottom: "1em",
-
-
     },
     adminLink: {
         backgroundColor: theme.palette.secondary.main,
@@ -78,7 +67,6 @@ const useStyles = makeStyles(theme => ({
         width: 325,
         borderRadius: "10px",
         marginBottom: "2em"
-
     },
     form: {
         "& .MuiInputBase-root": {
@@ -87,11 +75,8 @@ const useStyles = makeStyles(theme => ({
             width: 325,
             borderRadius: "2.5px"
         },
-
         marginBottom: "2em"
-
     },
-
     loginButton: {
         ...theme.typography.login,
         backgroundColor: theme.palette.secondary.main,
@@ -109,16 +94,17 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-
 function Index(props) {
     const classes = useStyles();
     const [emailMessage, setEmailMessage] = useState('')
     const [passwordMessage, setPasswordMessage] = useState('')
     const appState = useAppState()
     const history = useHistory();
-
     const [openSnackbar, setOpenSnackbar] = useState(false)
+
     useEffect(() => {
+
+        /**EVERY TIME YOU RELOAD THE PAGE THIS FUNCTION IS RUN TO CHECK WTHE USER AUTHENTICATION***/
         async function authenticate() {
             const result = await axios.get("/authenticate", {
                 withCredentials: true
@@ -146,9 +132,7 @@ function Index(props) {
                             'Content-Type': "application/json"
                         },
                         withCredentials: true,
-                        //credentials: 'include'
                     });
-                console.log(response.data.status)
                 if (!response.data.status) {
                     setEmailMessage("Incorrect Information. Try again.");
                     setPasswordMessage("Incorrect Information. Try again.");
@@ -156,18 +140,19 @@ function Index(props) {
                 } else {
                     setEmailMessage('');
                     setPasswordMessage('');
-
                     appState.setAuth(true);
                     setOpenSnackbar(true)
+
+                    /**THE DRAWER COMPONENT IS RENDER WHEN THE USER HAS SUCCESSFULLY LOGGED IN
+                     * HISTORY.REPLACE WILL REPLACE THE CURRENT LOCATION WITH /DRAWER
+                     **/
+
                     history.replace('/drawer')
-
-
                 }
 
             } catch (error) {
-                console.log(error)
+                alert(error)
             }
-
         }
     });
 
@@ -176,17 +161,17 @@ function Index(props) {
             <Snackbar
                 anchorOrigin={{vertical: "bottom", horizontal: "right"}}
                 open={openSnackbar}
-                onClose={()=> setOpenSnackbar(false) }
+                onClose={() => setOpenSnackbar(false)}
                 message={"Successful login"}
                 autoHideDuration={3000}
             />
         </Fragment>
-
     )
     return (
         <div>
             {snackBarComponent}
-            <Grid container direction={"row"} justify={"center"} className={classes.mainContainer} style={{height: "100%"}}
+            <Grid container direction={"row"} justify={"center"} className={classes.mainContainer}
+                  style={{height: "100%"}}
                   alignItems={"center"}>
                 <Paper className={classes.paperContainer}>
 
@@ -266,7 +251,6 @@ function Index(props) {
                             </Grid>
 
                         </Grid>
-
 
                     </Grid>
                 </Paper>

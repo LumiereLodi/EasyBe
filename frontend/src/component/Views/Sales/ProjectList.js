@@ -17,8 +17,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-import Typography from "@material-ui/core/Typography";
-
 
 const useStyles = makeStyles(theme => ({
 
@@ -109,8 +107,7 @@ const useStyles = makeStyles(theme => ({
 
 function ProjectList(props) {
     const classes = useStyles()
-    const [enableSendButton, setEnableSendButton] = useState(false)
-    const [enableCompletedButton, setEnableCompletedButton] = useState(false)
+
     const [reload, setReload] = useState(false)
     const appState = useAppState()
     const [openSendDialog, setOpenSendDialog] = useState(false)
@@ -121,15 +118,9 @@ function ProjectList(props) {
     const handleProjectCLick = async (projectid)=> {
         try{
             const result = await axios.get(`/project/projectlist/${projectid}`)
-
-            //console.log(result.data)
             appState.setSelectedProject(result.data.project[0])
 
-            //console.log(appState.selectedProject.givennames)
-
-
             const startDate = new Date(result.data.project[0].startdate);
-            //console.log(result.data)
             const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
             appState.setStartDate(startDateFormat)
 
@@ -149,21 +140,17 @@ function ProjectList(props) {
             //enable or disable send button
             if (location.data.location === '1') {
                 appState.setEnableSendButton(true)
-                //setReload(!reload)
-                //console.log(location.data.location)
+
             } else {
                 appState.setEnableSendButton(false)
-                //setReload(!reload)
             }
 
             //enable or disable complete button
 
             if (status.data.status === '2') {
                 appState.setEnableCompletedButton(true)
-                //setReload(!reload)
             } else {
                 appState.setEnableCompletedButton(false)
-                //setReload(!reload)
             }
 
             //GET PROJECT FILE
@@ -192,12 +179,6 @@ function ProjectList(props) {
         }catch (error) {
             console.log(error)
         }
-
-        //setReload(!reload)
-
-        //CHANGE THE STATE IN ORDER TO RELOAD STATE DATA
-
-        //props.setReload = (!props.reload)
     }
     const handleSendButtonClick = async ()=> {
         try{
@@ -207,7 +188,6 @@ function ProjectList(props) {
             if (location.data.location === '1') {
                 appState.setEnableSendButton(true)
                 setReload(!reload)
-                //console.log(location.data.location)
             } else {
                 appState.setEnableSendButton(false)
                 setReload(!reload)
@@ -235,12 +215,9 @@ function ProjectList(props) {
                 appState.setEnableCompletedButton(false)
 
             }
-
-
             if (location.data.location === '1') {
                 appState.setEnableSendButton(true)
                 setReload(!reload)
-                //console.log(location.data.location)
             } else {
                 appState.setEnableSendButton(false)
                 setReload(!reload)
@@ -367,7 +344,6 @@ function ProjectList(props) {
 
     const completedButton = (
 
-        //The title of the button will come from the Database.
         <Fragment>
             <Button
                 className={classes.completedButton}

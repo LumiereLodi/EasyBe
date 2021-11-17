@@ -12,24 +12,15 @@ import axios from "axios";
 function Project(props) {
     const appState = useAppState()
 
-    //we will also pass the list here.
-
-
-
     const handleProjectCLick = async (projectid)=> {
 
         console.log("inside the click")
         try{
             const result = await axios.get(`/project/projectlist/${projectid}`)
 
-            //console.log(result.data)
             appState.setSelectedProject(result.data.project[0])
 
-            //console.log(appState.selectedProject.givennames)
-
-
             const startDate = new Date(result.data.project[0].startdate);
-            //console.log(result.data)
             const startDateFormat = startDate.getDate() + "/" + startDate.getMonth() + "/" + startDate.getFullYear();
             appState.setStartDate(startDateFormat)
 
@@ -49,21 +40,17 @@ function Project(props) {
             //enable or disable send button
             if (location.data.location === '1') {
                 appState.setEnableSendButton(true)
-                //setReload(!reload)
-                //console.log(location.data.location)
+
             } else {
                 appState.setEnableSendButton(false)
-                //setReload(!reload)
             }
 
             //enable or disable complete button
 
             if (status.data.status === '2') {
                 appState.setEnableCompletedButton(true)
-                //setReload(!reload)
             } else {
                 appState.setEnableCompletedButton(false)
-                //setReload(!reload)
             }
 
             //GET PROJECT FILE
@@ -93,11 +80,6 @@ function Project(props) {
             console.log(error)
         }
 
-        //setReload(!reload)
-
-        //CHANGE THE STATE IN ORDER TO RELOAD STATE DATA
-
-        //props.setReload = (!props.reload)
     }
 
 

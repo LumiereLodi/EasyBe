@@ -20,8 +20,6 @@ app.use(express.static(path[0] +  "frontend/build"))
 if(process.env.NODE_ENV === "production"){
     const path = __dirname.split("\server")
     app.use(express.static(path[0] +  "frontend/build"))
-    //D:\lumie\Coding\IE Project\EasyBe\frontend\build
-    //frontend\build
 } 
 
 /************* CONNECTION TO THE ROUTES ******************/
@@ -48,6 +46,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 /*>>>>> first field of the URL <<<<<<<<<*/
+/*>>>>> ROUTES TO THE CONTROLLERS <<<<<<<<<*/
 
 app.use("/Sales", sales);
 app.use("/hr", hr);
@@ -62,32 +61,9 @@ app.use("/analytics", manager);
 app.use("/project", project)
 
 
-// app.get("/test", async (req, res)=> {
-//
-//     try{
-//         console.log("inside the test")
-//         console.log("the JWT_SECRET: " + process.env.REACT_APP_JWT_SECRET)
-//         const result = await db.query("SELECT * FROM employee")
-//         console.log(result)
-//         res.json(result)
-//     }catch(e){
-//         res.status(400).json(e.message)
-//     }
-//
-// })
-
-console.log("inside backend")
-
     app.get("*", (req, res)=> {
-
-
-            console.log("inside unknown")
-
-            const path = __dirname.split("\server")
-            console.log(path[0] + "\n")
-            //console.log(path.join(__dirname, "frontend/build/index.html"))
-            res.sendFile(path[0] +  "frontend/build/index.html")
-            //console.log(path.join(__dirname, "client-side/build/index.html"))
+        const path = __dirname.split("\server")
+        res.sendFile(path[0] +  "frontend/build/index.html")
 
     })
 

@@ -1,6 +1,4 @@
 import React, {Fragment, useState} from 'react';
-import ListLayout from "../../Layout/ListLayout";
-import Details from "../../Layout/Details";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -15,7 +13,6 @@ import * as yup from "yup";
 import Snackbar from "@material-ui/core/Snackbar";
 
 const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-//const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
 const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 const formValidation = yup.object({
     name: yup.string().required('Name is required'),
@@ -125,8 +122,7 @@ function AddCustomer(props) {
                                 'Content-Type': "application/json"
                             }
                         });
-                        //use a snackbar to show the admin that the empoyee has been added.
-                        //alert("Customer " + response.data.name + " has been added")
+
                         console.log(response)
                         setProjectName(response.data.name)
 
@@ -137,16 +133,10 @@ function AddCustomer(props) {
                     }
                 }
 
-
-
-
             } catch (error) {
 
                 setProjectName(formik.values.name)
                 setOpenErrorSnackbar(true)
-
-                // console.log("there was an error")
-                // alert(error)
             }
         }
     });
@@ -340,11 +330,6 @@ function AddCustomer(props) {
 
             {snackBarComponent}
             {errorSnackBarComponent}
-            {/*<Grid container>*/}
-            {/*    <ListLayout text={"Add client"}/>*/}
-
-            {/*    <Details details={details}/>*/}
-            {/*</Grid>*/}
 
             {details}
         </div>

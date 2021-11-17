@@ -8,13 +8,10 @@ import {makeStyles} from "@material-ui/styles";
 import DepartmentList from "./DepartmentList";
 import EmployeeList from "./EmployeeList";
 import Dialog from "@material-ui/core/Dialog";
-
 import AddDepartment from "./AddDepartment";
-import axios from "axios";
 import {useAppState} from "../../WithStore"
 import HrProject from "./Project";
 import Snackbar from "@material-ui/core/Snackbar";
-import Customer from "../Sales/Customer";
 
 const useStyles = makeStyles(theme => ({
 
@@ -118,10 +115,6 @@ function Admin(props) {
     ]
     const addButton = (
         <div style={{marginLeft: "auto"}}>
-            {/*<IconButton component={Link}*/}
-            {/*            to={window.location.pathname === "/drawer/admin/departmentList" ? "/drawer/admin/addDepartment" : "/drawer/admin/addEmployee"}>*/}
-            {/*    <AddIcon className={classes.tab}/>*/}
-            {/*</IconButton>*/}
             <IconButton
                         onClick={()=> {
                             handlePlusButton();
@@ -165,16 +158,6 @@ function Admin(props) {
 
     )
     useEffect(async () => {
-        try {
-            // const response = await axios.get("/hr/admin/department/departmentlist");
-            //
-            //
-            // appState.addDepartmentName(response.data.departmentList);
-
-        } catch (error) {
-            alert(error.response.message)
-        }
-
         if (window.location.pathname === "/drawer/admin/addEmployee") {
             setValue(1)
 
@@ -216,20 +199,7 @@ function Admin(props) {
 
                 <Route path={"/drawer/admin/registerEmployee"} component={RegisterEmployee}/>
                 <Route path={"/drawer/admin/departmentList"} render={()=><DepartmentList setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
-
                 <Route path={"/drawer/admin/employeeList"} render={()=><EmployeeList setOpenEmployeeDialog={setOpenEmployeeDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
-                {/*<Route path={"/drawer/admin/add"} component={() =>*/}
-                {/*    <div>*/}
-                {/*        {value === 0 ? <AddDepartment/> : <RegisterEmployee/>}*/}
-                {/*    </div>*/}
-
-                {/*}/>*/}
-                {/*<Route path={"/drawer/admin/add"} component={() =>*/}
-                {/*    <div>*/}
-                {/*        {value === 0 ? <AddDepartment/> : AddEmployeeDialog}*/}
-                {/*    </div>*/}
-
-                {/*}/>*/}
                 <Route path={"/drawer/admin/hrProject"} render={()=><HrProject setOpenDepartmentDialog={setOpenDepartmentDialog} reload={reload} setReload={setReload} reloadDrawer={props.reloadDrawer} setReloadDrawer={props.setReloadDrawer}/>}/>
                 <Route path={"/drawer/admin/addDepartment"} component={AddDepartment}/>
                 <Route path={"/drawer/admin/addEmployee"} component={RegisterEmployee}/>

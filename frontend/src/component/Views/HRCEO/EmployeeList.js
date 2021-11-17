@@ -189,8 +189,6 @@ function EmployeeList(props) {
                 }
             }
 
-            //props.setReload(!props.reload)
-
         }catch(e){
             alert(e)
         }

@@ -85,12 +85,6 @@ function DepartmentList(props) {
         "Email",
         "Contract "
     ];
-    const OverviewData = [
-        "Lumiere",
-        "Staff",
-        "lumiere@gmail.com",
-        "Full-time"
-    ]
 
     const InformationHeader = [
         "Num Staff",
@@ -156,8 +150,6 @@ function DepartmentList(props) {
                     appState.setSelectedDepartmentStaffList([])
                 }
             }
-
-            //props.setReload(!props.reload)
 
         }catch(e){
             alert(e)

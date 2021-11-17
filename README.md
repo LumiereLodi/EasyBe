@@ -16,9 +16,7 @@ COMPONENT:
     -LAYOUT : We have two main layout that we have called list layout and details layout. the list layout is on the left and the roght layout is on the right. 
     
     -VIEWS : 
-        -MANAGER : The view of each manager depending on their department. 
-            
-            -humanResource : 
+            -humanResource & CEO : 
                 *AddDepartment & RegisterEmployee : 
                     Those 2 components are dialogues. 
                     When click on + button you see a dialogue according to your current location (Department or Employee)
@@ -31,7 +29,7 @@ COMPONENT:
                 *Project: Component has the project overviews or analysis. 
                 
                 *Menu: This is the component that has the menu for HR department. 
-            
+                
             
         -STAFF : view of each staff members depending on their department. 
         

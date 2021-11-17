@@ -1,7 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {Drawer} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
-
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import useTheme from "@material-ui/styles/useTheme";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
@@ -9,7 +8,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-import {BrowserRouter as Router, Redirect, Route, Switch, useHistory} from "react-router-dom"
+import {Redirect, Route, Switch, useHistory} from "react-router-dom"
 import MenuIcon from "@material-ui/icons/Menu"
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
@@ -24,7 +23,7 @@ import easybeLogo from "../../assets/EasyBe.png";
 import Typography from "@material-ui/core/Typography";
 import Dashboard from "../Dashboard";
 
-/**MENU**/
+/**MENU TABS**/
 import ITRIMenu from "../Views/ITRI/Menu"
 import SalesMenu from "../Views/Sales/Menu"
 import HRCEOMenu from "../Views/HRCEO/Menu"
@@ -42,6 +41,9 @@ import Snackbar from "@material-ui/core/Snackbar";
 const marginLeft = 100;
 const drawerWidth = 13.5;
 
+
+/**THE CODES HELP THE APPBAR TO ELEVATE WHEN A COMPONENT COMES CLOSE**/
+
 function ElevationScroll(props) {
     const {children} = props;
     const trigger = useScrollTrigger({
@@ -58,21 +60,18 @@ const useStyles = makeStyles(theme => ({
     drawerBackground: {
         backgroundColor: theme.palette.primary.main,
         width: "12.5rem"
-
     },
     toolbar: {
         [theme.breakpoints.up("md")]: {
             ...theme.mixins.toolbar,
         }
     },
-
     userId: {
         marginTop: "1rem",
         height: "4rem",
         width: "100%",
         backgroundColor: "#131111",
         color: "white"
-
     },
     drawerItem: {
         color: "white",
@@ -80,7 +79,6 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             opacity: 1
         }
-
     },
     menuTitle: {
         fontSize: "17px",
@@ -88,7 +86,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: "1rem",
         marginLeft: "auto",
         marginRight: "auto"
-
     },
     appBarTab: {
         zIndex: theme.zIndex.modal + 1,
@@ -110,7 +107,6 @@ const useStyles = makeStyles(theme => ({
         color: "white",
         height: "50px",
         width: "50px",
-
     },
     drawerMargin: {
         marginBottom: "3.5em"
@@ -137,8 +133,6 @@ const useStyles = makeStyles(theme => ({
             paddingLeft: "5px",
             paddingRight: "5px"
         }
-
-
     },
     drawerItemSelected: {
         opacity: 1
@@ -162,8 +156,6 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             opacity: 1,
         },
-
-
     },
     menu: {
         borderRadius: 0
@@ -174,9 +166,7 @@ const useStyles = makeStyles(theme => ({
         "& .MuiSnackbarContent-root": {
             backgroundColor: "#6ed00c"
         }
-
     }
-
 }))
 
 function AppDrawer(props) {
@@ -188,29 +178,25 @@ function AppDrawer(props) {
     const appState = useAppState()
     let history = useHistory()
 
-
     const [openMobileDrawer, setOpenMobileDrawer] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openMenu, setOpenMenu] = useState(false);
 
-    // const [selectedMenuItem, setSelectedMenuItem] = useState(0);
     const [selectedMenuItem, setSelectedMenuItem] = useState(0);
-    const [value, setValue] = useState()
     const [department, setDepartment] = useState('')
     const [position, setPosition] = useState('')
     const [reloadDrawer, setReloadDrawer] = useState(false);
     const [initial, setInitial] = useState('')
     const [openSnackbar, setOpenSnackbar] = useState(false)
 
-    const handleChange = (e, newValue) => {
-        setValue(newValue)
-    }
+    /***HANDLE THE MORE BUTTON TO OPEN A MENU FOR THE LOG OUT***/
     const handleClick = (e) => {
-
         setAnchorEl(e.currentTarget);
         setOpenMenu(true);
-
     };
+
+    /***HANDLE THE MORE BUTTON TO CLOSE A MENU FOR THE LOG OUT***/
+
     const handleClose = (e) => {
         setAnchorEl(null);
         setOpenMenu(false);
@@ -248,6 +234,7 @@ function AppDrawer(props) {
                     setPosition(result.data.position)
                     setInitial(result.data.givennames)
 
+                    /**IF THE USER IS ALREADY LOGGED IN YOU DO NOT SHOW THE SNACKBAR (SUCCESSFUL LOG IN)**/
                     if(appState.loggedIn){
                         setOpenSnackbar(false)
                         //appState.setLoggedIn(false)
@@ -262,23 +249,45 @@ function AppDrawer(props) {
 
                 if(appState.userInfo.position === 'Manager'){
 
+                    /**FOR CEO, HR AND SM MANAGERS ALL PROJECTS WITHIN THE DEPARTMENT IS LISTED FOR THEM**/
+
                     if(appState.userInfo.departmentid === '2002' ||
                         appState.userInfo.departmentid === '2003' ||
                         appState.userInfo.departmentid === '2004') {
                         const projectlistAll = await axios.get(`/project/projectlist`);
-                        console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
                     }
+
+                    /***HERE YOU LIST PROJECTS THAT HAVE BEEN SENT FROM THE SM MANAGERS TO IT AND RI DEPARTMENT**/
                     else if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
                         const projectlistAll = await axios.get(`/project/sentProject`);
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
                     }
-                    /********GET DEFAULT VALUES FOR PROJECT********/
+                    /********GET DEFAULT VALUES FOR PROJECT (DETAILS LAYOUT)********/
+
+                    /**appState.leftList[0] HOLDS THE LEFT LAYOUT LIST WITH THE SEARCH BAR**/
+
+
                     if(appState.leftList[0]){
 
+                        /**
+                         *  WE FIRST CHECK IF THE EDITSELECTEDPROJECT IS EMPTY
+                         *  IF IT IS EMPTY IT MEANS WE ARE NOT EDITING, WE ARE ADDING A NEW USER
+                         *  WE ALSO CHECK WHETHER WE ARE ADDING A NEW TASK OR EDITING.
+                         *
+                         * ***/
 
                         if(JSON.stringify(appState.editSelectedProject) === '{}'){
+
+                            /**
+                             * IF WE HAVE CLICKED THE EDIT PROJECT BUTTON, ON RELOAD DRAWER YOU WILL COME BACK TO THE SELECTED PROJECT.
+                             * **/
+
+                            /**
+                             * IF WE HAVENT CLICKED THE EDIT PROJECT, WE HAVE PROBABLY CLICKED THE EDIT TASK OR WE ARE ADDING A NEW TASK
+                             * THAT IS WHY WE ARE DOING THE TEST BELOW.
+                             * **/
                             if(JSON.stringify(appState.editSelectedTask) !== '{}'){
                                 const defaultproject = await axios.get(`/project/projectlist/${appState.selectedProject.projectid}`);
                                 console.log(defaultproject.data.project);
@@ -323,13 +332,21 @@ function AppDrawer(props) {
                     }
 
 
-                }else if(appState.userInfo.position === 'Staff'){
+                }
+
+                /**SAME APPROACH WITH THE STAFF AS WITH THE MANAGER**/
+
+                /**THE SM STAFF HAVE THE ABILITY TO SEND PROJECT TO OTHERS.
+                 * THAT IS WHY WE LIST TO THEM ALL PROJECT THAT HAS BEEN ASSIGNED TO THEM
+                 * **/
+
+                else if(appState.userInfo.position === 'Staff'){
                     if(appState.userInfo.departmentid === '2002'){
                         const projectlistAll = await axios.get(`/project/projectstafflist/staff/${appState.userInfo.employeeid}`);
                         console.log(projectlistAll);
                         appState.setProjectListAll(projectlistAll.data);
 
-                        /********GET DEFAULT VALUES FOR PROJECTass********/
+                        /********GET DEFAULT VALUES FOR PROJECT********/
 
                         if(appState.leftList[0]){
                             if(JSON.stringify(appState.editSelectedProject) === '{}'){
@@ -354,6 +371,9 @@ function AppDrawer(props) {
                         }
 
                     }
+
+                    /**IT AND RI STAFF MEMBERS WILL ONLY SEE TASKS ASSIGNED TO THEM**/
+
                     else  if(appState.userInfo.departmentid === '2000' || appState.userInfo.departmentid === '2001'){
                         const projectlistAll = await axios.get(`/project/taskstafflist/${appState.userInfo.employeeid}`);
                         console.log(projectlistAll);
@@ -368,7 +388,7 @@ function AppDrawer(props) {
 
                 }
 
-                /*** CUSTOMER LIST ***/
+                /*** CUSTOMER LIST FOR SM MANAGER WHEN CREATING A NEW PROJECT***/
 
                 if(appState.userInfo.departmentid === '2002' && appState.userInfo.position === 'Manager'){
 
@@ -430,7 +450,7 @@ function AppDrawer(props) {
                 appState.setRIProjectFile(RIProjectFile);
                 appState.setITProjectFile(ITProjectFile);
 
-                /***** DEFAULT STAFF FOR A SPECIFIC DEPARTMENT ******/
+                /***** STAFF LIST FOR A SPECIFIC DEPARTMENT ******/
                 const departmentStaff = await axios.get(`/project/stafflist/${appState.userInfo.departmentid}`)
                 console.log(departmentStaff.data)
                 appState.setDepartmentStaffList(departmentStaff.data)
@@ -439,7 +459,7 @@ function AppDrawer(props) {
                 appState.setDepartmentStaffonlyList(staffonlylist.data)
 
                 console.log(staffonlylist.data)
-                /******* DEFAULT CUSTOMER VALUES ********/
+                /******* CUSTOMER DETAILS ********/
                 if(appState.customerList[0]){
 
                     if(JSON.stringify(appState.editSelectedCustomer) === '{}'){
@@ -455,22 +475,18 @@ function AppDrawer(props) {
                 }
 
 
+                /**
+                 * SELECTED CUSTOMER PROJECT LIST
+                 * **/
                 const defaultCustomerProject = await axios.get(`/sales/customerproject/${appState.selectedCustomer.customerid}`);
-
-                console.log(defaultCustomerProject.data);
                 appState.setSelectedCustomerProjects(defaultCustomerProject.data);
-
-                console.log(appState.selectedCustomerProjects.length);
-
 
                 if(appState.userInfo.departmentid === '2003' ||
                     appState.userInfo.departmentid === '2004'){
 
                     const response = await axios.get("/hr/admin/department/departmentlist");
                     appState.addDepartmentName(response.data.departmentList);
-                    //appState.setProjectListAll(response.data.departmentList);
 
-                    //appState.departmentList[0]
                     if(appState.departmentList[0]){
                         const departmentSelected = await axios.get(`/hr/departmentdetails/${appState.departmentList[0].departmentid}`)
 
@@ -482,6 +498,7 @@ function AppDrawer(props) {
                     }
 
 
+                    /**FOR CEO AND HR WE LIST ALL EMPLOYEE OF THE COMPANNY (EASYBE)**/
                     const employeeList = await axios.get(`/hr/alleasybeemployeelist`)
                     appState.setAllEasybeEmployeeList(employeeList.data)
                     console.log(employeeList.data)
@@ -509,6 +526,7 @@ function AppDrawer(props) {
                 }
 
 
+                /**HERE WE LIST ALL EMPLOYEE OF A SPECIFIC DEPARTMENT FOR HR AND CEO***/
                 const employeeList = await axios.get("/hr/allemployeelist");
                 console.log(employeeList.data)
                 appState.setEmployeeStaffList(employeeList.data)
@@ -518,9 +536,7 @@ function AppDrawer(props) {
             }
         }
 
-
         fetchData()
-
 
     }, [reloadDrawer])
 
@@ -548,13 +564,7 @@ function AppDrawer(props) {
             className={classes.drawerPadding}
 
         >
-            {/*// the picture size when you change to button to be fixed later*/}
-            {/*<Button component={Link} to="/" className={classes.logoContainer} disableRipple >*/}
-
-            {/*    <img className={classes.easybeLogo} src={easybeLogo} alt="easybe logo"/>*/}
-            {/*</Button>*/}
             <img className={classes.easybeLogo} src={easybeLogo} alt="easybe logo"/>
-
 
             <Grid container className={classes.userId}>
                 <Grid item sm={8}>

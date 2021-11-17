@@ -16,11 +16,7 @@ import Select from "@material-ui/core/Select";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Snackbar from "@material-ui/core/Snackbar";
-import Customer from "../Sales/Customer";
 
-const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-//const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
-const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 
 const nameCheck = /^[A-Z][A-Za-z]/
 
@@ -34,7 +30,6 @@ const useStyles = makeStyles(theme => ({
     textFieldContainer: {
         marginTop: "1em",
 
-
     },
     form: {
         "& .MuiInputLabel-root": {
@@ -42,7 +37,6 @@ const useStyles = makeStyles(theme => ({
         },
         "& .MuiInputBase-root": {
             borderRadius: "0.3em",
-            // backgroundColor: "white"
         },
         "& .MuiAutocomplete-root": {
             backgroundColor: "red"
@@ -98,11 +92,7 @@ function AddDepartment(props) {
         },
         validationSchema: formValidation,
         onSubmit: async (values, {resetForm}) => {
-                console.log(values)
-
             const response = await axios.post(`/hr/addDepartment/${appState.userInfo.employeeid}`, values)
-
-            console.log(response.data)
 
             if(response.data.status){
                 setDepartmentExist("Department name already exists.")

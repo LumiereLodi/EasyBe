@@ -3,8 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
-import ListLayout from "../../Layout/ListLayout";
-import Details from "../../Layout/Details";
 import * as yup from "yup";
 import {makeStyles} from "@material-ui/styles";
 import {useAppState} from "../../WithStore";
@@ -20,10 +18,6 @@ import DateFnsUtils from "@date-io/date-fns";
 import {useObserver} from "mobx-react"
 import Snackbar from "@material-ui/core/Snackbar";
 
-
-const phoneNumberCheck = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-//const phoneNumberCheck = /^\+[1-9]{1}[0-9]{3,14}$/;
-const emailCheck = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 const formValidation = yup.object({
     customer: yup.string().required('Select a Customer'),
     staff: yup.string().required('Select a Sale Person'),
@@ -37,8 +31,6 @@ const useStyles = makeStyles(theme => ({
 
     textFieldContainer: {
         marginTop: "1em",
-
-
     },
     form: {
         "& .MuiInputLabel-root": {
@@ -135,18 +127,12 @@ function AddProject(props) {
                             'Content-Type': "application/json"
                         }
                     });
-                    //use a snackbar to show the admin that the empoyee has been added.
-                    //alert("Project " +  response.data.newProject.name +  " has been added ")
 
                     console.log(response.data.newProject)
                     setProjectName(response.data.newProject.name)
-                    //console.log(response)
-                    //alert(data)
                     setOpenSnackbar(true)
                     resetForm({})
                 }
-
-
 
             } catch (error) {
                 setProjectName(formik.values.name)
@@ -401,11 +387,6 @@ function AddProject(props) {
             {snackBarComponent}
             {errorSnackBarComponent}
 
-            {/*<Grid container>*/}
-            {/*    <ListLayout text={"Add Project"}/>*/}
-
-            {/*    <Details details={details}/>*/}
-            {/*</Grid>*/}
 
             {details}
 

@@ -73,24 +73,6 @@ function Project(props) {
         appState.setShowListLayout(true)
     }
     useEffect(() => {
-        async function fetchData() {
-            try {
-                // const response = await axios.get("/Sales/customerlist", {
-                //     withCredentials: true
-                // })
-                // console.log(response.data)
-                // appState.setCustomerList(response.data)
-                //
-                // const staff = await axios.get(`/employee/employeelist/${appState.userInfo.departmentid}`)
-                // console.log(staff.data)
-                // appState.setStaffList(staff.data)
-
-            } catch (error) {
-                alert(error)
-            }
-        }
-        fetchData()
-
     }, [reload])
 
 

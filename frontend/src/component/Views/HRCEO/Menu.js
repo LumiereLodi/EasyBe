@@ -43,13 +43,6 @@ function Menu(props) {
             link: "/drawer/dashboard",
             activeIndex: 0
         },
-        // {name: "Department", icon: <ListItemIcon><TimelineIcon/></ListItemIcon>, link: "/drawer/yes", activeIndex: 1},
-        // {
-        //     name: "Employee",
-        //     icon: <ListItemIcon><PeopleAltIcon/></ListItemIcon>,
-        //     link: "/drawer/employee",
-        //     activeIndex: 1
-        // },
         {name: "Projects", icon: <ListItemIcon><AccountTreeIcon/></ListItemIcon>, link: "/drawer/admin/hrProject", activeIndex: 1},
         {name: "Admin", icon: <ListItemIcon><SettingsIcon/></ListItemIcon>, link: "/drawer/admin", activeIndex: 2},
 

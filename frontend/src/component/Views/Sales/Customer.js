@@ -71,9 +71,6 @@ function Customer(props) {
     }
     const addButton=(
         <div style={{marginLeft: "auto"}}>
-            {/*<IconButton component={Link} to={"/drawer/client/addclient" }>*/}
-            {/*    <AddIcon className={classes.tab} />*/}
-            {/*</IconButton>*/}
 
             <IconButton onClick={()=> {
                 setOpenDialog(true);

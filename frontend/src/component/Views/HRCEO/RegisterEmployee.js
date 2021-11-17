@@ -100,21 +100,6 @@ function RegisterEmployee(props) {
         "Part-Time"
     ]
 
-    // const snackBarComponent = (
-    //     <Fragment>
-    //         <Snackbar
-    //             anchorOrigin={{vertical: "bottom", horizontal: "right"}}
-    //             open={openSnackbar}
-    //             onClose={()=> setOpenSnackbar(false) }
-    //             message={"Successful login"}
-    //             autoHideDuration={3000}
-    //             classes={{root: classes.snackbar}}
-    //
-    //         />
-    //     </Fragment>
-    //
-    // )
-
 
 
     const formik = useFormik({
@@ -140,10 +125,6 @@ function RegisterEmployee(props) {
 
                 if(JSON.stringify(appState.editSelectedEasbeEmployee) !== '{}'){
 
-                    alert("in here")
-                    console.log(JSON.stringify(values))
-                    alert(JSON.stringify(values))
-
                     const response = await axios.put(`/user/editemployeeinfo/${appState.userInfo.employeeid}/${appState.editSelectedEasbeEmployee.employeeid}`,
                         updatedValues )
 
@@ -158,24 +139,19 @@ function RegisterEmployee(props) {
                     if (result.data.exist) {
                         setEmailExist("Email already exists")
                     } else {
-                        console.log("email does not exists")
                         setEmailExist('')
 
                         const data = JSON.stringify(updatedValues)
-                        //alert(data);
                         const response = await axios.post("/user/register/" + appState.userInfo.employeeid, data, {
                             headers: {
                                 'Content-Type': "application/json"
                             }
                         });
 
-                        //props.setOpenEmployeeDialog(false)
 
-                        alert(response.data.data[0].lastname)
                         setEmployeeName(response.data.data[0].lastname)
 
                         setOpenSnackbar(true)
-                        //props.setOpenSnackbar(true)
                         props.setReloadDrawer(!props.reloadDrawer)
                         resetForm({})
 

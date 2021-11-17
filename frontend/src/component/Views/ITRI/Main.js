@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import AppBar from "../../AppBar";
-import {Link, Redirect, Route, Switch} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import ProjectList from "./ProjectList";
 import {useAppState} from "../../WithStore";
-import AddProject from "../Sales/AddProject";
 
 function Main(props) {
 

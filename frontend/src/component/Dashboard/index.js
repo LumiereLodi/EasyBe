@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Hidden from "@material-ui/core/Hidden";
-
 import {Grid, Typography} from "@material-ui/core";
 import {useObserver} from "mobx-react"
 import {useAppState} from "../WithStore"
 import axios from "axios";
-
 
 import {makeStyles, useTheme} from "@material-ui/styles";
 import AppBar from "../AppBar";
@@ -113,10 +111,16 @@ function Index(props) {
                 setBacklogProject(backlogProject.data.count);
                 appState.setBacklogProject(backlogProject.data.count);
                 let overview;
+
+                /****ADMIN/GENERAL IS FOR CEO HR AND SALES MANAGER. THEY GET TO SEE THE OVERVIEW OF THE ENTIRE COMPANY
+                 * THEY SEE OVERVIEW OF PROJECT THAT HAS AT LEAST ONE TASK.
+                 * *****/
                 if(appState.userInfo.departmentid === '2002' || appState.userInfo.departmentid === '2003' || appState.userInfo.departmentid === '2004'){
                     overview = await axios.get(`/dashboard/overview/admin/general`)
                 }
                 else{
+
+                    /**THIS IS THE OVERVIEW FOR A SPECIFIC DEPARTMENT**/
                     overview = await axios.get(`/dashboard/overview/${appState.userInfo.departmentid}`)
 
                 }
@@ -194,11 +198,7 @@ function Index(props) {
                                     Status
                                 </Grid>
                                 </Hidden>
-                                
 
-                                {/*<Grid item container xs  justify={matches ? "flex-end" : "center"} alignItems={"center"} className={classes.overviewText}>*/}
-                                {/*    Progress*/}
-                                {/*</Grid>*/}
                             </Grid>
                         </Grid>
                         <Grid item className={classes.overviewDataContainer}>
@@ -217,10 +217,6 @@ function Index(props) {
                                         {project.status}
                                     </Grid>
                                     </Hidden>
-                                    
-                                    {/*<Grid item container xs style={{color: "black", fontFamily: "Roboto"}} justify={matches ? "flex-end" : "center"} >*/}
-                                    {/*    {project.progress}*/}
-                                    {/*</Grid>*/}
                                 </Grid>
                             ))}
 
